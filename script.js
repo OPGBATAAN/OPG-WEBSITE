@@ -236,80 +236,9 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Contact form handling
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(this);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const subject = formData.get('subject');
-        const message = formData.get('message');
-        
-        // Basic validation
-        if (!name || !email || !subject || !message) {
-            showNotification('Please fill in all fields', 'error');
-            return;
-        }
-        
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showNotification('Please enter a valid email address', 'error');
-            return;
-        }
-        
-        // Simulate form submission
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.innerHTML = '<span class="loading"></span> Sending...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call
-        setTimeout(() => {
-            showNotification('Message sent successfully! We will get back to you soon.', 'success');
-            this.reset();
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-    });
-}
+// Contact form handling is now in initializeForms()
 
-// Newsletter form handling
-const newsletterForm = document.querySelector('.newsletter-form');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const email = this.querySelector('input[type="email"]').value;
-        
-        if (!email) {
-            showNotification('Please enter your email address', 'error');
-            return;
-        }
-        
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showNotification('Please enter a valid email address', 'error');
-            return;
-        }
-        
-        const submitBtn = this.querySelector('button');
-        const originalText = submitBtn.textContent;
-        submitBtn.innerHTML = '<span class="loading"></span> Subscribing...';
-        submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            showNotification('Successfully subscribed to our newsletter!', 'success');
-            this.reset();
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 1500);
-    });
-}
+// Newsletter form handling is now in initializeForms()
 
 // Notification system
 function showNotification(message, type = 'info') {
@@ -324,45 +253,17 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 8px;
-        color: white;
-        font-weight: 500;
-        z-index: 10000;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    `;
-    
-    // Set background color based on type
-    switch(type) {
-        case 'success':
-            notification.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            break;
-        case 'error':
-            notification.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-            break;
-        default:
-            notification.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
-    }
-    
     // Add to page
     document.body.appendChild(notification);
     
     // Animate in
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
+        notification.classList.add('show');
     }, 100);
     
     // Remove after 5 seconds
     setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
+        notification.classList.remove('show');
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.remove();
@@ -371,44 +272,7 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Counter animation for statistics
-function animateCounter(element, target, duration = 2000) {
-    const start = 0;
-    const increment = target / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        
-        // Format the number
-        if (target >= 1000) {
-            element.textContent = Math.floor(current / 1000) + 'K+';
-        } else {
-            element.textContent = Math.floor(current) + '+';
-        }
-    }, 16);
-}
-
-// Initialize counter animations when statistics are visible
-const statNumbers = document.querySelectorAll('.stat-number');
-const statObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-            entry.target.classList.add('animated');
-            const text = entry.target.textContent;
-            const number = parseInt(text.replace(/\D/g, ''));
-            animateCounter(entry.target, number);
-        }
-    });
-}, { threshold: 0.5 });
-
-statNumbers.forEach(stat => {
-    statObserver.observe(stat);
-});
+// Counter animation is now in initializeCounters()
 
 // Add hover effects to service cards
 document.querySelectorAll('.service-card').forEach(card => {
@@ -501,7 +365,7 @@ window.addEventListener('load', () => {
     const footerYear = document.querySelector('.footer-bottom p');
     if (footerYear) {
         const currentYear = new Date().getFullYear();
-        footerYear.textContent = footerYear.textContent.replace('2024', currentYear);
+        footerYear.textContent = footerYear.textContent.replace(/\d{4}/, currentYear);
     }
 });
 

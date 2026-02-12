@@ -1,4 +1,10 @@
 (function () {
+    // Prevent multiple initializations
+    if (window.budgetSheetEditorInitialized) {
+        return;
+    }
+    window.budgetSheetEditorInitialized = true;
+
     function getSheetKey() {
         var path = (location.pathname || '').split('?')[0];
         var file = path.split('/').pop() || 'budget_sheet';
@@ -76,8 +82,21 @@
 
         try {
             savedRaw = localStorage.getItem(key);
-            if (savedRaw) savedSnapshot = JSON.parse(savedRaw);
+            if (savedRaw) {
+                savedSnapshot = JSON.parse(savedRaw);
+                if (!Array.isArray(savedSnapshot)) {
+                    console.warn('Invalid saved data format, ignoring saved snapshot');
+                    savedSnapshot = null;
+                }
+            }
         } catch (e) {
+            if (e instanceof SyntaxError) {
+                console.error('Invalid JSON in localStorage, ignoring saved data:', e);
+            } else if (e.name === 'QuotaExceededError') {
+                console.error('localStorage quota exceeded, ignoring saved data:', e);
+            } else {
+                console.error('Error accessing localStorage, ignoring saved data:', e);
+            }
             savedSnapshot = null;
         }
 
@@ -87,6 +106,12 @@
 
         var controls = document.querySelector('.excel-controls');
         if (!controls) return;
+
+        // Remove any existing editor buttons to prevent duplicates
+        var existingButtons = controls.querySelectorAll('.editor-btn');
+        existingButtons.forEach(function(btn) {
+            btn.remove();
+        });
 
         var editBtn = createButton('Edit', 'secondary');
         var saveBtn = createButton('Save');
@@ -146,7 +171,14 @@
                 savedSnapshot = snap;
                 setDirty(false);
             } catch (e) {
-                alert('Could not save. Your browser storage may be full or blocked.');
+                if (e.name === 'QuotaExceededError') {
+                    alert('Could not save: Storage quota exceeded. Please clear some data or try again.');
+                } else if (e.name === 'SecurityError') {
+                    alert('Could not save: Storage access denied. Please check your browser settings.');
+                } else {
+                    alert('Could not save: An unexpected error occurred. Please try again.');
+                }
+                console.error('Save error:', e);
             }
         });
 
