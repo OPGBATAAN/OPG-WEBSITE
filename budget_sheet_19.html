@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Management - 2026 AIP Budget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .excel-container {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        
+        .excel-header {
+            background: #2c5282;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .excel-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .excel-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .excel-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        
+        .excel-table th,
+        .excel-table td {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            text-align: left;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        
+        .excel-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .col-a {
+            background: #f0f0f0;
+            font-weight: bold;
+            text-align: center;
+            width: 40px;
+            min-width: 40px;
+        }
+        
+        .text-cell {
+            text-align: left;
+        }
+        
+        .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .header-row {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .excel-formula-bar {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-left: none;
+            border-right: none;
+        }
+        
+        .excel-status-bar {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .back-btn {
+            background: #2c5282;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #1a365d;
+        }
+    </style>
+</head>
+<body>
+    <a href="budget-display.html" class="back-btn">← Back to Budget Overview</a>
+    
+    <div class="excel-container">
+        <div class="excel-header">
+            <div class="excel-title">Environmental Management - 2026 AIP Budget</div>
+            <div class="excel-controls">
+                <button class="excel-btn">File</button>
+                <button class="excel-btn">Home</button>
+                <button class="excel-btn">Insert</button>
+                <button class="excel-btn">Data</button>
+            </div>
+        </div>
+        
+        <table class="excel-table">
+            <thead>
+                <tr>
+                    <th class="col-a"></th>
+                    <th class="col-b">A</th>
+                    <th class="col-c">B</th>
+                    <th class="col-d">C</th>
+                    <th class="col-e">D</th>
+                    <th class="col-f">E</th>
+                    <th class="col-g">F</th>
+                    <th class="col-h">G</th>
+                    <th class="col-i">H</th>
+                    <th class="col-j">I</th>
+                    <th class="col-k">J</th>
+                    <th class="col-l">K</th>
+                    <th class="col-m">L</th>
+                    <th class="col-n">M</th>
+                    <th class="col-o">N</th>
+                    <th class="col-p">O</th>
+                    <th class="col-q">P</th>
+                    <th class="col-r">Q</th>
+                    <th class="col-s">R</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="col-a">1</td><td class="col-b text-cell">LBAc Form No. 2</td><td class="col-b"></td><td class="col-c"></td><td class="col-d"></td><td class="col-e"></td><td class="col-f"></td><td class="col-g"></td><td class="col-h"></td><td class="col-i"></td><td class="col-j"></td><td class="col-k"></td><td class="col-l"></td><td class="col-m"></td><td class="col-n"></td><td class="col-o"></td><td class="col-p"></td><td class="col-q"></td><td class="col-r"></td><td class="col-s"></td></tr><tr><td class="col-a">2</td><td class="col-b text-cell">QUARTERLY FINANCIAL REPORT OF OPERATIONS</td><td class="col-b"></td><td class="col-c"></td><td class="col-d"></td><td class="col-e"></td><td class="col-f"></td><td class="col-g"></td><td class="col-h"></td><td class="col-i"></td><td class="col-j"></td><td class="col-k"></td><td class="col-l"></td><td class="col-m"></td><td class="col-n"></td><td class="col-o"></td><td class="col-p"></td><td class="col-q"></td><td class="col-r"></td><td class="col-s"></td></tr><tr><td class="col-a">3</td><td class="col-b text-cell">For Quarter Ending December 31, 2025</td><td class="col-b"></td><td class="col-c"></td><td class="col-d"></td><td class="col-e"></td><td class="col-f"></td><td class="col-g"></td><td class="col-h"></td><td class="col-i"></td><td class="col-j"></td><td class="col-k"></td><td class="col-l"></td><td class="col-m"></td><td class="col-n"></td><td class="col-o"></td><td class="col-p"></td><td class="col-q"></td><td class="col-r"></td><td class="col-s"></td></tr><tr><td class="col-a">4</td><td class="col-b"></td><td class="col-c"></td><td class="col-d"></td><td class="col-e"></td><td class="col-f"></td><td class="col-g"></td><td class="col-h"></td><td class="col-i"></td><td class="col-j"></td><td class="col-k"></td><td class="col-l"></td><td class="col-m"></td><td class="col-n"></td><td class="col-o"></td><td class="col-p"></td><td class="col-q"></td><td class="col-r"></td><td class="col-s"></td></tr><tr><td class="col-a">5</td><td class="col-a text-cell">Major Final Output/ PPA</td><td class="col-b text-cell">FPP Code</td><td class="col-c text-cell">Implementing Unit</td><td class="col-d ">Appropriation</td><td class="col-e "></td><td class="col-f "></td><td class="col-g "></td><td class="col-h "></td><td class="col-i "></td><td class="col-j "></td><td class="col-k ">Allotment Released</td><td class="col-l "></td><td class="col-m "></td><td class="col-n "></td><td class="col-o "></td><td class="col-p "></td><td class="col-q "></td><td class="col-r ">Balance of Appropriation</td><td class="col-s ">Obligations Incurred</td></tr><tr><td class="col-a">6</td><td class="col-a "></td><td class="col-b "></td><td class="col-c text-cell"></td><td class="col-d text-cell">Continuing</td><td class="col-e text-cell">Current</td><td class="col-f text-cell">PS</td><td class="col-g text-cell">MOOE</td><td class="col-h text-cell">CO</td><td class="col-i text-cell">FE</td><td class="col-j text-cell">Total</td><td class="col-k text-cell">Previous Quarters</td><td class="col-l text-cell">This Quarter</td><td class="col-m text-cell">PS</td><td class="col-n text-cell">MOOE</td><td class="col-o text-cell">CO</td><td class="col-p text-cell">FE</td><td class="col-q text-cell">Total</td><td class="col-r text-cell"></td><td class="col-s text-cell">Previous Quarters</td></tr><tr class="header-row"><td class="col-a">247</td><td class="col-b text-cell">Environmental Management</td><td class="col-c "></td><td class="col-d "></td><td class="col-e "></td><td class="col-f "></td><td class="col-g "></td><td class="col-h "></td><td class="col-i "></td><td class="col-j "></td><td class="col-k "></td><td class="col-l "></td><td class="col-m "></td><td class="col-n "></td><td class="col-o "></td><td class="col-p "></td><td class="col-q "></td><td class="col-r "></td><td class="col-s "></td></tr><tr><td class="col-a">247</td><td class="col-a ">EnvironmentalManagement</td><td class="col-b text-cell"></td><td class="col-c text-cell"></td><td class="col-d text-cell"></td><td class="col-e amount"></td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount"></td><td class="col-k amount"></td><td class="col-l amount"></td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount"></td><td class="col-r amount"></td><td class="col-s amount"></td></tr><tr><td class="col-a">248</td><td class="col-a ">ProvincialGreeningProgram</td><td class="col-b text-cell">8000-4-2.1.1</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">2,500,000.00</td><td class="col-f amount"></td><td class="col-g amount">2,500,000.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">2,500,000.00</td><td class="col-k amount">2,500,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">2,500,000.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">2,500,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">1,529,902.60</td></tr><tr><td class="col-a">249</td><td class="col-a ">ProvincialEnvironmentalMonitoringProgram</td><td class="col-b text-cell">8000-4-2.1.2</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">2,975,000.00</td><td class="col-f amount"></td><td class="col-g amount">1,200,000.00</td><td class="col-h amount">1,775,000.00</td><td class="col-i amount"></td><td class="col-j amount">2,975,000.00</td><td class="col-k amount">2,975,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">1,200,000.00</td><td class="col-o amount">1,775,000.00</td><td class="col-p amount"></td><td class="col-q amount">2,975,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">250</td><td class="col-a ">Community-BasedForestManagementProgram</td><td class="col-b text-cell">8000-4-2.1.3</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">550,000.00</td><td class="col-f amount"></td><td class="col-g amount">550,000.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">550,000.00</td><td class="col-k amount">550,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">550,000.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">550,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">544,333.00</td></tr><tr><td class="col-a">251</td><td class="col-a ">SupporttoCity/MunicipalSolidWasteManagement</td><td class="col-b text-cell">8000-4-2.1.4</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">245,000.00</td><td class="col-f amount"></td><td class="col-g amount">245,000.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">245,000.00</td><td class="col-k amount">245,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">245,000.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">245,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">252</td><td class="col-a ">PGBSolidWasteManagementProgram</td><td class="col-b text-cell">8000-4-2.1.5</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount">-  </td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">-  </td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">253</td><td class="col-a ">HealthCareWasteManagement</td><td class="col-b text-cell">8000-4-2.1.6</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,500,000.00</td><td class="col-f amount"></td><td class="col-g amount">1,500,000.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">1,500,000.00</td><td class="col-k amount">1,500,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">1,500,000.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">1,500,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">1,500,000.00</td></tr><tr><td class="col-a">254</td><td class="col-a ">CoastalClean-upActivity</td><td class="col-b text-cell">8000-4-2.1.7</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">97,160.00</td><td class="col-f amount"></td><td class="col-g amount">97,160.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">97,160.00</td><td class="col-k amount">97,160.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">97,160.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">97,160.00</td><td class="col-r amount">-  </td><td class="col-s amount">94,529.00</td></tr><tr><td class="col-a">255</td><td class="col-a ">ProcurementofFarmInputsforUplandFarmers</td><td class="col-b text-cell">8000-4-2.1.9</td><td class="col-c text-cell">OPG-ENRO</td><td class="col-d text-cell"> -   </td><td class="col-e amount">500,000.00</td><td class="col-f amount"></td><td class="col-g amount">500,000.00</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">500,000.00</td><td class="col-k amount">500,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">500,000.00</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">500,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">493,475.00</td></tr><tr><td class="col-a">256</td><td class="col-a ">ImprovementofCreek,Brgy.Sta.Elena,Orion,Bataan</td><td class="col-b text-cell">8000-5-2.3.71</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,935,165.77</td><td class="col-f amount"></td><td class="col-g amount">1,935,165.77</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">1,935,165.77</td><td class="col-k amount">1,935,165.77</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">1,935,165.77</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">1,935,165.77</td><td class="col-r amount">-  </td><td class="col-s amount">1,935,165.77</td></tr><tr><td class="col-a">257</td><td class="col-a ">RehabilitationofDrainageSystem,Brgy.Talisay,BalangaCity,Bataan</td><td class="col-b text-cell">8000-5-2.3.65</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,644,926.02</td><td class="col-f amount"></td><td class="col-g amount">1,644,926.02</td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">1,644,926.02</td><td class="col-k amount">1,644,926.02</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">1,644,926.02</td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">1,644,926.02</td><td class="col-r amount">-  </td><td class="col-s amount">1,644,926.02</td></tr><tr><td class="col-a">258</td><td class="col-a ">Repair/RehabofDrainageSystem,Brgy.Ibayo,BalangaCity,Bataan</td><td class="col-b text-cell">8000-5-2.3.100</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount">-  </td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">-  </td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">259</td><td class="col-a ">RehabilitationofDrainageSystem,Brgy.SanJose,BalangaCity,Bataan</td><td class="col-b text-cell">8000-5-2.3.34</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount">-  </td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">-  </td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">260</td><td class="col-a ">Rehab/ImprovementofDrainageSystem,Brgy.BalonAnito,Mariveles,Bataan</td><td class="col-b text-cell">8000-5-2.3.1</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount">-  </td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">-  </td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">261</td><td class="col-a ">Rehab/ImprovementofDrainageSystem,Brgy.Gomez,Dinalupihan,Bataan</td><td class="col-b text-cell">8000-5-2.3.5</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount">-  </td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount">-  </td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">262</td><td class="col-a ">ConstructionofDike,Brgy.Panilao,Pilar,Bataan</td><td class="col-b text-cell">8000-5-2.3.89</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">4,861,098.25</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">4,861,098.25</td><td class="col-i amount"></td><td class="col-j amount">4,861,098.25</td><td class="col-k amount">4,861,098.25</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">4,861,098.25</td><td class="col-p amount"></td><td class="col-q amount">4,861,098.25</td><td class="col-r amount">-  </td><td class="col-s amount">4,861,098.25</td></tr><tr><td class="col-a">263</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.Palihan,Orani,Bataan</td><td class="col-b text-cell">8000-5-2.3.123</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,937,393.75</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">1,937,393.75</td><td class="col-i amount"></td><td class="col-j amount">1,937,393.75</td><td class="col-k amount">1,937,393.75</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">1,937,393.75</td><td class="col-p amount"></td><td class="col-q amount">1,937,393.75</td><td class="col-r amount">-  </td><td class="col-s amount">1,937,393.75</td></tr><tr><td class="col-a">264</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.Dangcol,BalangaCity,Bataan</td><td class="col-b text-cell">8000-5-2.3.33</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,926,495.47</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">1,926,495.47</td><td class="col-i amount"></td><td class="col-j amount">1,926,495.47</td><td class="col-k amount">1,926,495.47</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">1,926,495.47</td><td class="col-p amount"></td><td class="col-q amount">1,926,495.47</td><td class="col-r amount">-  </td><td class="col-s amount">1,926,495.47</td></tr><tr><td class="col-a">265</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.BatangasII,Mariveles,Bataan</td><td class="col-b text-cell">8000-5-2.3.30</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">1,944,369.60</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">1,944,369.60</td><td class="col-i amount"></td><td class="col-j amount">1,944,369.60</td><td class="col-k amount">1,944,369.60</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">1,944,369.60</td><td class="col-p amount"></td><td class="col-q amount">1,944,369.60</td><td class="col-r amount">-  </td><td class="col-s amount">1,944,369.60</td></tr><tr><td class="col-a">266</td><td class="col-a ">ConstructionofDike,Brgy.PadreDandan,Dinalupihan,Bataan</td><td class="col-b text-cell">8000-5-2.3.62</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">4,841,091.16</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">4,841,091.16</td><td class="col-i amount"></td><td class="col-j amount">4,841,091.16</td><td class="col-k amount">4,841,091.16</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">4,841,091.16</td><td class="col-p amount"></td><td class="col-q amount">4,841,091.16</td><td class="col-r amount">-  </td><td class="col-s amount">4,841,091.16</td></tr><tr><td class="col-a">267</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.CentroI,Orani,Bataan</td><td class="col-b text-cell">8000-5-2.3.9</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">268</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.Camacho,BalangaCity,Bataan</td><td class="col-b text-cell">8000-5-2.3.119</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">269</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.WakasNorth,Pilar,Bataan</td><td class="col-b text-cell">8000-5-2.3.4</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">270</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.Tabing-ilog,Bagac,Bataan</td><td class="col-b text-cell">8000-5-2.3.12</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">271</td><td class="col-a ">ConstructionofCanal,Brgy.Kaparangan,Orani,Bataan</td><td class="col-b text-cell">8000-5-2.3.93</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">272</td><td class="col-a ">ConstructionofSlopeProtection,Brgy.Ibaba,Samal,Bataan</td><td class="col-b text-cell">8000-5-2.3.61</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">4,862,582.75</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">4,862,582.75</td><td class="col-i amount"></td><td class="col-j amount">4,862,582.75</td><td class="col-k amount">4,862,582.75</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">4,862,582.75</td><td class="col-p amount"></td><td class="col-q amount">4,862,582.75</td><td class="col-r amount">-  </td><td class="col-s amount">4,862,582.43</td></tr><tr><td class="col-a">273</td><td class="col-a ">ConstructionofSlopeProtection,Brgy.Sta.Isabel,Dinalupihan,Bataan</td><td class="col-b text-cell">8000-5-2.3.115</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">274</td><td class="col-a ">ConstructionofDrainage,Brgy.SanIsidro,Mariveles,Bataan</td><td class="col-b text-cell">8000-5-2.3.75</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">275</td><td class="col-a ">ConstructionofDrainageSystem,Brgy.Pentor,Dinalupihan,Bataan</td><td class="col-b text-cell">8000-5-2.3.6</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">-  </td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">-  </td><td class="col-i amount"></td><td class="col-j amount">-  </td><td class="col-k amount">-  </td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">-  </td><td class="col-p amount"></td><td class="col-q amount">-  </td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">276</td><td class="col-a ">JustcompensationforRoadRightofWayforBataanSanitaryLandfillFacility,Capitangan,Abucay,Bataan</td><td class="col-b text-cell">8000-5-2.3.124</td><td class="col-c text-cell">OPE</td><td class="col-d text-cell"> -   </td><td class="col-e amount">2,000,000.00</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount">2,000,000.00</td><td class="col-i amount"></td><td class="col-j amount">2,000,000.00</td><td class="col-k amount">2,000,000.00</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount">2,000,000.00</td><td class="col-p amount"></td><td class="col-q amount">2,000,000.00</td><td class="col-r amount">-  </td><td class="col-s amount">-  </td></tr><tr><td class="col-a">277</td><td class="col-a ">Subtotal</td><td class="col-b text-cell"></td><td class="col-c text-cell"></td><td class="col-d text-cell"> -   </td><td class="col-e amount">34,320,282.77</td><td class="col-f amount"></td><td class="col-g amount"></td><td class="col-h amount"></td><td class="col-i amount"></td><td class="col-j amount">34,320,282.77</td><td class="col-k amount">34,320,282.77</td><td class="col-l amount">-  </td><td class="col-m amount"></td><td class="col-n amount"></td><td class="col-o amount"></td><td class="col-p amount"></td><td class="col-q amount">34,320,282.77</td><td class="col-r amount">-  </td><td class="col-s amount">28,115,362.05</td></tr>
+            </tbody>
+        </table>
+        
+        <div class="excel-formula-bar">
+            =SUM(F8:F110)
+        </div>
+        
+        <div class="excel-status-bar">
+            <span>Ready</span>
+            <span>Rows: 38 | Zoom: 100%</span>
+        </div>
+    </div>
+</body>
+</html>
