@@ -758,13 +758,21 @@ body {
     min-height: 120px;
 }
 
+/* Main Content Layout */
+.main-content {
+    padding-bottom: 6rem; /* Ensure space for footer */
+    min-height: calc(100vh - 200px); /* Minimum height to push footer down */
+}
+
 /* Footer */
 .footer {
     background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
     color: #ffffff;
     padding: 60px 20px 20px;
-    margin-top: 4rem; /* Add space to prevent overlap */
+    margin-top: 0; /* Remove margin since main-content has padding-bottom */
     clear: both; /* Clear floats */
+    position: relative; /* Ensure proper positioning */
+    width: 100%; /* Full width */
 }
 
 .footer-content {

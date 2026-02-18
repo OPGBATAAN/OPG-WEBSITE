@@ -421,6 +421,7 @@ if ('IntersectionObserver' in window) {
 // News Slideshow Functionality
 let currentSlideIndex = 0;
 let slideInterval;
+let slides; // Declare slides in global scope
 
 function showSlide(index) {
     const slides = document.querySelectorAll('.slide');
@@ -458,7 +459,8 @@ function currentSlide(index) {
 }
 
 function autoSlide() {
-    showSlide(currentSlideIndex + 1);
+    currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Loop back to 0 when reaching end
+    showSlide(currentSlideIndex);
     resetAutoSlide();
 }
 
