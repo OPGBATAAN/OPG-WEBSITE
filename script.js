@@ -472,10 +472,15 @@ function resetAutoSlide() {
 // Initialize slideshow when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize slideshow if it exists
-    const slides = document.querySelectorAll('.slide');
+    slides = document.querySelectorAll('.slide'); // Use global slides variable
+    console.log('Found slides:', slides.length);
+    
     if (slides.length > 0) {
         showSlide(0);
-        resetAutoSlide();
+        // Start slideshow after a short delay for better UX
+        setTimeout(() => {
+            resetAutoSlide();
+        }, 1000); // 1 second delay before starting auto-rotation
         
         // Pause auto-slide on hover
         const slideshow = document.querySelector('.news-slideshow');
@@ -488,11 +493,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (slideInterval) {
                     clearInterval(slideInterval);
                     slideInterval = null;
+                    console.log('Slideshow paused');
                 } else {
                     resetAutoSlide();
+                    console.log('Slideshow resumed');
                 }
             });
         }
+    } else {
+        console.log('No slides found');
     }
 });
 

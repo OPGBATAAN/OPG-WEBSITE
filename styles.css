@@ -760,8 +760,10 @@ body {
 
 /* Main Content Layout */
 .main-content {
-    padding-bottom: 6rem; /* Ensure space for footer */
-    min-height: calc(100vh - 200px); /* Minimum height to push footer down */
+    padding-bottom: 8rem; /* Increased space for footer */
+    min-height: calc(100vh - 250px); /* Increased minimum height */
+    position: relative; /* Ensure proper positioning context */
+    overflow: visible; /* Ensure content doesn't get hidden */
 }
 
 /* Footer */
@@ -773,6 +775,7 @@ body {
     clear: both; /* Clear floats */
     position: relative; /* Ensure proper positioning */
     width: 100%; /* Full width */
+    box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
 }
 
 .footer-content {
