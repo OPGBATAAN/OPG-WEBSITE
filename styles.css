@@ -763,6 +763,8 @@ body {
     background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
     color: #ffffff;
     padding: 60px 20px 20px;
+    margin-top: 4rem; /* Add space to prevent overlap */
+    clear: both; /* Clear floats */
 }
 
 .footer-content {

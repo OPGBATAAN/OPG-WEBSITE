@@ -433,13 +433,15 @@ function showSlide(index) {
     if (index < 0) currentSlideIndex = slides.length - 1;
     else currentSlideIndex = index;
     
-    // Hide all slides
+    // Hide all slides with fade effect
     slides.forEach(slide => slide.classList.remove('active'));
     dots.forEach(dot => dot.classList.remove('active'));
     
-    // Show current slide
-    slides[currentSlideIndex].classList.add('active');
-    dots[currentSlideIndex].classList.add('active');
+    // Show current slide with fade effect
+    setTimeout(() => {
+        slides[currentSlideIndex].classList.add('active');
+        dots[currentSlideIndex].classList.add('active');
+    }, 50); // Small delay for smooth transition
 }
 
 function changeSlide(direction) {
@@ -458,7 +460,7 @@ function autoSlide() {
 
 function resetAutoSlide() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(autoSlide, 5000); // Change slide every 5 seconds
+    slideInterval = setInterval(autoSlide, 4000); // Change slide every 4 seconds for better engagement
 }
 
 // Initialize slideshow when DOM is loaded
@@ -474,6 +476,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (slideshow) {
             slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
             slideshow.addEventListener('mouseleave', resetAutoSlide);
+            
+            // Also pause on click/touch for mobile
+            slideshow.addEventListener('click', () => {
+                if (slideInterval) {
+                    clearInterval(slideInterval);
+                    slideInterval = null;
+                } else {
+                    resetAutoSlide();
+                }
+            });
         }
     }
 });
