@@ -27,9 +27,6 @@
                         <a href="#about" class="nav-link">About</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#news" class="nav-link">News</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="#offices" class="nav-link">Divisions</a>
                     </li>
                     <li class="nav-item">
@@ -64,8 +61,45 @@
                         <a href="#contact" class="btn btn-secondary" onclick="showSection('contact')">Contact Us</a>
                     </div>
                 </div>
-                <div class="hero-image">
-                    <img src="https://via.placeholder.com/600x400/1e3a8a/ffffff?text=Provincial+Government" alt="Provincial Government Building">
+                <div class="hero-right">
+                    <div class="news-slideshow">
+                        <h3 class="slideshow-title">Latest News & Updates</h3>
+                        <div class="slideshow-container">
+                            <div class="slide active">
+                                <img src="https://via.placeholder.com/400x250/10b981/ffffff?text=News+1" alt="News 1">
+                                <div class="slide-content">
+                                    <h4>New Infrastructure Projects Announced</h4>
+                                    <p>March 15, 2024</p>
+                                    <a href="#" class="slide-link">Read More</a>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="https://via.placeholder.com/400x250/3b82f6/ffffff?text=News+2" alt="News 2">
+                                <div class="slide-content">
+                                    <h4>Community Outreach Program Success</h4>
+                                    <p>March 10, 2024</p>
+                                    <a href="#" class="slide-link">Read More</a>
+                                </div>
+                            </div>
+                            <div class="slide">
+                                <img src="https://via.placeholder.com/400x250/ef4444/ffffff?text=News+3" alt="News 3">
+                                <div class="slide-content">
+                                    <h4>Scholarship Program Launch</h4>
+                                    <p>March 5, 2024</p>
+                                    <a href="#" class="slide-link">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slideshow-controls">
+                            <button class="slide-btn prev-btn" onclick="changeSlide(-1)">‹</button>
+                            <button class="slide-btn next-btn" onclick="changeSlide(1)">›</button>
+                        </div>
+                        <div class="slide-dots">
+                            <span class="dot active" onclick="currentSlide(1)"></span>
+                            <span class="dot" onclick="currentSlide(2)"></span>
+                            <span class="dot" onclick="currentSlide(3)"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

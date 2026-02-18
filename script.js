@@ -22,11 +22,8 @@ function showSection(sectionId) {
         
         // Show/hide footer based on section
         const footer = document.getElementById('main-footer');
-        if (sectionId === 'home') {
-            footer.style.display = 'none';
-        } else {
-            footer.style.display = 'block';
-        }
+        // Footer is now visible on all pages including home
+        footer.style.display = 'block';
         
         // Close mobile menu if open
         hamburger.classList.remove('active');
@@ -420,6 +417,66 @@ if ('IntersectionObserver' in window) {
         imageObserver.observe(img);
     });
 }
+
+// News Slideshow Functionality
+let currentSlideIndex = 0;
+let slideInterval;
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (slides.length === 0) return;
+    
+    // Wrap around if index is out of bounds
+    if (index >= slides.length) currentSlideIndex = 0;
+    if (index < 0) currentSlideIndex = slides.length - 1;
+    else currentSlideIndex = index;
+    
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    // Show current slide
+    slides[currentSlideIndex].classList.add('active');
+    dots[currentSlideIndex].classList.add('active');
+}
+
+function changeSlide(direction) {
+    showSlide(currentSlideIndex + direction);
+    resetAutoSlide();
+}
+
+function currentSlide(index) {
+    showSlide(index - 1);
+    resetAutoSlide();
+}
+
+function autoSlide() {
+    showSlide(currentSlideIndex + 1);
+}
+
+function resetAutoSlide() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(autoSlide, 5000); // Change slide every 5 seconds
+}
+
+// Initialize slideshow when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize slideshow if it exists
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length > 0) {
+        showSlide(0);
+        resetAutoSlide();
+        
+        // Pause auto-slide on hover
+        const slideshow = document.querySelector('.news-slideshow');
+        if (slideshow) {
+            slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            slideshow.addEventListener('mouseleave', resetAutoSlide);
+        }
+    }
+});
 
 // Console welcome message
 console.log('%cOffice of the Provincial Governor Website', 'color: #1e3a8a; font-size: 20px; font-weight: bold;');
