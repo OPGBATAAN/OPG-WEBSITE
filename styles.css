@@ -162,8 +162,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 80px 20px;
-    background: linear-gradient(135deg, rgba(248, 250, 252, 0.7) 0%, rgba(226, 232, 240, 0.7) 100%),
-                url('../images/watermark_bg.jpg') center/cover no-repeat;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.5) 15%, rgba(255, 255, 255, 0.3) 25%, rgba(255, 255, 255, 0.2) 35%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%), url('../images/watermark_bg.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     min-height: 600px;
