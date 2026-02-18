@@ -426,6 +426,8 @@ function showSlide(index) {
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     
+    console.log('showSlide called with index:', index);
+    
     if (slides.length === 0) return;
     
     // Wrap around if index is out of bounds
@@ -441,6 +443,7 @@ function showSlide(index) {
     setTimeout(() => {
         slides[currentSlideIndex].classList.add('active');
         dots[currentSlideIndex].classList.add('active');
+        console.log('Showing slide:', currentSlideIndex);
     }, 50); // Small delay for smooth transition
 }
 
@@ -450,17 +453,18 @@ function changeSlide(direction) {
 }
 
 function currentSlide(index) {
-    showSlide(index - 1);
+    showSlide(index);
     resetAutoSlide();
 }
 
 function autoSlide() {
     showSlide(currentSlideIndex + 1);
+    resetAutoSlide();
 }
 
 function resetAutoSlide() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(autoSlide, 4000); // Change slide every 4 seconds for better engagement
+    slideInterval = setInterval(autoSlide, 3000); // Change slide every 3 seconds for better visibility
 }
 
 // Initialize slideshow when DOM is loaded
@@ -477,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
             slideshow.addEventListener('mouseleave', resetAutoSlide);
             
-            // Also pause on click/touch for mobile
+            // Also pause on click/touch for mobile - toggle auto-slide
             slideshow.addEventListener('click', () => {
                 if (slideInterval) {
                     clearInterval(slideInterval);
