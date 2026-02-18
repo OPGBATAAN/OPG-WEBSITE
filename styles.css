@@ -760,9 +760,11 @@ body {
 /* Main Content Layout */
 .main-content {
     padding-bottom: 8rem; /* Increased space for footer */
-    min-height: calc(100vh - 250px); /* Increased minimum height */
+    min-height: calc(100vh - 200px); /* Increased minimum height */
     position: relative; /* Ensure proper positioning context */
     overflow: visible; /* Ensure content doesn't get hidden */
+    display: flex;
+    flex-direction: column; /* Ensure proper flow */
 }
 
 /* Footer */
