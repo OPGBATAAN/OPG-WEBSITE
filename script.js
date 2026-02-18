@@ -466,7 +466,7 @@ function autoSlide() {
 
 function resetAutoSlide() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(autoSlide, 3000); // Change slide every 3 seconds for better visibility
+    slideInterval = setInterval(autoSlide, 2000); // Change slide every 2 seconds for smoother experience
 }
 
 // Initialize slideshow when DOM is loaded
