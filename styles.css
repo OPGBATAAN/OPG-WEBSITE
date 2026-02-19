@@ -163,7 +163,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 80px 20px;
-    background: #f8fafc;
+    background: transparent;
     display: flex;
     align-items: center;
     min-height: 600px;
@@ -272,7 +272,7 @@ body {
 /* Offices Section */
 .offices {
     padding: 80px 20px;
-    background: #ffffff;
+    background: transparent;
 }
 
 .offices-grid {
@@ -473,7 +473,7 @@ body {
 /* About Section */
 .about {
     padding: 80px 20px;
-    background: #ffffff;
+    background: transparent;
 }
 
 .about-content {
@@ -549,7 +549,7 @@ body {
 /* Services Section */
 .services {
     padding: 80px 20px;
-    background: #f8fafc;
+    background: transparent;
 }
 
 .services-grid {
@@ -602,7 +602,7 @@ body {
 /* News Section */
 .news {
     padding: 80px 20px;
-    background: #ffffff;
+    background: transparent;
 }
 
 .news-grid {
@@ -679,7 +679,7 @@ body {
 /* Contact Section */
 .contact {
     padding: 80px 20px;
-    background: #f8fafc;
+    background: transparent;
 }
 
 .contact-content {
@@ -774,7 +774,7 @@ body {
     overflow: visible;
     display: flex;
     flex-direction: column;
-    background: #ffffff;
+    background: transparent;
 }
 
 /* Footer */
