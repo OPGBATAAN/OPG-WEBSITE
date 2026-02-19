@@ -9,7 +9,7 @@ body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     color: #333;
-    background: url('../images/watermark_bg.jpg') center/cover no-repeat fixed;
+    background: url('../images/watermark_bg.jpg') center top/cover no-repeat;
     background-attachment: scroll;
 }
 
@@ -163,7 +163,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 80px 20px;
-    background: rgba(248, 250, 252, 0.85);
+    background: #f8fafc;
     display: flex;
     align-items: center;
     min-height: 600px;
@@ -272,7 +272,7 @@ body {
 /* Offices Section */
 .offices {
     padding: 80px 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background: #ffffff;
 }
 
 .offices-grid {
@@ -473,7 +473,7 @@ body {
 /* About Section */
 .about {
     padding: 80px 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background: #ffffff;
 }
 
 .about-content {
@@ -549,7 +549,7 @@ body {
 /* Services Section */
 .services {
     padding: 80px 20px;
-    background: rgba(248, 250, 252, 0.85);
+    background: #f8fafc;
 }
 
 .services-grid {
@@ -602,7 +602,7 @@ body {
 /* News Section */
 .news {
     padding: 80px 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background: #ffffff;
 }
 
 .news-grid {
@@ -679,7 +679,7 @@ body {
 /* Contact Section */
 .contact {
     padding: 80px 20px;
-    background: rgba(248, 250, 252, 0.85);
+    background: #f8fafc;
 }
 
 .contact-content {
@@ -774,7 +774,7 @@ body {
     overflow: visible;
     display: flex;
     flex-direction: column;
-    background: transparent;
+    background: #ffffff;
 }
 
 /* Footer */
