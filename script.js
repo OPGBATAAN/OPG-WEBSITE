@@ -444,23 +444,14 @@ function initSimpleSlideshow() {
         clearInterval(slideInterval);
     }
     
-    // Initialize
+    // Initialize - fully automatic, no pause on hover
     showSlide(0);
     startSlideshow();
     
-    // Pause on hover
-    const slideshow = document.querySelector('.news-slideshow');
-    if (slideshow) {
-        slideshow.addEventListener('mouseenter', stopSlideshow);
-        slideshow.addEventListener('mouseleave', startSlideshow);
-    }
-    
-    // Dot click handlers
+    // Dot click handlers - still allow manual navigation
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            stopSlideshow();
             showSlide(index);
-            startSlideshow();
         });
     });
 }
