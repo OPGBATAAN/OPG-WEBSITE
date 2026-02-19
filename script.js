@@ -409,92 +409,68 @@ if ('IntersectionObserver' in window) {
     });
 }
 
-// News Slideshow Functionality
-let currentSlideIndex = 0;
+// Simple working slideshow with 2 second delay
+let slideIndex = 0;
 let slideInterval;
-let slides; // Declare slides in global scope
 
-function showSlide(index) {
+function initSimpleSlideshow() {
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     
-    console.log('showSlide called with index:', index);
-    
     if (slides.length === 0) return;
     
-    // Wrap around if index is out of bounds
-    if (index >= slides.length) currentSlideIndex = 0;
-    if (index < 0) currentSlideIndex = slides.length - 1;
-    else currentSlideIndex = index;
-    
-    // Hide all slides with fade effect
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
-    
-    // Show current slide with fade effect
-    setTimeout(() => {
-        slides[currentSlideIndex].classList.add('active');
-        dots[currentSlideIndex].classList.add('active');
-        console.log('Showing slide:', currentSlideIndex);
-    }, 50); // Small delay for smooth transition
-}
-
-function changeSlide(direction) {
-    showSlide(currentSlideIndex + direction);
-    resetAutoSlide();
-}
-
-function currentSlide(index) {
-    showSlide(index);
-    resetAutoSlide();
-}
-
-function autoSlide() {
-    currentSlideIndex = (currentSlideIndex + 1) % slides.length; // Loop back to 0 when reaching end
-    showSlide(currentSlideIndex);
-    resetAutoSlide();
-}
-
-function resetAutoSlide() {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(autoSlide, 2000); // Change slide every 2 seconds for smoother experience
-}
-
-// Initialize slideshow when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize slideshow if it exists
-    slides = document.querySelectorAll('.slide'); // Use global slides variable
-    console.log('Found slides:', slides.length);
-    
-    if (slides.length > 0) {
-        showSlide(0);
-        // Start slideshow after a short delay for better UX
-        setTimeout(() => {
-            resetAutoSlide();
-        }, 1000); // 1 second delay before starting auto-rotation
+    function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
         
-        // Pause auto-slide on hover
-        const slideshow = document.querySelector('.news-slideshow');
-        if (slideshow) {
-            slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slideshow.addEventListener('mouseleave', resetAutoSlide);
-            
-            // Also pause on click/touch for mobile - toggle auto-slide
-            slideshow.addEventListener('click', () => {
-                if (slideInterval) {
-                    clearInterval(slideInterval);
-                    slideInterval = null;
-                    console.log('Slideshow paused');
-                } else {
-                    resetAutoSlide();
-                    console.log('Slideshow resumed');
-                }
-            });
-        }
-    } else {
-        console.log('No slides found');
+        slideIndex = n;
+        if (slideIndex >= slides.length) slideIndex = 0;
+        if (slideIndex < 0) slideIndex = slides.length - 1;
+        
+        slides[slideIndex].classList.add('active');
+        if (dots[slideIndex]) dots[slideIndex].classList.add('active');
     }
-});
+    
+    function nextSlide() {
+        showSlide(slideIndex + 1);
+    }
+    
+    // Auto-play with 2 second delay
+    function startSlideshow() {
+        slideInterval = setInterval(nextSlide, 2000);
+    }
+    
+    function stopSlideshow() {
+        clearInterval(slideInterval);
+    }
+    
+    // Initialize
+    showSlide(0);
+    startSlideshow();
+    
+    // Pause on hover
+    const slideshow = document.querySelector('.news-slideshow');
+    if (slideshow) {
+        slideshow.addEventListener('mouseenter', stopSlideshow);
+        slideshow.addEventListener('mouseleave', startSlideshow);
+    }
+    
+    // Dot click handlers
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            stopSlideshow();
+            showSlide(index);
+            startSlideshow();
+        });
+    });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSimpleSlideshow);
+} else {
+    initSimpleSlideshow();
+}
 
 // Console welcome message
 console.log('%cOffice of the Provincial Governor Website', 'color: #1e3a8a; font-size: 20px; font-weight: bold;');
