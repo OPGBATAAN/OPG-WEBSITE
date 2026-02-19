@@ -171,11 +171,14 @@ body {
     min-height: 600px;
     position: relative;
     justify-content: space-between; /* Push content to left, slideshow to right */
+    z-index: 1; /* Ensure proper layering */
 }
 
 .hero-content {
     flex: 0.7; /* Take less space to push slideshow right */
     max-width: 500px; /* Reduce max width */
+    position: relative;
+    z-index: 2; /* Ensure content stays above background */
 }
 
 .hero-title {
@@ -1067,6 +1070,8 @@ html {
     min-width: 350px; /* Reduce minimum width */
     max-width: 500px; /* Increase maximum width */
     margin-left: auto; /* Push to the right */
+    position: relative;
+    z-index: 2; /* Ensure slideshow stays above background */
 }
 
 .news-slideshow {
