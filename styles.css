@@ -1051,27 +1051,6 @@ html {
     100% { transform: rotate(360deg); }
 }
 
-/* News Slideshow Styles */
-.hero {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-}
-
-.hero-content {
-    flex: 0.7; /* Take less space to push slideshow right */
-    max-width: 500px; /* Reduce max width */
-}
-
-.hero-right {
-    flex: 1; /* Take more space for right positioning */
-    min-width: 350px; /* Reduce minimum width */
-    max-width: 500px; /* Increase maximum width */
-    margin-left: auto; /* Push to the right */
-    position: relative;
-    z-index: 2; /* Ensure slideshow stays above background */
-}
-
 .news-slideshow {
     background: white;
     border-radius: 12px;
