@@ -463,6 +463,40 @@ if (document.readyState === 'loading') {
     initSimpleSlideshow();
 }
 
+// Personnel Modal Functions
+function openPersonnelModal(divisionId, divisionName) {
+    const modal = document.getElementById('personnelModal');
+    const modalTitle = document.getElementById('modalTitle');
+    
+    // Update modal title with division name
+    modalTitle.innerHTML = `<i class="fas fa-users"></i> ${divisionName} - Key Personnel`;
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closePersonnelModal() {
+    const modal = document.getElementById('personnelModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore background scrolling
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('personnelModal');
+    if (event.target === modal) {
+        closePersonnelModal();
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePersonnelModal();
+    }
+});
+
 // Console welcome message
 console.log('%cOffice of the Provincial Governor Website', 'color: #1e3a8a; font-size: 20px; font-weight: bold;');
 console.log('%cBuilt with dedication for public service', 'color: #3730a3; font-size: 14px;');
