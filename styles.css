@@ -335,6 +335,44 @@ body {
     margin-right: 0.5rem;
 }
 
+.office-personnel {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.office-personnel h4 {
+    font-size: 0.95rem;
+    color: #1e3a8a;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.office-personnel h4 i {
+    color: #1e3a8a;
+}
+
+.office-personnel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.office-personnel li {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.4rem;
+    padding-left: 0;
+}
+
+.office-personnel li strong {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
 /* Budget Section */
 .budget-content {
     display: grid;
