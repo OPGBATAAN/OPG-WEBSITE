@@ -692,10 +692,11 @@ body {
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #1e3a8a;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
 }
 
 .stat-label {
