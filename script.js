@@ -181,44 +181,8 @@ function initializeForms() {
 }
 
 function initializeCounters() {
-    // Counter animation for statistics
-    function animateCounter(element, target, duration = 2000) {
-        const start = 0;
-        const increment = target / (duration / 16);
-        let current = start;
-        
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
-            
-            // Format the number
-            if (target >= 1000) {
-                element.textContent = Math.floor(current / 1000) + 'K+';
-            } else {
-                element.textContent = Math.floor(current) + '+';
-            }
-        }, 16);
-    }
-
-    // Initialize counter animations when statistics are visible
-    const statNumbers = document.querySelectorAll('.stat-number');
-    const statObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                entry.target.classList.add('animated');
-                const text = entry.target.textContent;
-                const number = parseInt(text.replace(/\D/g, ''));
-                animateCounter(entry.target, number);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    statNumbers.forEach(stat => {
-        statObserver.observe(stat);
-    });
+    // Counter animation disabled - using static values from HTML
+    // Previous animation was overwriting custom formats like "5M+"
 }
 
 // Header scroll effect
