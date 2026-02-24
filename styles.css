@@ -542,9 +542,10 @@ body {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #2563eb 100%);
     min-width: 150px;
     padding: 1rem 1.75rem;
-    flex: 1;
+    width: 100%;
     max-width: 180px;
     text-align: center;
+    justify-self: center;
 }
 
 .org-node.staff:hover {
@@ -673,22 +674,25 @@ body {
 .org-level.level-3 {
     width: 100%;
     max-width: 1100px;
-    justify-content: space-between;
-    gap: 0;
-    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+    padding: 0 1rem;
 }
 
 .org-connector.downward-lines {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
     margin: 0;
-    padding: 0 2rem;
+    padding: 0 1rem;
     background: transparent;
     box-shadow: none;
     width: 100%;
     max-width: 1100px;
     position: relative;
     top: -3px;
+    justify-items: center;
 }
 
 .downward-line {
@@ -697,7 +701,6 @@ body {
     background: linear-gradient(to bottom, #3b82f6, #1e40af);
     border-radius: 2px;
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-    flex-shrink: 0;
 }
 
 .org-chart {
