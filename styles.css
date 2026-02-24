@@ -458,43 +458,108 @@ body {
     padding: 2rem;
 }
 
-.personnel-category {
-    margin-bottom: 1.5rem;
+/* Org Chart Styles - Landscape */
+.org-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    min-width: 600px;
 }
 
-.personnel-category:last-child {
-    margin-bottom: 0;
+.org-level {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0.5rem 0;
 }
 
-.personnel-category h4 {
-    color: #1e3a8a;
-    font-size: 1.1rem;
+.org-node {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 160px;
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.org-node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+}
+
+.org-node.staff {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    min-width: 140px;
+    padding: 0.875rem 1.5rem;
+}
+
+.org-node.division-head {
+    background: linear-gradient(135deg, #1e40af 0%, #312e81 100%);
+}
+
+.org-title {
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
 }
 
-.personnel-category ul {
-    list-style: none;
-    padding: 0;
+.org-name {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.org-connector {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.org-connector.vertical {
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
     margin: 0;
 }
 
-.personnel-category li {
-    padding: 0.5rem 0;
-    color: #475569;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.org-connector.horizontal {
+    width: 300px;
+    height: 2px;
+    background: linear-gradient(to right, #3b82f6, #1e3a8a, #3b82f6);
+    margin: 0;
+    position: relative;
 }
 
-.personnel-category li::before {
-    content: '•';
-    color: #1e3a8a;
-    font-weight: bold;
-    font-size: 1.2rem;
+.org-connector.horizontal::before,
+.org-connector.horizontal::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background: #3b82f6;
+    top: -18px;
+}
+
+.org-connector.horizontal::before {
+    left: 33%;
+}
+
+.org-connector.horizontal::after {
+    right: 33%;
+}
+
+/* Wider modal for org chart */
+.modal-content {
+    max-width: 700px;
+}
+
+.modal-body {
+    overflow-x: auto;
 }
 
 /* Budget Section */

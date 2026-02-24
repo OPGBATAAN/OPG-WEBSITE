@@ -222,25 +222,35 @@
                     <button class="modal-close" onclick="closePersonnelModal()">&times;</button>
                 </div>
                 <div class="modal-body" id="modalBody">
-                    <div class="personnel-category">
-                        <h4>Department Head</h4>
-                        <ul id="divisionHeadList">
-                            <li>JEFFREY T. CALMA</li>
-                        </ul>
-                    </div>
-                    <div class="personnel-category">
-                        <h4>Division Head</h4>
-                        <ul id="assistantList">
-                            <li>[Name to be added]</li>
-                        </ul>
-                    </div>
-                    <div class="personnel-category">
-                        <h4>Staff</h4>
-                        <ul id="staffList">
-                            <li>[Name to be added]</li>
-                            <li>[Name to be added]</li>
-                            <li>[Name to be added]</li>
-                        </ul>
+                    <div class="org-chart">
+                        <div class="org-level level-1">
+                            <div class="org-node department-head">
+                                <div class="org-title">Department Head</div>
+                                <div class="org-name">JEFFREY T. CALMA</div>
+                            </div>
+                        </div>
+                        <div class="org-connector vertical"></div>
+                        <div class="org-level level-2">
+                            <div class="org-node division-head">
+                                <div class="org-title">Division Head</div>
+                                <div class="org-name">[Name to be added]</div>
+                            </div>
+                        </div>
+                        <div class="org-connector horizontal"></div>
+                        <div class="org-level level-3">
+                            <div class="org-node staff">
+                                <div class="org-title">Staff</div>
+                                <div class="org-name">[Name to be added]</div>
+                            </div>
+                            <div class="org-node staff">
+                                <div class="org-title">Staff</div>
+                                <div class="org-name">[Name to be added]</div>
+                            </div>
+                            <div class="org-node staff">
+                                <div class="org-title">Staff</div>
+                                <div class="org-name">[Name to be added]</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
