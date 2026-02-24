@@ -651,7 +651,8 @@ body {
 }
 
 .org-connector.horizontal {
-    width: 800px;
+    width: 100%;
+    max-width: 1100px;
     height: 3px;
     background: linear-gradient(to right, #3b82f6, #1e3a8a, #3b82f6);
     margin: 0;
@@ -660,41 +661,31 @@ body {
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
+/* Remove the old ::before and ::after since we'll use downward-lines instead */
 .org-connector.horizontal::before,
 .org-connector.horizontal::after {
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 20px;
-    background: linear-gradient(to bottom, #3b82f6, #1e40af);
-    top: -20px;
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
-}
-
-.org-connector.horizontal::before {
-    left: 25%;
-}
-
-.org-connector.horizontal::after {
-    right: 25%;
+    display: none;
 }
 
 .org-level.level-3 {
     width: 100%;
-    max-width: 950px;
-    justify-content: space-around;
-    gap: 1rem;
+    max-width: 1100px;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0 2rem;
 }
 
 .org-connector.downward-lines {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin: 0;
-    padding: 0;
+    padding: 0 2rem;
     background: transparent;
     box-shadow: none;
-    width: 800px;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    top: -3px;
 }
 
 .downward-line {
@@ -711,16 +702,16 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 2rem 1rem;
-    min-width: 1000px;
+    min-width: 1200px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
     border-radius: 20px;
     position: relative;
-    overflow-x: auto;
+    overflow-x: visible;
 }
 
 /* Wider modal for org chart */
 .modal-content {
-    max-width: 1000px;
+    max-width: 1300px;
     width: 95%;
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 24px;
@@ -730,7 +721,7 @@ body {
 }
 
 .modal-body {
-    overflow-x: auto;
+    overflow-x: visible;
     padding: 2.5rem;
     background: transparent;
 }
