@@ -493,7 +493,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 2.5rem;
-    margin: 0.75rem 0;
+    margin: 1.5rem 0;
     position: relative;
     z-index: 1;
 }
@@ -665,9 +665,9 @@ body {
     content: '';
     position: absolute;
     width: 3px;
-    height: 25px;
+    height: 20px;
     background: linear-gradient(to bottom, #3b82f6, #1e40af);
-    top: -22px;
+    top: -20px;
     border-radius: 2px;
     box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
 }
