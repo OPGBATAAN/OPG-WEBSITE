@@ -11,6 +11,9 @@ function showSection(sectionId) {
     if (targetSection) {
         targetSection.classList.add('active');
         
+        // Save current section to localStorage for refresh persistence
+        localStorage.setItem('currentSection', sectionId);
+        
         // Update active nav link
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
@@ -69,10 +72,16 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initialize page - show home section and hide footer
+// Initialize page - restore section from localStorage or show home by default
 document.addEventListener('DOMContentLoaded', () => {
-    // Show home section by default
-    showSection('home');
+    // Check for saved section in localStorage
+    const savedSection = localStorage.getItem('currentSection');
+    if (savedSection && document.getElementById(savedSection)) {
+        showSection(savedSection);
+    } else {
+        // Show home section by default
+        showSection('home');
+    }
     
     // Initialize other features
     initializeAnimations();
@@ -444,12 +453,14 @@ function openPersonnelModal(divisionId, divisionName) {
     // Show modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    localStorage.setItem('modalOpen', 'true');
 }
 
 function closePersonnelModal() {
     const modal = document.getElementById('personnelModal');
     modal.classList.remove('active');
     document.body.style.overflow = ''; // Restore background scrolling
+    localStorage.setItem('modalOpen', 'false');
 }
 
 // Close modal when clicking outside (on the modal backdrop)

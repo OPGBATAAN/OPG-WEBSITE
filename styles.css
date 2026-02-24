@@ -680,6 +680,24 @@ body {
     right: 25%;
 }
 
+.org-connector.downward-lines {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.downward-line {
+    width: 3px;
+    height: 30px;
+    background: linear-gradient(to bottom, #3b82f6, #1e40af);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
 /* Wider modal for org chart */
 .modal-content {
     max-width: 750px;
