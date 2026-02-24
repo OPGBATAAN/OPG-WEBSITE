@@ -553,11 +553,37 @@ body {
     background: linear-gradient(135deg, #1e40af 0%, #312e81 50%, #3730a3 100%);
 }
 
-.org-node.division-head:hover {
+.org-node.governor {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 50%, #7f1d1d 100%);
+    min-width: 200px;
+    padding: 1.5rem 2.5rem;
     box-shadow: 
-        0 20px 60px rgba(30, 64, 175, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.2) inset,
-        0 0 30px rgba(30, 64, 175, 0.4);
+        0 15px 50px rgba(185, 28, 28, 0.5),
+        0 0 0 2px rgba(251, 191, 36, 0.3) inset,
+        0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.org-node.governor:hover {
+    box-shadow: 
+        0 25px 70px rgba(185, 28, 28, 0.6),
+        0 0 0 2px rgba(251, 191, 36, 0.5) inset,
+        0 0 40px rgba(251, 191, 36, 0.3);
+}
+
+.org-node.governor .org-title {
+    color: #fbbf24;
+    font-size: 0.8rem;
+}
+
+.org-node.governor .org-name {
+    font-size: 1.2rem;
+}
+
+.org-node.governor .org-image {
+    width: 100px;
+    height: 100px;
+    border-width: 4px;
+    border-color: rgba(251, 191, 36, 0.4);
 }
 
 .org-image {
