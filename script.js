@@ -350,7 +350,7 @@ document.querySelectorAll('a, button').forEach(element => {
     });
 });
 
-// Lazy loading for images (if supported)
+// Lazy loading for images (if supported) - exclude modal images
 if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -363,12 +363,18 @@ if ('IntersectionObserver' in window) {
                     img.style.opacity = '1';
                 };
                 
+                // If already loaded, show immediately
+                if (img.complete) {
+                    img.style.opacity = '1';
+                }
+                
                 observer.unobserve(img);
             }
         });
     });
     
-    document.querySelectorAll('img').forEach(img => {
+    // Only observe images NOT in the modal
+    document.querySelectorAll('img:not(.modal-content img)').forEach(img => {
         imageObserver.observe(img);
     });
 }
@@ -446,13 +452,13 @@ function closePersonnelModal() {
     document.body.style.overflow = ''; // Restore background scrolling
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
+// Close modal when clicking outside (on the modal backdrop)
+document.addEventListener('click', function(event) {
     const modal = document.getElementById('personnelModal');
     if (event.target === modal) {
         closePersonnelModal();
     }
-}
+});
 
 // Close modal on Escape key
 document.addEventListener('keydown', function(event) {
