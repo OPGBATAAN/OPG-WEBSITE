@@ -651,7 +651,7 @@ body {
 }
 
 .org-connector.horizontal {
-    width: 400px;
+    width: 800px;
     height: 3px;
     background: linear-gradient(to right, #3b82f6, #1e3a8a, #3b82f6);
     margin: 0;
@@ -682,8 +682,9 @@ body {
 
 .org-level.level-3 {
     width: 100%;
-    max-width: 900px;
+    max-width: 950px;
     justify-content: space-around;
+    gap: 1rem;
 }
 
 .org-connector.downward-lines {
@@ -693,8 +694,7 @@ body {
     padding: 0;
     background: transparent;
     box-shadow: none;
-    width: 100%;
-    max-width: 900px;
+    width: 800px;
 }
 
 .downward-line {
@@ -711,7 +711,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 2rem 1rem;
-    min-width: 950px;
+    min-width: 1000px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
     border-radius: 20px;
     position: relative;
@@ -720,7 +720,8 @@ body {
 
 /* Wider modal for org chart */
 .modal-content {
-    max-width: 750px;
+    max-width: 1000px;
+    width: 95%;
     background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 24px;
     box-shadow: 
