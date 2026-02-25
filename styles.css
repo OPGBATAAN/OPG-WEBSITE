@@ -180,8 +180,8 @@ body {
 
 .hero-right {
     flex: 1;
-    min-width: 350px;
-    max-width: 500px;
+    min-width: 450px;
+    max-width: 600px;
     margin-left: auto;
 }
 
