@@ -313,6 +313,9 @@
                         </div>
                         <h3 class="service-title">Administrative Services</h3>
                         <p class="service-description">Comprehensive administrative support for provincial operations and citizen services.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('admin')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">
@@ -320,6 +323,9 @@
                         </div>
                         <h3 class="service-title">Community Programs</h3>
                         <p class="service-description">Development programs focused on community empowerment and social welfare.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('community')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">
@@ -327,6 +333,9 @@
                         </div>
                         <h3 class="service-title">Economic Development</h3>
                         <p class="service-description">Initiatives to promote business growth and economic opportunities.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('economic')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">
@@ -334,6 +343,9 @@
                         </div>
                         <h3 class="service-title">Education Support</h3>
                         <p class="service-description">Educational programs and scholarship opportunities for provincial youth.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('education')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">
@@ -341,6 +353,9 @@
                         </div>
                         <h3 class="service-title">Healthcare Services</h3>
                         <p class="service-description">Public health programs and medical assistance for provincial residents.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('healthcare')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">
@@ -348,10 +363,28 @@
                         </div>
                         <h3 class="service-title">Infrastructure</h3>
                         <p class="service-description">Development and maintenance of provincial infrastructure projects.</p>
+                        <button class="service-list-btn" onclick="openServicesModal('infrastructure')">
+                            <i class="fas fa-list"></i> View Services
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Services Modal -->
+        <div id="servicesModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="servicesModalTitle"><i class="fas fa-list"></i> Services</h3>
+                    <button class="modal-close" onclick="closeServicesModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="servicesModalBody">
+                    <ul id="servicesList" class="services-list">
+                        <!-- Services will be populated here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <!-- AIP Budget Section -->
         <section id="aip-budget" class="content-section">

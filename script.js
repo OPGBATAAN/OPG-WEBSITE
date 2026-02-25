@@ -475,6 +475,121 @@ document.addEventListener('click', function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closePersonnelModal();
+        closeServicesModal();
+    }
+});
+
+// Services Data
+const servicesData = {
+    admin: {
+        title: 'Administrative Services',
+        services: [
+            'Document Processing and Authentication',
+            'Business Permit Applications',
+            'Civil Registry Services',
+            'Notary Public Services',
+            'Government ID Processing',
+            'Public Records Management',
+            'Legal Document Review',
+            'Citizen Complaint Handling'
+        ]
+    },
+    community: {
+        title: 'Community Programs',
+        services: [
+            'Livelihood Training Programs',
+            'Senior Citizen Assistance',
+            'Persons with Disability Support',
+            'Women and Children Welfare',
+            'Youth Development Programs',
+            'Family Planning Services',
+            'Community Organizing',
+            'Barangay Development Support'
+        ]
+    },
+    economic: {
+        title: 'Economic Development',
+        services: [
+            'Business Registration Assistance',
+            'Microfinance and Loan Programs',
+            'Agricultural Support Services',
+            'Investment Promotion',
+            'Market Development',
+            'Entrepreneurship Training',
+            'Trade and Industry Support',
+            'Tourism Development Programs'
+        ]
+    },
+    education: {
+        title: 'Education Support',
+        services: [
+            'Scholarship Programs',
+            'School Building Maintenance',
+            'Educational Material Assistance',
+            'Teacher Training Programs',
+            'Alternative Learning System',
+            'College Education Support',
+            'Technical-Vocational Training',
+            'Library Services'
+        ]
+    },
+    healthcare: {
+        title: 'Healthcare Services',
+        services: [
+            'Free Medical Consultations',
+            'Vaccination Programs',
+            'Maternal and Child Health',
+            'Dental Health Services',
+            'Mental Health Support',
+            'Medical Mission Programs',
+            'Hospital Referral Services',
+            'Health Education Campaigns'
+        ]
+    },
+    infrastructure: {
+        title: 'Infrastructure',
+        services: [
+            'Road Construction and Maintenance',
+            'Bridge Repair and Construction',
+            'Public Building Maintenance',
+            'Water System Development',
+            'Flood Control Projects',
+            'Street Lighting Installation',
+            'Drainage System Maintenance',
+            'Public Market Development'
+        ]
+    }
+};
+
+// Services Modal Functions
+function openServicesModal(categoryId) {
+    const modal = document.getElementById('servicesModal');
+    const modalTitle = document.getElementById('servicesModalTitle');
+    const servicesList = document.getElementById('servicesList');
+    
+    const category = servicesData[categoryId];
+    if (category) {
+        modalTitle.innerHTML = `<i class="fas fa-list"></i> ${category.title}`;
+        servicesList.innerHTML = category.services.map(service => 
+            `<li><i class="fas fa-check-circle"></i> ${service}</li>`
+        ).join('');
+    }
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeServicesModal() {
+    const modal = document.getElementById('servicesModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Close services modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('servicesModal');
+    if (event.target === modal) {
+        closeServicesModal();
     }
 });
 
