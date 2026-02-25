@@ -655,20 +655,28 @@ body {
 }
 
 .org-connector.horizontal {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+    padding: 0 1rem;
     width: 100%;
     max-width: 1100px;
     height: 3px;
-    background: linear-gradient(to right, #3b82f6, #1e3a8a, #3b82f6);
     margin: 0;
     position: relative;
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+    background: transparent;
 }
 
-/* Remove the old ::before and ::after since we'll use downward-lines instead */
-.org-connector.horizontal::before,
 .org-connector.horizontal::after {
-    display: none;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(1rem + 90px); /* Start at center of first column (half of 180px max-width) */
+    right: calc(1rem + 90px); /* End at center of last column */
+    height: 3px;
+    background: linear-gradient(to right, #3b82f6, #1e3a8a, #3b82f6);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
 .org-level.level-3 {
