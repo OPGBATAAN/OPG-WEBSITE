@@ -36,10 +36,10 @@
                         <a href="#services" class="nav-link">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#contact" class="nav-link">Contact Us</a>
+                        <a href="#" class="nav-link" onclick="openAIPView(); return false;">View</a>
                     </li>
                     <li class="nav-item">
-                        <a href="employee-dashboard.html" class="nav-link nav-link-budget" onclick="window.open('employee-dashboard.html', 'EmployeeDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes'); return false;">Employee Dashboard Sign In</a>
+                        <a href="employee-dashboard.html" class="nav-link nav-link-budget" onclick="window.open('employee-dashboard.html', 'AIPDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes'); return false;">AIP</a>
                     </li>
                 </ul>
                 <div class="hamburger">
@@ -525,6 +525,56 @@
             </div>
         </section>
     </main>
+
+    <!-- AIP View Modal -->
+    <div class="aip-view-modal" id="aipViewModal">
+        <div class="aip-view-content">
+            <div class="aip-view-header">
+                <div class="aip-view-title">
+                    <i class="fas fa-database"></i> 2026 AIP Budget Data
+                </div>
+                <button class="aip-view-close" onclick="closeAIPView()">&times;</button>
+            </div>
+            <div class="aip-view-body" id="aipViewBody">
+                <div class="aip-no-data" id="aipNoData">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No Budget Data</h3>
+                    <p>No AIP budget data has been uploaded yet. Please go to the AIP dashboard to upload data.</p>
+                    <button class="btn btn-primary" onclick="window.open('employee-dashboard.html', 'AIPDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes'); closeAIPView();">
+                        <i class="fas fa-external-link-alt"></i> Open AIP Dashboard
+                    </button>
+                </div>
+                <div class="aip-data-display" id="aipDataDisplay" style="display: none;">
+                    <div class="aip-stats-grid" id="aipStatsGrid"></div>
+                    <div class="aip-controls">
+                        <input type="text" id="aipSearchInput" placeholder="Search programs, codes..." onkeyup="searchAIPData()">
+                        <select id="aipSectionFilter" onchange="filterAIPSection()">
+                            <option value="">All Sections</option>
+                        </select>
+                        <span class="aip-record-count" id="aipRecordCount">0 records</span>
+                    </div>
+                    <div class="aip-table-container">
+                        <table class="aip-data-table" id="aipDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Section</th>
+                                    <th>Program/PPA</th>
+                                    <th>FPP Code</th>
+                                    <th>Unit</th>
+                                    <th>Total</th>
+                                    <th>PS</th>
+                                    <th>MOOE</th>
+                                    <th>CO</th>
+                                    <th>FE</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aipTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer" id="main-footer">

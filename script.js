@@ -983,3 +983,118 @@ if (uploadAreaDashboard) {
     });
     uploadAreaDashboard.addEventListener('click', () => document.getElementById('budgetFileInput').click());
 }
+
+// ==================== AIP VIEW MODAL FUNCTIONS ====================
+let aipAllData = [];
+let aipSections = [];
+let aipFilteredData = [];
+
+function openAIPView() {
+    document.getElementById('aipViewModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    loadAIPData();
+}
+
+function closeAIPView() {
+    document.getElementById('aipViewModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function loadAIPData() {
+    // Load data from localStorage
+    const storedData = localStorage.getItem('aipBudgetData');
+    const storedSections = localStorage.getItem('aipBudgetSections');
+    
+    if (storedData && storedSections) {
+        aipAllData = JSON.parse(storedData);
+        aipSections = JSON.parse(storedSections);
+        aipFilteredData = [...aipAllData];
+        
+        document.getElementById('aipNoData').style.display = 'none';
+        document.getElementById('aipDataDisplay').style.display = 'block';
+        
+        updateAIPStats();
+        updateAIPTable();
+        populateAIPSectionFilter();
+    } else {
+        document.getElementById('aipNoData').style.display = 'block';
+        document.getElementById('aipDataDisplay').style.display = 'none';
+    }
+}
+
+function formatAIPAmount(amount) {
+    if (amount === 0) return '-';
+    return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function updateAIPStats() {
+    const totalItems = aipAllData.length;
+    const totalAmount = aipAllData.reduce((sum, item) => sum + item.total, 0);
+    const totalSections = aipSections.length;
+    
+    document.getElementById('aipStatsGrid').innerHTML = `
+        <div class="aip-stat-card">
+            <div class="aip-stat-value">${totalItems}</div>
+            <div class="aip-stat-label">Total Programs</div>
+        </div>
+        <div class="aip-stat-card">
+            <div class="aip-stat-value">${totalSections}</div>
+            <div class="aip-stat-label">Sections</div>
+        </div>
+        <div class="aip-stat-card">
+            <div class="aip-stat-value">${formatAIPAmount(totalAmount)}</div>
+            <div class="aip-stat-label">Total Budget</div>
+        </div>
+        <div class="aip-stat-card">
+            <div class="aip-stat-value">${formatAIPAmount(totalItems > 0 ? totalAmount / totalItems : 0)}</div>
+            <div class="aip-stat-label">Average per Program</div>
+        </div>
+    `;
+}
+
+function updateAIPTable() {
+    const tbody = document.getElementById('aipTableBody');
+    tbody.innerHTML = aipFilteredData.map(item => `
+        <tr>
+            <td><span class="aip-section-tag">${item.section || 'N/A'}</span></td>
+            <td>${item.program}</td>
+            <td>${item.code}</td>
+            <td>${item.unit}</td>
+            <td class="aip-amount">${formatAIPAmount(item.total)}</td>
+            <td class="aip-amount">${formatAIPAmount(item.ps)}</td>
+            <td class="aip-amount">${formatAIPAmount(item.mooe)}</td>
+            <td class="aip-amount">${formatAIPAmount(item.co)}</td>
+            <td class="aip-amount">${formatAIPAmount(item.fe)}</td>
+        </tr>
+    `).join('');
+    
+    document.getElementById('aipRecordCount').textContent = `${aipFilteredData.length} records`;
+}
+
+function populateAIPSectionFilter() {
+    const filter = document.getElementById('aipSectionFilter');
+    filter.innerHTML = '<option value="">All Sections</option>' +
+        aipSections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+}
+
+function searchAIPData() {
+    const searchTerm = document.getElementById('aipSearchInput').value.toLowerCase();
+    aipFilteredData = aipAllData.filter(item =>
+        item.program.toLowerCase().includes(searchTerm) ||
+        item.code.toLowerCase().includes(searchTerm) ||
+        item.unit.toLowerCase().includes(searchTerm)
+    );
+    updateAIPTable();
+}
+
+function filterAIPSection() {
+    const section = document.getElementById('aipSectionFilter').value;
+    aipFilteredData = section ? aipAllData.filter(item => item.section === section) : [...aipAllData];
+    updateAIPTable();
+}
+
+// Close modal when clicking outside
+document.getElementById('aipViewModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAIPView();
+});
+
