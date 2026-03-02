@@ -669,6 +669,803 @@
         .empty-state h3 { color: #1e293b; margin-bottom: 8px; font-size: 1.1rem; }
         .empty-state p { color: #64748b; font-size: 0.9rem; }
         
+        /* E-Requests Management - Modern Smart Design */
+        .requests-controls {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .search-filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-box input:focus + i,
+        .search-box:focus-within i {
+            color: #3b82f6;
+        }
+
+        .search-filter-row select {
+            padding: 14px 40px 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+            min-width: 160px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            transition: all 0.3s ease;
+        }
+
+        .search-filter-row select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-filter-row select:hover {
+            border-color: #94a3b8;
+        }
+
+        .requests-stats-bar {
+            display: flex;
+            gap: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .requests-stats-bar span {
+            font-size: 0.9rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .requests-stats-bar span::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        #adminTotalRequests::before {
+            background: #3b82f6;
+        }
+
+        .stat-pending {
+            color: #f59e0b !important;
+        }
+
+        .stat-pending::before {
+            background: #f59e0b !important;
+        }
+
+        .stat-completed {
+            color: #10b981 !important;
+        }
+
+        .stat-completed::before {
+            background: #10b981 !important;
+        }
+
+        /* Request Cards Grid */
+        .admin-requests-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-requests-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Individual Request Card */
+        .admin-request-item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-request-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e1;
+        }
+
+        .admin-request-item[data-status="completed"] {
+            border-left: 4px solid #10b981;
+        }
+
+        .admin-request-item[data-status="pending"] {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .admin-request-item[data-status="processing"] {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .admin-request-item[data-status="rejected"] {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Card Header */
+        .admin-request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-request-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .admin-request-type i {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .admin-request-item[data-type="governor-esig"] .admin-request-type i {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .admin-request-item[data-type="financial-assistance"] .admin-request-type i {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .admin-request-item[data-type="obr-signature"] .admin-request-type i,
+        .admin-request-item[data-type="pr-signature"] .admin-request-type i {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .admin-request-item[data-type="dtr"] .admin-request-type i,
+        .admin-request-item[data-type="leave"] .admin-request-type i {
+            background: #fce7f3;
+            color: #db2777;
+        }
+
+        .admin-request-item[data-type="certificate"] .admin-request-type i {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .admin-request-item[data-type="travel"] .admin-request-type i {
+            background: #ecfeff;
+            color: #0891b2;
+        }
+
+        /* Status Badge */
+        .admin-request-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-request-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .admin-request-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .admin-request-status.pending::before {
+            background: #f59e0b;
+        }
+
+        .admin-request-status.processing {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .admin-request-status.processing::before {
+            background: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .admin-request-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .admin-request-status.completed::before {
+            background: #10b981;
+            animation: none;
+        }
+
+        .admin-request-status.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .admin-request-status.rejected::before {
+            background: #ef4444;
+            animation: none;
+        }
+
+        /* Card Body */
+        .admin-request-body {
+            padding: 20px;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .admin-request-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .admin-request-info p {
+            margin: 8px 0;
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .admin-request-info strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .admin-request-info .request-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .admin-request-details {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .admin-request-details p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .admin-request-details .details-text {
+            color: #334155;
+            font-weight: 500;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        /* Card Actions */
+        .admin-request-actions {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .admin-request-actions button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: fit-content;
+            justify-content: center;
+        }
+
+        .admin-request-actions button i {
+            font-size: 0.9rem;
+        }
+
+        .btn-view-files {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .btn-view-files:hover {
+            background: #c7d2fe;
+            transform: scale(1.02);
+        }
+
+        .btn-status-processing {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .btn-status-processing:hover:not(:disabled) {
+            background: #bfdbfe;
+            transform: scale(1.02);
+        }
+
+        .btn-status-complete {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .btn-status-complete:hover:not(:disabled) {
+            background: #a7f3d0;
+            transform: scale(1.02);
+        }
+
+        .btn-attach-sig {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .btn-attach-sig:hover {
+            background: #fbcfe8;
+            transform: scale(1.02);
+        }
+
+        .btn-status-reject {
+            background: #fee2e2;
+            color: #b91c1b;
+        }
+
+        .btn-status-reject:hover:not(:disabled) {
+            background: #fecaca;
+            transform: scale(1.02);
+        }
+
+        .admin-request-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Empty State */
+        .empty-requests {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 2px dashed #e2e8f0;
+            grid-column: 1 / -1;
+        }
+
+        .empty-requests i {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .empty-requests h3 {
+            color: #475569;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-requests p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        /* File Viewer Modal */
+        .file-viewer-modal, .signature-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .file-viewer-content, .signature-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .file-viewer-header, .signature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .file-viewer-header h3, .signature-header h3 {
+            font-size: 1.1rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-viewer-header h3 i, .signature-header h3 i {
+            color: #3b82f6;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #64748b;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .file-list {
+            padding: 20px 24px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-info i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .file-size {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .btn-download-file {
+            padding: 8px 16px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download-file:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* Signature Modal */
+        .signature-body {
+            padding: 24px;
+        }
+
+        .signature-body > p {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .signature-upload {
+            margin-bottom: 20px;
+        }
+
+        .signature-input {
+            display: none;
+        }
+
+        .signature-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 40px 20px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .signature-label:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .signature-label i {
+            font-size: 3rem;
+            color: #3b82f6;
+        }
+
+        .signature-label span {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .signature-preview {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            min-height: 100px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .signature-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .signature-actions {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-save-sig {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save-sig:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        /* Status Filter Quick Tabs */
+        .status-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .status-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .status-tab:hover {
+            border-color: #94a3b8;
+        }
+
+        .status-tab.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .status-tab[data-status="pending"].active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+        }
+
+        .status-tab[data-status="processing"].active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .status-tab[data-status="completed"].active {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .status-tab[data-status="rejected"].active {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .admin-requests-list {
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .requests-controls {
+                padding: 16px;
+            }
+
+            .search-filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .search-filter-row select {
+                width: 100%;
+            }
+
+            .admin-request-actions {
+                flex-direction: column;
+            }
+
+            .admin-request-actions button {
+                width: 100%;
+            }
+        }
+        
         @media (max-width: 1200px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .dashboard-grid { grid-template-columns: 1fr; }
@@ -866,6 +1663,13 @@
                 </div>
 
                 <div class="requests-controls">
+                    <div class="status-tabs">
+                        <div class="status-tab active" data-status="" onclick="setStatusFilter('')">All Requests</div>
+                        <div class="status-tab" data-status="pending" onclick="setStatusFilter('pending')">Pending</div>
+                        <div class="status-tab" data-status="processing" onclick="setStatusFilter('processing')">Processing</div>
+                        <div class="status-tab" data-status="completed" onclick="setStatusFilter('completed')">Completed</div>
+                        <div class="status-tab" data-status="rejected" onclick="setStatusFilter('rejected')">Rejected</div>
+                    </div>
                     <div class="search-filter-row">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
@@ -882,7 +1686,7 @@
                             <option value="certificate">Certificate Request</option>
                             <option value="travel">Travel Order</option>
                         </select>
-                        <select id="adminRequestsStatusFilter" onchange="filterAdminRequests()">
+                        <select id="adminRequestsStatusFilter" onchange="filterAdminRequests()" style="display: none;">
                             <option value="">All Status</option>
                             <option value="pending">Pending Review</option>
                             <option value="processing">Processing</option>
@@ -1469,6 +2273,22 @@
         }
 
         // ==================== ADMIN REQUESTS MANAGEMENT ====================
+        function setStatusFilter(status) {
+            // Update hidden select
+            document.getElementById('adminRequestsStatusFilter').value = status;
+            
+            // Update tabs UI
+            document.querySelectorAll('.status-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.status === status) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Apply filter
+            filterAdminRequests();
+        }
+        
         function filterAdminRequests() {
             const searchTerm = document.getElementById('adminRequestsSearch').value.toLowerCase();
             const typeFilter = document.getElementById('adminRequestsFilter').value;

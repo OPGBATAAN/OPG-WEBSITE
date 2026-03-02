@@ -2812,36 +2812,73 @@ function clearCollection() {
     }
 }
 
-// Export collection to text/CSV
+// Export collection to Word Document (.docx)
 function exportCollection() {
     if (collectedItems.length === 0) {
         showNotification('No items to export!', 'warning');
         return;
     }
     
-    let content = 'PRICE LIST COLLECTION\\n';
-    content += '===================\\n\\n';
-    content += 'Generated: ' + new Date().toLocaleString() + '\\n\\n';
+    // Create Word-compatible HTML content
+    let content = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Price List Collection</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #1e3a8a; font-size: 24px; margin-bottom: 10px; }
+        .subtitle { color: #64748b; font-size: 12px; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #1e3a8a; color: white; padding: 12px; text-align: left; font-weight: bold; }
+        td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .number { text-align: center; font-weight: bold; color: #64748b; }
+        .price { color: #059669; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <h1>Price List Collection</h1>
+    <div class="subtitle">Generated: ${new Date().toLocaleString()}</div>
     
-    collectedItems.forEach((item, index) => {
-        content += `${index + 1}. ${item.item}\\n`;
-        content += `   Unit: ${item.unit}\\n`;
-        content += `   Price Range: ${item.priceRange}\\n`;
-        content += `   Average: ${item.avgPrice}\\n\\n`;
-    });
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                <th>Item</th>
+                <th>Unit</th>
+                <th>Price Range (PHP)</th>
+                <th>Average Price</th>
+            </tr>
+        </thead>
+        <tbody>
+${collectedItems.map((item, index) => `
+            <tr>
+                <td class="number">${index + 1}</td>
+                <td>${item.item}</td>
+                <td>${item.unit}</td>
+                <td>${item.priceRange}</td>
+                <td class="price">${item.avgPrice}</td>
+            </tr>
+`).join('')}
+        </tbody>
+    </table>
+</body>
+</html>`;
     
-    // Create and download file
-    const blob = new Blob([content], { type: 'text/plain' });
+    // Create and download as .doc file (Word can open HTML as doc)
+    const blob = new Blob([content], { type: 'application/msword' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Price_List_Collection.txt';
+    a.download = 'Price_List_Collection.doc';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    showNotification('Collection exported!', 'success');
+    showNotification('Collection exported to Word!', 'success');
 }
 
 // Update count on page load
