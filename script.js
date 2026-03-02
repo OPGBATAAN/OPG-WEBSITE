@@ -1474,7 +1474,6 @@ function submitRequest(event) {
     const formData = {
         type: currentRequestType,
         name: document.getElementById('reqName').value,
-        email: document.getElementById('reqEmail').value,
         phone: document.getElementById('reqPhone').value,
         office: document.getElementById('reqOffice').value,
         purpose: document.getElementById('reqPurpose').value,
@@ -1493,21 +1492,254 @@ function submitRequest(event) {
     requests.push(formData);
     localStorage.setItem('submittedRequests', JSON.stringify(requests));
     
+    // Store current request for receipt download
+    localStorage.setItem('currentRequestReceipt', JSON.stringify(formData));
+    
     // Send email notifications if email service is available
     if (typeof sendEmail === 'function' && typeof EMAIL_TEMPLATES !== 'undefined') {
         // Send to admin
         sendEmail('opg@bataan.gov.ph', EMAIL_TEMPLATES.newRequest, formData);
-        
-        // Send confirmation to user
-        sendEmail(formData.email, EMAIL_TEMPLATES.confirmationToUser, formData);
     }
     
-    // Show success message
-    showNotification('Request submitted successfully! You will receive a confirmation email shortly.', 'success');
+    // Show success screen
+    showRequestSuccessScreen(formData);
+}
+
+function showRequestSuccessScreen(formData) {
+    // Hide form
+    document.getElementById('requestFormContainer').style.display = 'none';
     
-    // Close modal and reset
-    closeRequestsModal();
+    // Show success screen
+    const successScreen = document.getElementById('requestSuccessScreen');
+    successScreen.style.display = 'block';
+    
+    // Populate data
+    document.getElementById('successRequestId').textContent = formData.id;
+    document.getElementById('successTimestamp').textContent = new Date(formData.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' }) + ' (GMT+8)';
+    
+    // Set processing time based on request type
+    const processingTimes = {
+        'governor-esig': '1-2 days',
+        'financial-assistance': '3-5 days',
+        'obr-signature': '1-2 days',
+        'pr-signature': '2-3 days',
+        'dtr': 'Same day',
+        'leave': '1-2 days',
+        'certificate': '2-3 days',
+        'travel': '2-3 days'
+    };
+    document.getElementById('successProcessingTime').textContent = processingTimes[formData.type] || '2-3 days';
+    
+    // Reset form for next time
     document.getElementById('requestForm').reset();
+}
+
+function downloadRequestReceipt() {
+    const requestData = JSON.parse(localStorage.getItem('currentRequestReceipt') || '{}');
+    if (!requestData.id) {
+        showNotification('No receipt available', 'error');
+        return;
+    }
+    
+    const processingTimes = {
+        'governor-esig': '1-2 days',
+        'financial-assistance': '3-5 days',
+        'obr-signature': '1-2 days',
+        'pr-signature': '2-3 days',
+        'dtr': 'Same day',
+        'leave': '1-2 days',
+        'certificate': '2-3 days',
+        'travel': '2-3 days'
+    };
+    
+    const requestTypeNames = {
+        'governor-esig': "Governor's E-Signature",
+        'financial-assistance': 'Financial Assistance',
+        'obr-signature': 'OBR Signature',
+        'pr-signature': 'PR Signature',
+        'dtr': 'Daily Time Record (DTR)',
+        'leave': 'Leave Application',
+        'certificate': 'Certificate Request',
+        'travel': 'Travel Order'
+    };
+    
+    const receiptContent = `
+========================================
+   OFFICE OF THE PROVINCIAL GOVERNOR
+         BATAAN PROVINCE
+========================================
+
+        REQUEST RECEIPT
+----------------------------------------
+
+Request ID: ${requestData.id}
+Request Type: ${requestTypeNames[requestData.type] || requestData.type}
+
+Submitted By:
+  Name: ${requestData.name}
+  Phone: ${requestData.phone}
+  Office/Department: ${requestData.office || 'N/A'}
+
+Details:
+${requestData.purpose}
+
+----------------------------------------
+Submitted: ${new Date(requestData.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)
+Status: Pending Review
+Expected Processing: ${processingTimes[requestData.type] || '2-3 days'}
+----------------------------------------
+
+Thank you for using our e-Request system.
+For inquiries, contact opg@bataan.gov.ph
+
+========================================
+    `;
+    
+    // Create and download file
+    const blob = new Blob([receiptContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Request_Receipt_${requestData.id}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Receipt downloaded successfully!', 'success');
+}
+
+function showRequestsGrid() {
+    const grid = document.querySelector('.requests-grid');
+    const form = document.getElementById('requestFormContainer');
+    const successScreen = document.getElementById('requestSuccessScreen');
+    const trackInterface = document.getElementById('trackRequestInterface');
+    const trackResult = document.getElementById('trackResult');
+    
+    if (grid && form) {
+        grid.style.display = 'grid';
+        form.style.display = 'none';
+    }
+    if (successScreen) {
+        successScreen.style.display = 'none';
+    }
+    if (trackInterface) {
+        trackInterface.style.display = 'none';
+    }
+    if (trackResult) {
+        trackResult.style.display = 'none';
+    }
+}
+
+function showTrackRequestInterface() {
+    const grid = document.querySelector('.requests-grid');
+    const trackInterface = document.getElementById('trackRequestInterface');
+    const trackResult = document.getElementById('trackResult');
+    
+    if (grid && trackInterface) {
+        grid.style.display = 'none';
+        trackInterface.style.display = 'block';
+    }
+    if (trackResult) {
+        trackResult.style.display = 'none';
+    }
+}
+
+function trackRequest() {
+    const requestId = document.getElementById('trackRequestId').value.trim();
+    const resultDiv = document.getElementById('trackResult');
+    
+    if (!requestId) {
+        showTrackResult(false, 'Please enter a Request ID');
+        return;
+    }
+    
+    // Search in localStorage
+    const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    const found = requests.find(r => r.id === requestId);
+    
+    if (found) {
+        showTrackResult(true, found);
+    } else {
+        showTrackResult(false, 'Request not found. Please check your Request ID and try again.');
+    }
+}
+
+function showTrackResult(found, data) {
+    const resultDiv = document.getElementById('trackResult');
+    
+    if (!found) {
+        resultDiv.className = 'track-result not-found';
+        resultDiv.innerHTML = `
+            <div class="track-result-header">
+                <i class="fas fa-times-circle"></i>
+                <h4>Request Not Found</h4>
+            </div>
+            <p style="color: #64748b; text-align: center;">${data}</p>
+        `;
+    } else {
+        const requestTypeNames = {
+            'governor-esig': "Governor's E-Signature",
+            'financial-assistance': 'Financial Assistance',
+            'obr-signature': 'OBR Signature',
+            'pr-signature': 'PR Signature',
+            'dtr': 'Daily Time Record (DTR)',
+            'leave': 'Leave Application',
+            'certificate': 'Certificate Request',
+            'travel': 'Travel Order'
+        };
+        
+        const processingTimes = {
+            'governor-esig': '1-2 days',
+            'financial-assistance': '3-5 days',
+            'obr-signature': '1-2 days',
+            'pr-signature': '2-3 days',
+            'dtr': 'Same day',
+            'leave': '1-2 days',
+            'certificate': '2-3 days',
+            'travel': '2-3 days'
+        };
+        
+        resultDiv.className = 'track-result found';
+        resultDiv.innerHTML = `
+            <div class="track-result-header">
+                <i class="fas fa-check-circle"></i>
+                <h4>Request Found!</h4>
+            </div>
+            <div class="track-result-details">
+                <div class="track-result-item">
+                    <span class="track-result-label">Request ID:</span>
+                    <span class="track-result-value">${data.id}</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Request Type:</span>
+                    <span class="track-result-value">${requestTypeNames[data.type] || data.type}</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Submitted By:</span>
+                    <span class="track-result-value">${data.name}</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Phone:</span>
+                    <span class="track-result-value">${data.phone}</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Submitted:</span>
+                    <span class="track-result-value">${new Date(data.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Status:</span>
+                    <span class="track-result-value" style="color: #d97706; font-weight: 700;">Pending Review</span>
+                </div>
+                <div class="track-result-item">
+                    <span class="track-result-label">Expected Processing:</span>
+                    <span class="track-result-value">${processingTimes[data.type] || '2-3 days'}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    resultDiv.style.display = 'block';
 }
 
 // Close requests modal when clicking outside

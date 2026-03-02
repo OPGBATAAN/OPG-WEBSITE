@@ -642,6 +642,23 @@
             </div>
             <div class="requests-body">
                 <div class="requests-grid">
+                    <!-- Track Request Button -->
+                    <div class="request-card track-request" onclick="showTrackRequestInterface()">
+                        <div class="request-icon track">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Track Request</h3>
+                            <p>Check the status of your submitted request using Request ID</p>
+                            <div class="request-badge">
+                                <span class="badge-standard"><i class="fas fa-info-circle"></i> Find Your Request</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
                     <!-- Governor's E-signature -->
                     <div class="request-card" onclick="openRequestForm('governor-esig')">
                         <div class="request-icon governor">
@@ -787,6 +804,30 @@
                     </div>
                 </div>
 
+                <!-- Track Request Interface -->
+                <div id="trackRequestInterface" class="track-request-interface" style="display: none;">
+                    <div class="form-header">
+                        <button class="back-btn" onclick="showRequestsGrid()">
+                            <i class="fas fa-arrow-left"></i> Back to Requests
+                        </button>
+                        <h3><i class="fas fa-search"></i> Track Your Request</h3>
+                    </div>
+                    <div class="track-search-box">
+                        <div class="form-group">
+                            <label for="trackRequestId">Enter Request ID</label>
+                            <div class="track-input-wrapper">
+                                <input type="text" id="trackRequestId" placeholder="e.g., req_1234567890_abc123" class="track-input">
+                                <button onclick="trackRequest()" class="btn-track">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trackResult" class="track-result" style="display: none;">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+
                 <!-- Request Form Container -->
                 <div id="requestFormContainer" class="request-form-container" style="display: none;">
                     <div class="form-header">
@@ -802,23 +843,17 @@
                                 <input type="text" id="reqName" required placeholder="Enter your full name">
                             </div>
                             <div class="form-group">
-                                <label for="reqEmail">Email Address *</label>
-                                <input type="email" id="reqEmail" required placeholder="Enter your email">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
                                 <label for="reqPhone">Phone Number *</label>
                                 <input type="tel" id="reqPhone" required placeholder="Enter phone number">
                             </div>
-                            <div class="form-group">
-                                <label for="reqOffice">Office/Department</label>
-                                <input type="text" id="reqOffice" placeholder="Enter office or department">
-                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="reqPurpose">Purpose/Details *</label>
-                            <textarea id="reqPurpose" rows="4" required placeholder="Describe the purpose and details of your request"></textarea>
+                            <label for="reqOffice">Office/Department</label>
+                            <input type="text" id="reqOffice" placeholder="Enter office or department">
+                        </div>
+                        <div class="form-group">
+                            <label for="reqPurpose">Details *</label>
+                            <textarea id="reqPurpose" rows="4" required placeholder="Describe the details of your request"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="reqDocuments">Supporting Documents</label>
@@ -835,6 +870,40 @@
                             </button>
                         </div>
                     </form>
+                </div>
+
+                <!-- Request Success/Status Screen -->
+                <div id="requestSuccessScreen" class="request-success-screen" style="display: none;">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Request Submitted Successfully!</h3>
+                    <div class="request-status-details">
+                        <div class="status-item">
+                            <span class="status-label">Request ID:</span>
+                            <span id="successRequestId" class="status-value"></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Submitted At:</span>
+                            <span id="successTimestamp" class="status-value"></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Status:</span>
+                            <span class="status-badge pending">Pending Review</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Expected Processing:</span>
+                            <span id="successProcessingTime" class="status-value"></span>
+                        </div>
+                    </div>
+                    <div class="success-actions">
+                        <button type="button" class="btn-download" onclick="downloadRequestReceipt()">
+                            <i class="fas fa-download"></i> Download Receipt
+                        </button>
+                        <button type="button" class="btn-close-success" onclick="closeRequestsModal()">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

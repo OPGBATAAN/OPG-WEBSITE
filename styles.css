@@ -3128,3 +3128,263 @@ html {
     }
 }
 
+/* Request Success Screen */
+.request-success-screen {
+    text-align: center;
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+}
+
+.success-icon {
+    font-size: 5rem;
+    color: #10b981;
+    margin-bottom: 20px;
+    animation: scaleIn 0.5s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.request-success-screen h3 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 30px;
+}
+
+.request-status-details {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+
+.status-label {
+    font-weight: 600;
+    color: #64748b;
+}
+
+.status-value {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.success-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-download {
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+
+.btn-close-success {
+    padding: 14px 30px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    color: #64748b;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-close-success:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+/* Track Request Interface */
+.track-request-interface {
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.track-request .request-icon.track {
+    background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+    color: #7c3aed;
+}
+
+.track-search-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.track-input-wrapper {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.track-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.track-input:focus {
+    outline: none;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+}
+
+.btn-track {
+    padding: 14px 25px;
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-track:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+}
+
+.track-result {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 20px;
+    animation: slideUp 0.3s ease;
+}
+
+.track-result.found {
+    border-color: #10b981;
+}
+
+.track-result.not-found {
+    border-color: #ef4444;
+}
+
+.track-result-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.track-result-header i {
+    font-size: 2rem;
+}
+
+.track-result.found .track-result-header i {
+    color: #10b981;
+}
+
+.track-result.not-found .track-result-header i {
+    color: #ef4444;
+}
+
+.track-result-header h4 {
+    font-size: 1.2rem;
+    color: #1e293b;
+}
+
+.track-result-details {
+    display: grid;
+    gap: 12px;
+}
+
+.track-result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.track-result-item:last-child {
+    border-bottom: none;
+}
+
+.track-result-label {
+    font-weight: 600;
+    color: #64748b;
+}
+
+.track-result-value {
+    color: #1e293b;
+    font-weight: 500;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .track-input-wrapper {
+        flex-direction: column;
+    }
+    
+    .btn-track {
+        width: 100%;
+        justify-content: center;
+    }
+}
