@@ -613,9 +613,11 @@ function updatePHTime() {
     }
 }
 
-// Update clock immediately and every second
-updatePHTime();
-setInterval(updatePHTime, 1000);
+// Initialize clock after DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    updatePHTime();
+    setInterval(updatePHTime, 1000);
+});
 
 // ==================== DASHBOARD FUNCTIONS ====================
 // Simple XLSX parser for Excel/CSV files (lightweight implementation)
