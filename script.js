@@ -1957,4 +1957,13 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// ==================== SIGN IN POPUP FUNCTION ====================
+function openSignInPopup() {
+    const popup = window.open('employee-dashboard.html', 'EmployeeDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes,top=50,left=50');
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        alert('Please allow popups for this website to open the Sign In page.');
+    }
+    return false;
+}
+
 
