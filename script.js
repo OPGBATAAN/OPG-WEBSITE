@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Navigation setup - called after DOM loads
 function initializeNavigation() {
     // Navigation click handlers
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link:not(.nav-link-external)').forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             
@@ -95,8 +95,8 @@ function initializeNavigation() {
             navMenu.classList.toggle('active');
         });
         
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(n => {
+        // Close mobile menu when clicking on a link (exclude external links)
+        document.querySelectorAll('.nav-link:not(.nav-link-external)').forEach(n => {
             n.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
