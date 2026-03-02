@@ -6,6 +6,7 @@
     <title>AIP Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="aip-data-preload.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -860,6 +861,12 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'flex';
                 document.getElementById('loginError').textContent = '';
+                
+                // Pre-load data if available and not already loaded
+                if (typeof preloadAIPData === 'function' && preloadAIPData()) {
+                    showToast('Pre-loaded AIP Budget data available', 'success');
+                }
+                
                 loadData();
                 addActivity('Login successful', 'info');
                 showToast('Welcome to AIP Dashboard', 'success');

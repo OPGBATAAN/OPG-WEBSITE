@@ -990,6 +990,11 @@ let aipSections = [];
 let aipFilteredData = [];
 
 function openAIPView() {
+    // Try to preload data if available
+    if (typeof preloadAIPData === 'function') {
+        preloadAIPData();
+    }
+    
     document.getElementById('aipViewModal').classList.add('active');
     document.body.style.overflow = 'hidden';
     loadAIPData();
