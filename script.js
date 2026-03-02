@@ -1966,4 +1966,89 @@ function openSignInPopup() {
     return false;
 }
 
+// ==================== PRICE LIST MODAL FUNCTIONS ====================
+function openPriceListModal() {
+    const modal = document.getElementById('priceListModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // Show all categories by default
+        filterPriceList('all');
+    }
+}
+
+function closePriceListModal() {
+    const modal = document.getElementById('priceListModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function filterPriceList(category) {
+    // Update tab buttons
+    const tabs = document.querySelectorAll('.price-tab');
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.getAttribute('onclick').includes(`'${category}'`)) {
+            tab.classList.add('active');
+        }
+    });
+    
+    // Filter categories
+    const categories = document.querySelectorAll('.price-category');
+    categories.forEach(cat => {
+        if (category === 'all') {
+            cat.style.display = 'block';
+        } else {
+            const catType = cat.getAttribute('data-category');
+            cat.style.display = catType === category ? 'block' : 'none';
+        }
+    });
+    
+    // Clear search when changing tabs
+    const searchInput = document.getElementById('priceSearchInput');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+}
+
+function searchPriceList() {
+    const searchTerm = document.getElementById('priceSearchInput').value.toLowerCase();
+    const categories = document.querySelectorAll('.price-category');
+    
+    categories.forEach(category => {
+        const items = category.querySelectorAll('tbody tr');
+        let hasVisibleItems = false;
+        
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                item.style.display = '';
+                hasVisibleItems = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Show/hide category based on whether it has visible items
+        category.style.display = hasVisibleItems ? 'block' : 'none';
+    });
+}
+
+// Close price list modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('priceListModal');
+    if (event.target === modal) {
+        closePriceListModal();
+    }
+});
+
+// Close price list modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePriceListModal();
+    }
+});
+
 
