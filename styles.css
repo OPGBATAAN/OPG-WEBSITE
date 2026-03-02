@@ -181,7 +181,7 @@ body {
 .hero-right {
     flex: 1;
     min-width: 450px;
-    max-width: 600px;
+    max-width: 650px;
     margin-left: auto;
 }
 
@@ -1564,7 +1564,7 @@ html {
 }
 
 .slideshow-container {
-    min-height: 650px;
+    min-height: 600px;
     position: relative;
 }
 
