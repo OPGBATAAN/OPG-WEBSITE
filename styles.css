@@ -3891,6 +3891,72 @@ html {
     background: #e2e8f0;
 }
 
+/* Add button for price list items */
+.btn-add-item {
+    background: #10b981;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    margin: 0 auto;
+}
+
+.btn-add-item:hover {
+    background: #059669;
+    transform: scale(1.1);
+}
+
+.btn-add-item:active {
+    transform: scale(0.95);
+}
+
+/* Action column styling */
+.price-table th.action-col,
+.price-table td:last-child {
+    text-align: center;
+    width: 50px;
+}
+
+/* Collected items badge */
+.collected-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+}
+
+/* Collected tab styling */
+.collected-tab {
+    position: relative;
+    background: #f0fdf4;
+    border-color: #10b981;
+    color: #059669;
+}
+
+.collected-tab:hover {
+    background: #dcfce7;
+}
+
+.collected-tab.active {
+    background: #10b981;
+    color: white;
+}
+
 /* Price List Footer */
 .price-list-footer {
     margin-top: 2rem;

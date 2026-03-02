@@ -2511,3 +2511,346 @@ if (fileUploadArea) {
         renderFilePreviews();
     });
 }
+
+// ==================== PRICE LIST COLLECTION FUNCTIONS ====================
+
+// Store collected items
+let collectedItems = JSON.parse(localStorage.getItem('priceListCollection') || '[]');
+
+// Add item to collection
+function addToCollection(item, unit, priceRange, avgPrice) {
+    // Check if item already exists
+    if (collectedItems.find(i => i.item === item)) {
+        showNotification('Item already in collection!', 'warning');
+        return;
+    }
+    
+    collectedItems.push({
+        item: item,
+        unit: unit,
+        priceRange: priceRange,
+        avgPrice: avgPrice,
+        addedAt: new Date().toISOString()
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('priceListCollection', JSON.stringify(collectedItems));
+    
+    // Update count
+    updateCollectedCount();
+    
+    // Show notification
+    showNotification(`${item} added to collection!`, 'success');
+}
+
+// Update collected count badge
+function updateCollectedCount() {
+    const badge = document.getElementById('collectedCount');
+    if (badge) {
+        badge.textContent = collectedItems.length;
+        badge.style.display = collectedItems.length > 0 ? 'inline-flex' : 'none';
+    }
+}
+
+// Show collected items
+function showCollectedItems() {
+    // Create modal if doesn't exist
+    let modal = document.getElementById('collectedItemsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'collectedItemsModal';
+        modal.className = 'collected-items-modal';
+        modal.innerHTML = `
+            <div class="collected-items-content">
+                <div class="collected-items-header">
+                    <h3><i class="fas fa-clipboard-list"></i> Collected Items</h3>
+                    <button onclick="closeCollectedItems()" class="collected-items-close">&times;</button>
+                </div>
+                <div class="collected-items-body" id="collectedItemsBody">
+                    <div class="collected-items-list" id="collectedItemsList"></div>
+                </div>
+                <div class="collected-items-footer">
+                    <button onclick="clearCollection()" class="btn-clear-collection">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                    <button onclick="exportCollection()" class="btn-export-collection">
+                        <i class="fas fa-download"></i> Export List
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .collected-items-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 5000;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .collected-items-modal.active {
+                display: flex;
+            }
+            .collected-items-content {
+                background: white;
+                border-radius: 12px;
+                max-width: 600px;
+                width: 100%;
+                max-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+            .collected-items-header {
+                background: #1e3a8a;
+                color: white;
+                padding: 1rem 1.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .collected-items-header h3 {
+                margin: 0;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .collected-items-close {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+            .collected-items-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            .collected-items-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 1rem;
+            }
+            .collected-items-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .collected-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                background: #f8fafc;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+            }
+            .collected-item-info {
+                flex: 1;
+            }
+            .collected-item-name {
+                font-weight: 600;
+                color: #1e293b;
+                margin-bottom: 2px;
+            }
+            .collected-item-details {
+                font-size: 0.85rem;
+                color: #64748b;
+            }
+            .collected-item-price {
+                font-weight: 600;
+                color: #059669;
+                font-size: 1rem;
+            }
+            .btn-remove-item {
+                background: #fee2e2;
+                color: #ef4444;
+                border: none;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+            .btn-remove-item:hover {
+                background: #ef4444;
+                color: white;
+            }
+            .collected-items-empty {
+                text-align: center;
+                padding: 40px 20px;
+                color: #64748b;
+            }
+            .collected-items-empty i {
+                font-size: 3rem;
+                margin-bottom: 10px;
+                color: #cbd5e1;
+            }
+            .collected-items-footer {
+                display: flex;
+                gap: 10px;
+                padding: 1rem;
+                border-top: 1px solid #e2e8f0;
+                justify-content: flex-end;
+            }
+            .btn-clear-collection {
+                background: #fee2e2;
+                color: #ef4444;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s;
+            }
+            .btn-clear-collection:hover {
+                background: #ef4444;
+                color: white;
+            }
+            .btn-export-collection {
+                background: #1e3a8a;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s;
+            }
+            .btn-export-collection:hover {
+                background: #1e40af;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Render collected items
+    renderCollectedItems();
+    
+    // Show modal
+    modal.classList.add('active');
+}
+
+// Render collected items list
+function renderCollectedItems() {
+    const list = document.getElementById('collectedItemsList');
+    
+    if (collectedItems.length === 0) {
+        list.innerHTML = `
+            <div class="collected-items-empty">
+                <i class="fas fa-clipboard-list"></i>
+                <p>No items collected yet.</p>
+                <p>Click the + button on items to add them to your collection.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    list.innerHTML = collectedItems.map((item, index) => `
+        <div class="collected-item">
+            <div class="collected-item-info">
+                <div class="collected-item-name">${item.item}</div>
+                <div class="collected-item-details">${item.unit} • Range: ${item.priceRange}</div>
+            </div>
+            <div class="collected-item-price">${item.avgPrice}</div>
+            <button class="btn-remove-item" onclick="removeFromCollection(${index})" title="Remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+// Remove item from collection
+function removeFromCollection(index) {
+    collectedItems.splice(index, 1);
+    localStorage.setItem('priceListCollection', JSON.stringify(collectedItems));
+    renderCollectedItems();
+    updateCollectedCount();
+}
+
+// Close collected items modal
+function closeCollectedItems() {
+    const modal = document.getElementById('collectedItemsModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// Clear all collected items
+function clearCollection() {
+    if (confirm('Are you sure you want to clear all collected items?')) {
+        collectedItems = [];
+        localStorage.removeItem('priceListCollection');
+        renderCollectedItems();
+        updateCollectedCount();
+        showNotification('Collection cleared!', 'success');
+    }
+}
+
+// Export collection to text/CSV
+function exportCollection() {
+    if (collectedItems.length === 0) {
+        showNotification('No items to export!', 'warning');
+        return;
+    }
+    
+    let content = 'PRICE LIST COLLECTION\\n';
+    content += '===================\\n\\n';
+    content += 'Generated: ' + new Date().toLocaleString() + '\\n\\n';
+    
+    collectedItems.forEach((item, index) => {
+        content += `${index + 1}. ${item.item}\\n`;
+        content += `   Unit: ${item.unit}\\n`;
+        content += `   Price Range: ${item.priceRange}\\n`;
+        content += `   Average: ${item.avgPrice}\\n\\n`;
+    });
+    
+    // Create and download file
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Price_List_Collection.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Collection exported!', 'success');
+}
+
+// Update count on page load
+updateCollectedCount();
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('collectedItemsModal');
+    if (event.target === modal) {
+        closeCollectedItems();
+    }
+});

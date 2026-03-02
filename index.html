@@ -1056,6 +1056,9 @@
                     <button class="price-tab" onclick="filterPriceList('services')">
                         <i class="fas fa-concierge-bell"></i> Services
                     </button>
+                    <button class="price-tab collected-tab" onclick="showCollectedItems()">
+                        <i class="fas fa-clipboard-list"></i> Collected Items <span id="collectedCount" class="collected-badge">0</span>
+                    </button>
                 </div>
                 
                 <!-- Search Box -->
@@ -1076,24 +1079,25 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Regular Milled Rice</td><td>kg</td><td>36.01 - 54.56</td><td>45.28</td></tr>
-                                <tr><td>Well-Milled Rice</td><td>kg</td><td>40.00 - 58.00</td><td>49.00</td></tr>
-                                <tr><td>Premium Rice</td><td>kg</td><td>48.00 - 65.00</td><td>56.50</td></tr>
-                                <tr><td>Chicken (Whole)</td><td>kg</td><td>160.00 - 190.00</td><td>175.00</td></tr>
-                                <tr><td>Pork (Kasim)</td><td>kg</td><td>280.00 - 320.00</td><td>300.00</td></tr>
-                                <tr><td>Beef (Lean)</td><td>kg</td><td>380.00 - 450.00</td><td>415.00</td></tr>
-                                <tr><td>Fish (Galunggong)</td><td>kg</td><td>140.00 - 180.00</td><td>160.00</td></tr>
-                                <tr><td>Fish (Bangus)</td><td>kg</td><td>150.00 - 200.00</td><td>175.00</td></tr>
-                                <tr><td>Eggs (Medium)</td><td>dozen</td><td>90.00 - 120.00</td><td>105.00</td></tr>
-                                <tr><td>Fresh Milk</td><td>liter</td><td>85.00 - 110.00</td><td>97.50</td></tr>
-                                <tr><td>Bread (Pandesal)</td><td>piece</td><td>2.50 - 5.00</td><td>3.75</td></tr>
-                                <tr><td>Instant Noodles</td><td>pack</td><td>12.00 - 18.00</td><td>15.00</td></tr>
-                                <tr><td>Cooking Oil (Vegetable)</td><td>liter</td><td>75.00 - 95.00</td><td>85.00</td></tr>
-                                <tr><td>Sugar (Refined)</td><td>kg</td><td>55.00 - 70.00</td><td>62.50</td></tr>
-                                <tr><td>Coffee (Ground)</td><td>100g</td><td>45.00 - 75.00</td><td>60.00</td></tr>
+                                <tr data-item="Regular Milled Rice" data-unit="kg" data-price="45.28"><td>Regular Milled Rice</td><td>kg</td><td>36.01 - 54.56</td><td>45.28</td><td><button class="btn-add-item" onclick="addToCollection('Regular Milled Rice', 'kg', '36.01 - 54.56', '45.28')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Well-Milled Rice" data-unit="kg" data-price="49.00"><td>Well-Milled Rice</td><td>kg</td><td>40.00 - 58.00</td><td>49.00</td><td><button class="btn-add-item" onclick="addToCollection('Well-Milled Rice', 'kg', '40.00 - 58.00', '49.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Premium Rice" data-unit="kg" data-price="56.50"><td>Premium Rice</td><td>kg</td><td>48.00 - 65.00</td><td>56.50</td><td><button class="btn-add-item" onclick="addToCollection('Premium Rice', 'kg', '48.00 - 65.00', '56.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Chicken (Whole)" data-unit="kg" data-price="175.00"><td>Chicken (Whole)</td><td>kg</td><td>160.00 - 190.00</td><td>175.00</td><td><button class="btn-add-item" onclick="addToCollection('Chicken (Whole)', 'kg', '160.00 - 190.00', '175.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Pork (Kasim)" data-unit="kg" data-price="300.00"><td>Pork (Kasim)</td><td>kg</td><td>280.00 - 320.00</td><td>300.00</td><td><button class="btn-add-item" onclick="addToCollection('Pork (Kasim)', 'kg', '280.00 - 320.00', '300.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Beef (Lean)" data-unit="kg" data-price="415.00"><td>Beef (Lean)</td><td>kg</td><td>380.00 - 450.00</td><td>415.00</td><td><button class="btn-add-item" onclick="addToCollection('Beef (Lean)', 'kg', '380.00 - 450.00', '415.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Fish (Galunggong)" data-unit="kg" data-price="160.00"><td>Fish (Galunggong)</td><td>kg</td><td>140.00 - 180.00</td><td>160.00</td><td><button class="btn-add-item" onclick="addToCollection('Fish (Galunggong)', 'kg', '140.00 - 180.00', '160.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Fish (Bangus)" data-unit="kg" data-price="175.00"><td>Fish (Bangus)</td><td>kg</td><td>150.00 - 200.00</td><td>175.00</td><td><button class="btn-add-item" onclick="addToCollection('Fish (Bangus)', 'kg', '150.00 - 200.00', '175.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Eggs (Medium)" data-unit="dozen" data-price="105.00"><td>Eggs (Medium)</td><td>dozen</td><td>90.00 - 120.00</td><td>105.00</td><td><button class="btn-add-item" onclick="addToCollection('Eggs (Medium)', 'dozen', '90.00 - 120.00', '105.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Fresh Milk" data-unit="liter" data-price="97.50"><td>Fresh Milk</td><td>liter</td><td>85.00 - 110.00</td><td>97.50</td><td><button class="btn-add-item" onclick="addToCollection('Fresh Milk', 'liter', '85.00 - 110.00', '97.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Bread (Pandesal)" data-unit="piece" data-price="3.75"><td>Bread (Pandesal)</td><td>piece</td><td>2.50 - 5.00</td><td>3.75</td><td><button class="btn-add-item" onclick="addToCollection('Bread (Pandesal)', 'piece', '2.50 - 5.00', '3.75')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Instant Noodles" data-unit="pack" data-price="15.00"><td>Instant Noodles</td><td>pack</td><td>12.00 - 18.00</td><td>15.00</td><td><button class="btn-add-item" onclick="addToCollection('Instant Noodles', 'pack', '12.00 - 18.00', '15.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Cooking Oil (Vegetable)" data-unit="liter" data-price="85.00"><td>Cooking Oil (Vegetable)</td><td>liter</td><td>75.00 - 95.00</td><td>85.00</td><td><button class="btn-add-item" onclick="addToCollection('Cooking Oil (Vegetable)', 'liter', '75.00 - 95.00', '85.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Sugar (Refined)" data-unit="kg" data-price="62.50"><td>Sugar (Refined)</td><td>kg</td><td>55.00 - 70.00</td><td>62.50</td><td><button class="btn-add-item" onclick="addToCollection('Sugar (Refined)', 'kg', '55.00 - 70.00', '62.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Coffee (Ground)" data-unit="100g" data-price="60.00"><td>Coffee (Ground)</td><td>100g</td><td>45.00 - 75.00</td><td>60.00</td><td><button class="btn-add-item" onclick="addToCollection('Coffee (Ground)', '100g', '45.00 - 75.00', '60.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1108,21 +1112,22 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Tomatoes</td><td>kg</td><td>40.00 - 70.00</td><td>55.00</td></tr>
-                                <tr><td>Onions (Red)</td><td>kg</td><td>80.00 - 120.00</td><td>100.00</td></tr>
-                                <tr><td>Garlic</td><td>kg</td><td>120.00 - 180.00</td><td>150.00</td></tr>
-                                <tr><td>Potatoes</td><td>kg</td><td>60.00 - 90.00</td><td>75.00</td></tr>
-                                <tr><td>Carrots</td><td>kg</td><td>50.00 - 80.00</td><td>65.00</td></tr>
-                                <tr><td>Cabbage</td><td>kg</td><td>40.00 - 70.00</td><td>55.00</td></tr>
-                                <tr><td>Peayes (String Beans)</td><td>kg</td><td>40.00 - 65.00</td><td>52.50</td></tr>
-                                <tr><td> Eggplant</td><td>kg</td><td>35.00 - 60.00</td><td>47.50</td></tr>
-                                <tr><td>Bananas (Lakatan)</td><td>kg</td><td>50.00 - 80.00</td><td>65.00</td></tr>
-                                <tr><td>Mangoes (Carabao)</td><td>kg</td><td>80.00 - 150.00</td><td>115.00</td></tr>
-                                <tr><td>Papaya</td><td>kg</td><td>35.00 - 60.00</td><td>47.50</td></tr>
-                                <tr><td>Watermelon</td><td>kg</td><td>25.00 - 45.00</td><td>35.00</td></tr>
+                                <tr data-item="Tomatoes" data-unit="kg" data-price="55.00"><td>Tomatoes</td><td>kg</td><td>40.00 - 70.00</td><td>55.00</td><td><button class="btn-add-item" onclick="addToCollection('Tomatoes', 'kg', '40.00 - 70.00', '55.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Onions (Red)" data-unit="kg" data-price="100.00"><td>Onions (Red)</td><td>kg</td><td>80.00 - 120.00</td><td>100.00</td><td><button class="btn-add-item" onclick="addToCollection('Onions (Red)', 'kg', '80.00 - 120.00', '100.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Garlic" data-unit="kg" data-price="150.00"><td>Garlic</td><td>kg</td><td>120.00 - 180.00</td><td>150.00</td><td><button class="btn-add-item" onclick="addToCollection('Garlic', 'kg', '120.00 - 180.00', '150.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Potatoes" data-unit="kg" data-price="75.00"><td>Potatoes</td><td>kg</td><td>60.00 - 90.00</td><td>75.00</td><td><button class="btn-add-item" onclick="addToCollection('Potatoes', 'kg', '60.00 - 90.00', '75.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Carrots" data-unit="kg" data-price="65.00"><td>Carrots</td><td>kg</td><td>50.00 - 80.00</td><td>65.00</td><td><button class="btn-add-item" onclick="addToCollection('Carrots', 'kg', '50.00 - 80.00', '65.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Cabbage" data-unit="kg" data-price="55.00"><td>Cabbage</td><td>kg</td><td>40.00 - 70.00</td><td>55.00</td><td><button class="btn-add-item" onclick="addToCollection('Cabbage', 'kg', '40.00 - 70.00', '55.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Peayes (String Beans)" data-unit="kg" data-price="52.50"><td>Peayes (String Beans)</td><td>kg</td><td>40.00 - 65.00</td><td>52.50</td><td><button class="btn-add-item" onclick="addToCollection('Peayes (String Beans)', 'kg', '40.00 - 65.00', '52.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Eggplant" data-unit="kg" data-price="47.50"><td> Eggplant</td><td>kg</td><td>35.00 - 60.00</td><td>47.50</td><td><button class="btn-add-item" onclick="addToCollection('Eggplant', 'kg', '35.00 - 60.00', '47.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Bananas (Lakatan)" data-unit="kg" data-price="65.00"><td>Bananas (Lakatan)</td><td>kg</td><td>50.00 - 80.00</td><td>65.00</td><td><button class="btn-add-item" onclick="addToCollection('Bananas (Lakatan)', 'kg', '50.00 - 80.00', '65.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Mangoes (Carabao)" data-unit="kg" data-price="115.00"><td>Mangoes (Carabao)</td><td>kg</td><td>80.00 - 150.00</td><td>115.00</td><td><button class="btn-add-item" onclick="addToCollection('Mangoes (Carabao)', 'kg', '80.00 - 150.00', '115.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Papaya" data-unit="kg" data-price="47.50"><td>Papaya</td><td>kg</td><td>35.00 - 60.00</td><td>47.50</td><td><button class="btn-add-item" onclick="addToCollection('Papaya', 'kg', '35.00 - 60.00', '47.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Watermelon" data-unit="kg" data-price="35.00"><td>Watermelon</td><td>kg</td><td>25.00 - 45.00</td><td>35.00</td><td><button class="btn-add-item" onclick="addToCollection('Watermelon', 'kg', '25.00 - 45.00', '35.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1137,17 +1142,18 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Diesel</td><td>liter</td><td>48.00 - 58.00</td><td>53.00</td></tr>
-                                <tr><td>Gasoline (Unleaded)</td><td>liter</td><td>55.00 - 68.00</td><td>61.50</td></tr>
-                                <tr><td>Gasoline (Premium)</td><td>liter</td><td>58.00 - 72.00</td><td>65.00</td></tr>
-                                <tr><td>LPG (Liquified Petroleum Gas)</td><td>kg</td><td>85.00 - 110.00</td><td>97.50</td></tr>
-                                <tr><td>Tricycle Fare (Minimum)</td><td>ride</td><td>20.00 - 35.00</td><td>27.50</td></tr>
-                                <tr><td>Jeepney Fare (Minimum)</td><td>ride</td><td>12.00 - 15.00</td><td>13.50</td></tr>
-                                <tr><td>Bus Fare (Provincial)</td><td>km</td><td>2.00 - 3.50</td><td>2.75</td></tr>
-                                <tr><td>Taxi Flag Down Rate</td><td>initial</td><td>40.00 - 45.00</td><td>42.50</td></tr>
+                                <tr data-item="Diesel" data-unit="liter" data-price="53.00"><td>Diesel</td><td>liter</td><td>48.00 - 58.00</td><td>53.00</td><td><button class="btn-add-item" onclick="addToCollection('Diesel', 'liter', '48.00 - 58.00', '53.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Gasoline (Unleaded)" data-unit="liter" data-price="61.50"><td>Gasoline (Unleaded)</td><td>liter</td><td>55.00 - 68.00</td><td>61.50</td><td><button class="btn-add-item" onclick="addToCollection('Gasoline (Unleaded)', 'liter', '55.00 - 68.00', '61.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Gasoline (Premium)" data-unit="liter" data-price="65.00"><td>Gasoline (Premium)</td><td>liter</td><td>58.00 - 72.00</td><td>65.00</td><td><button class="btn-add-item" onclick="addToCollection('Gasoline (Premium)', 'liter', '58.00 - 72.00', '65.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="LPG (Liquified Petroleum Gas)" data-unit="kg" data-price="97.50"><td>LPG (Liquified Petroleum Gas)</td><td>kg</td><td>85.00 - 110.00</td><td>97.50</td><td><button class="btn-add-item" onclick="addToCollection('LPG (Liquified Petroleum Gas)', 'kg', '85.00 - 110.00', '97.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Tricycle Fare (Minimum)" data-unit="ride" data-price="27.50"><td>Tricycle Fare (Minimum)</td><td>ride</td><td>20.00 - 35.00</td><td>27.50</td><td><button class="btn-add-item" onclick="addToCollection('Tricycle Fare (Minimum)', 'ride', '20.00 - 35.00', '27.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Jeepney Fare (Minimum)" data-unit="ride" data-price="13.50"><td>Jeepney Fare (Minimum)</td><td>ride</td><td>12.00 - 15.00</td><td>13.50</td><td><button class="btn-add-item" onclick="addToCollection('Jeepney Fare (Minimum)', 'ride', '12.00 - 15.00', '13.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Bus Fare (Provincial)" data-unit="km" data-price="2.75"><td>Bus Fare (Provincial)</td><td>km</td><td>2.00 - 3.50</td><td>2.75</td><td><button class="btn-add-item" onclick="addToCollection('Bus Fare (Provincial)', 'km', '2.00 - 3.50', '2.75')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Taxi Flag Down Rate" data-unit="initial" data-price="42.50"><td>Taxi Flag Down Rate</td><td>initial</td><td>40.00 - 45.00</td><td>42.50</td><td><button class="btn-add-item" onclick="addToCollection('Taxi Flag Down Rate', 'initial', '40.00 - 45.00', '42.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1162,15 +1168,16 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Electricity (Residential)</td><td>kWh</td><td>9.50 - 12.50</td><td>11.00</td></tr>
-                                <tr><td>Electricity (Commercial)</td><td>kWh</td><td>10.50 - 14.00</td><td>12.25</td></tr>
-                                <tr><td>Water (Residential)</td><td>cu.m.</td><td>18.00 - 35.00</td><td>26.50</td></tr>
-                                <tr><td>Internet (DSL/Fiber)</td><td>month</td><td>1,299 - 2,500</td><td>1,899</td></tr>
-                                <tr><td>Mobile Load (Prepaid)</td><td>varies</td><td>10.00 - 1,000</td><td>-</td></tr>
-                                <tr><td>LPG Tank (11kg refill)</td><td>tank</td><td>850 - 1,100</td><td>975</td></tr>
+                                <tr data-item="Electricity (Residential)" data-unit="kWh" data-price="11.00"><td>Electricity (Residential)</td><td>kWh</td><td>9.50 - 12.50</td><td>11.00</td><td><button class="btn-add-item" onclick="addToCollection('Electricity (Residential)', 'kWh', '9.50 - 12.50', '11.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Electricity (Commercial)" data-unit="kWh" data-price="12.25"><td>Electricity (Commercial)</td><td>kWh</td><td>10.50 - 14.00</td><td>12.25</td><td><button class="btn-add-item" onclick="addToCollection('Electricity (Commercial)', 'kWh', '10.50 - 14.00', '12.25')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Water (Residential)" data-unit="cu.m." data-price="26.50"><td>Water (Residential)</td><td>cu.m.</td><td>18.00 - 35.00</td><td>26.50</td><td><button class="btn-add-item" onclick="addToCollection('Water (Residential)', 'cu.m.', '18.00 - 35.00', '26.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Internet (DSL/Fiber)" data-unit="month" data-price="1,899"><td>Internet (DSL/Fiber)</td><td>month</td><td>1,299 - 2,500</td><td>1,899</td><td><button class="btn-add-item" onclick="addToCollection('Internet (DSL/Fiber)', 'month', '1,299 - 2,500', '1,899')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Mobile Load (Prepaid)" data-unit="varies" data-price="-"><td>Mobile Load (Prepaid)</td><td>varies</td><td>10.00 - 1,000</td><td>-</td><td><button class="btn-add-item" onclick="addToCollection('Mobile Load (Prepaid)', 'varies', '10.00 - 1,000', '-')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="LPG Tank (11kg refill)" data-unit="tank" data-price="975"><td>LPG Tank (11kg refill)</td><td>tank</td><td>850 - 1,100</td><td>975</td><td><button class="btn-add-item" onclick="addToCollection('LPG Tank (11kg refill)', 'tank', '850 - 1,100', '975')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1185,18 +1192,19 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Cement</td><td>bag (40kg)</td><td>280.00 - 350.00</td><td>315.00</td></tr>
-                                <tr><td>Steel Bars (Grade 40)</td><td>piece</td><td>180.00 - 250.00</td><td>215.00</td></tr>
-                                <tr><td>Hollow Blocks (4")</td><td>piece</td><td>18.00 - 28.00</td><td>23.00</td></tr>
-                                <tr><td>Hollow Blocks (6")</td><td>piece</td><td>28.00 - 40.00</td><td>34.00</td></tr>
-                                <tr><td>Plywood (1/4")</td><td>sheet</td><td>350.00 - 500.00</td><td>425.00</td></tr>
-                                <tr><td>Roofing (Long Span)</td><td>meter</td><td>450.00 - 650.00</td><td>550.00</td></tr>
-                                <tr><td>Paint (Interior, 4L)</td><td>gallon</td><td>450.00 - 800.00</td><td>625.00</td></tr>
-                                <tr><td>Apartment Rent (1BR)</td><td>month</td><td>5,000 - 12,000</td><td>8,500</td></tr>
-                                <tr><td>House Rent (2-3BR)</td><td>month</td><td>12,000 - 25,000</td><td>18,500</td></tr>
+                                <tr data-item="Cement" data-unit="bag (40kg)" data-price="315.00"><td>Cement</td><td>bag (40kg)</td><td>280.00 - 350.00</td><td>315.00</td><td><button class="btn-add-item" onclick="addToCollection('Cement', 'bag (40kg)', '280.00 - 350.00', '315.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Steel Bars (Grade 40)" data-unit="piece" data-price="215.00"><td>Steel Bars (Grade 40)</td><td>piece</td><td>180.00 - 250.00</td><td>215.00</td><td><button class="btn-add-item" onclick="addToCollection('Steel Bars (Grade 40)', 'piece', '180.00 - 250.00', '215.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Hollow Blocks (4')" data-unit="piece" data-price="23.00"><td>Hollow Blocks (4")</td><td>piece</td><td>18.00 - 28.00</td><td>23.00</td><td><button class="btn-add-item" onclick="addToCollection('Hollow Blocks (4)', 'piece', '18.00 - 28.00', '23.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Hollow Blocks (6')" data-unit="piece" data-price="34.00"><td>Hollow Blocks (6")</td><td>piece</td><td>28.00 - 40.00</td><td>34.00</td><td><button class="btn-add-item" onclick="addToCollection('Hollow Blocks (6)', 'piece', '28.00 - 40.00', '34.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Plywood (1/4')" data-unit="sheet" data-price="425.00"><td>Plywood (1/4")</td><td>sheet</td><td>350.00 - 500.00</td><td>425.00</td><td><button class="btn-add-item" onclick="addToCollection('Plywood (1/4)', 'sheet', '350.00 - 500.00', '425.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Roofing (Long Span)" data-unit="meter" data-price="550.00"><td>Roofing (Long Span)</td><td>meter</td><td>450.00 - 650.00</td><td>550.00</td><td><button class="btn-add-item" onclick="addToCollection('Roofing (Long Span)', 'meter', '450.00 - 650.00', '550.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Paint (Interior, 4L)" data-unit="gallon" data-price="625.00"><td>Paint (Interior, 4L)</td><td>gallon</td><td>450.00 - 800.00</td><td>625.00</td><td><button class="btn-add-item" onclick="addToCollection('Paint (Interior, 4L)', 'gallon', '450.00 - 800.00', '625.00')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Apartment Rent (1BR)" data-unit="month" data-price="8,500"><td>Apartment Rent (1BR)</td><td>month</td><td>5,000 - 12,000</td><td>8,500</td><td><button class="btn-add-item" onclick="addToCollection('Apartment Rent (1BR)', 'month', '5,000 - 12,000', '8,500')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="House Rent (2-3BR)" data-unit="month" data-price="18,500"><td>House Rent (2-3BR)</td><td>month</td><td>12,000 - 25,000</td><td>18,500</td><td><button class="btn-add-item" onclick="addToCollection('House Rent (2-3BR)', 'month', '12,000 - 25,000', '18,500')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1211,17 +1219,18 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Doctor Consultation (GP)</td><td>visit</td><td>500 - 1,000</td><td>750</td></tr>
-                                <tr><td>Doctor Consultation (Specialist)</td><td>visit</td><td>800 - 2,000</td><td>1,400</td></tr>
-                                <tr><td>Dental Check-up</td><td>visit</td><td>400 - 800</td><td>600</td></tr>
-                                <tr><td>Blood Test (CBC)</td><td>test</td><td>250 - 500</td><td>375</td></tr>
-                                <tr><td>X-Ray (Chest)</td><td>procedure</td><td>350 - 700</td><td>525</td></tr>
-                                <tr><td>Ultrasound</td><td>procedure</td><td>800 - 1,500</td><td>1,150</td></tr>
-                                <tr><td>Generic Medicine (Paracetamol)</td><td>tablet</td><td>3 - 8</td><td>5.50</td></tr>
-                                <tr><td>Multivitamins</td><td>bottle</td><td>150 - 400</td><td>275</td></tr>
+                                <tr data-item="Doctor Consultation (GP)" data-unit="visit" data-price="750"><td>Doctor Consultation (GP)</td><td>visit</td><td>500 - 1,000</td><td>750</td><td><button class="btn-add-item" onclick="addToCollection('Doctor Consultation (GP)', 'visit', '500 - 1,000', '750')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Doctor Consultation (Specialist)" data-unit="visit" data-price="1,400"><td>Doctor Consultation (Specialist)</td><td>visit</td><td>800 - 2,000</td><td>1,400</td><td><button class="btn-add-item" onclick="addToCollection('Doctor Consultation (Specialist)', 'visit', '800 - 2,000', '1,400')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Dental Check-up" data-unit="visit" data-price="600"><td>Dental Check-up</td><td>visit</td><td>400 - 800</td><td>600</td><td><button class="btn-add-item" onclick="addToCollection('Dental Check-up', 'visit', '400 - 800', '600')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Blood Test (CBC)" data-unit="test" data-price="375"><td>Blood Test (CBC)</td><td>test</td><td>250 - 500</td><td>375</td><td><button class="btn-add-item" onclick="addToCollection('Blood Test (CBC)', 'test', '250 - 500', '375')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="X-Ray (Chest)" data-unit="procedure" data-price="525"><td>X-Ray (Chest)</td><td>procedure</td><td>350 - 700</td><td>525</td><td><button class="btn-add-item" onclick="addToCollection('X-Ray (Chest)', 'procedure', '350 - 700', '525')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Ultrasound" data-unit="procedure" data-price="1,150"><td>Ultrasound</td><td>procedure</td><td>800 - 1,500</td><td>1,150</td><td><button class="btn-add-item" onclick="addToCollection('Ultrasound', 'procedure', '800 - 1,500', '1,150')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Generic Medicine (Paracetamol)" data-unit="tablet" data-price="5.50"><td>Generic Medicine (Paracetamol)</td><td>tablet</td><td>3 - 8</td><td>5.50</td><td><button class="btn-add-item" onclick="addToCollection('Generic Medicine (Paracetamol)', 'tablet', '3 - 8', '5.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Multivitamins" data-unit="bottle" data-price="275"><td>Multivitamins</td><td>bottle</td><td>150 - 400</td><td>275</td><td><button class="btn-add-item" onclick="addToCollection('Multivitamins', 'bottle', '150 - 400', '275')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1236,17 +1245,18 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Public School Tuition (K-12)</td><td>year</td><td>Free</td><td>Free</td></tr>
-                                <tr><td>Private School Tuition (Elementary)</td><td>year</td><td>25,000 - 60,000</td><td>42,500</td></tr>
-                                <tr><td>Private School Tuition (High School)</td><td>year</td><td>35,000 - 80,000</td><td>57,500</td></tr>
-                                <tr><td>College Tuition (State University)</td><td>unit</td><td>500 - 1,500</td><td>1,000</td></tr>
-                                <tr><td>College Tuition (Private)</td><td>unit</td><td>1,500 - 5,000</td><td>3,250</td></tr>
-                                <tr><td>Notebooks</td><td>piece</td><td>15 - 50</td><td>32.50</td></tr>
-                                <tr><td>Ballpen</td><td>piece</td><td>8 - 25</td><td>16.50</td></tr>
-                                <tr><td>School Uniform</td><td>set</td><td>800 - 1,500</td><td>1,150</td></tr>
+                                <tr data-item="Public School Tuition (K-12)" data-unit="year" data-price="Free"><td>Public School Tuition (K-12)</td><td>year</td><td>Free</td><td>Free</td><td><button class="btn-add-item" onclick="addToCollection('Public School Tuition (K-12)', 'year', 'Free', 'Free')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Private School Tuition (Elementary)" data-unit="year" data-price="42,500"><td>Private School Tuition (Elementary)</td><td>year</td><td>25,000 - 60,000</td><td>42,500</td><td><button class="btn-add-item" onclick="addToCollection('Private School Tuition (Elementary)', 'year', '25,000 - 60,000', '42,500')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Private School Tuition (High School)" data-unit="year" data-price="57,500"><td>Private School Tuition (High School)</td><td>year</td><td>35,000 - 80,000</td><td>57,500</td><td><button class="btn-add-item" onclick="addToCollection('Private School Tuition (High School)', 'year', '35,000 - 80,000', '57,500')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="College Tuition (State University)" data-unit="unit" data-price="1,000"><td>College Tuition (State University)</td><td>unit</td><td>500 - 1,500</td><td>1,000</td><td><button class="btn-add-item" onclick="addToCollection('College Tuition (State University)', 'unit', '500 - 1,500', '1,000')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="College Tuition (Private)" data-unit="unit" data-price="3,250"><td>College Tuition (Private)</td><td>unit</td><td>1,500 - 5,000</td><td>3,250</td><td><button class="btn-add-item" onclick="addToCollection('College Tuition (Private)', 'unit', '1,500 - 5,000', '3,250')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Notebooks" data-unit="piece" data-price="32.50"><td>Notebooks</td><td>piece</td><td>15 - 50</td><td>32.50</td><td><button class="btn-add-item" onclick="addToCollection('Notebooks', 'piece', '15 - 50', '32.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Ballpen" data-unit="piece" data-price="16.50"><td>Ballpen</td><td>piece</td><td>8 - 25</td><td>16.50</td><td><button class="btn-add-item" onclick="addToCollection('Ballpen', 'piece', '8 - 25', '16.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="School Uniform" data-unit="set" data-price="1,150"><td>School Uniform</td><td>set</td><td>800 - 1,500</td><td>1,150</td><td><button class="btn-add-item" onclick="addToCollection('School Uniform', 'set', '800 - 1,500', '1,150')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1261,17 +1271,18 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Shampoo</td><td>180ml</td><td>120 - 250</td><td>185</td></tr>
-                                <tr><td>Soap (Bath)</td><td>piece</td><td>25 - 60</td><td>42.50</td></tr>
-                                <tr><td>Toothpaste</td><td>tube</td><td>45 - 120</td><td>82.50</td></tr>
-                                <tr><td>Detergent Powder</td><td>kg</td><td>60 - 120</td><td>90</td></tr>
-                                <tr><td>Dishwashing Liquid</td><td>500ml</td><td>50 - 100</td><td>75</td></tr>
-                                <tr><td>Toilet Paper (4 rolls)</td><td>pack</td><td>80 - 150</td><td>115</td></tr>
-                                <tr><td>Haircut (Barbershop)</td><td>service</td><td>80 - 200</td><td>140</td></tr>
-                                <tr><td>Haircut (Salon)</td><td>service</td><td>200 - 500</td><td>350</td></tr>
+                                <tr data-item="Shampoo" data-unit="180ml" data-price="185"><td>Shampoo</td><td>180ml</td><td>120 - 250</td><td>185</td><td><button class="btn-add-item" onclick="addToCollection('Shampoo', '180ml', '120 - 250', '185')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Soap (Bath)" data-unit="piece" data-price="42.50"><td>Soap (Bath)</td><td>piece</td><td>25 - 60</td><td>42.50</td><td><button class="btn-add-item" onclick="addToCollection('Soap (Bath)', 'piece', '25 - 60', '42.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Toothpaste" data-unit="tube" data-price="82.50"><td>Toothpaste</td><td>tube</td><td>45 - 120</td><td>82.50</td><td><button class="btn-add-item" onclick="addToCollection('Toothpaste', 'tube', '45 - 120', '82.50')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Detergent Powder" data-unit="kg" data-price="90"><td>Detergent Powder</td><td>kg</td><td>60 - 120</td><td>90</td><td><button class="btn-add-item" onclick="addToCollection('Detergent Powder', 'kg', '60 - 120', '90')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Dishwashing Liquid" data-unit="500ml" data-price="75"><td>Dishwashing Liquid</td><td>500ml</td><td>50 - 100</td><td>75</td><td><button class="btn-add-item" onclick="addToCollection('Dishwashing Liquid', '500ml', '50 - 100', '75')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Toilet Paper (4 rolls)" data-unit="pack" data-price="115"><td>Toilet Paper (4 rolls)</td><td>pack</td><td>80 - 150</td><td>115</td><td><button class="btn-add-item" onclick="addToCollection('Toilet Paper (4 rolls)', 'pack', '80 - 150', '115')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Haircut (Barbershop)" data-unit="service" data-price="140"><td>Haircut (Barbershop)</td><td>service</td><td>80 - 200</td><td>140</td><td><button class="btn-add-item" onclick="addToCollection('Haircut (Barbershop)', 'service', '80 - 200', '140')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Haircut (Salon)" data-unit="service" data-price="350"><td>Haircut (Salon)</td><td>service</td><td>200 - 500</td><td>350</td><td><button class="btn-add-item" onclick="addToCollection('Haircut (Salon)', 'service', '200 - 500', '350')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1286,16 +1297,17 @@
                                     <th>Unit</th>
                                     <th>Price Range (PHP)</th>
                                     <th>Average Price</th>
+                                    <th class="action-col">Add</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>T-Shirt</td><td>piece</td><td>150 - 500</td><td>325</td></tr>
-                                <tr><td>Jeans</td><td>pair</td><td>400 - 1,200</td><td>800</td></tr>
-                                <tr><td>Dress (Casual)</td><td>piece</td><td>300 - 1,000</td><td>650</td></tr>
-                                <tr><td>Shorts</td><td>pair</td><td>200 - 600</td><td>400</td></tr>
-                                <tr><td>Sneakers</td><td>pair</td><td>500 - 2,500</td><td>1,500</td></tr>
-                                <tr><td>Slippers</td><td>pair</td><td>100 - 350</td><td>225</td></tr>
-                                <tr><td>Formal Shoes</td><td>pair</td><td>800 - 3,000</td><td>1,900</td></tr>
+                                <tr data-item="T-Shirt" data-unit="piece" data-price="325"><td>T-Shirt</td><td>piece</td><td>150 - 500</td><td>325</td><td><button class="btn-add-item" onclick="addToCollection('T-Shirt', 'piece', '150 - 500', '325')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Jeans" data-unit="pair" data-price="800"><td>Jeans</td><td>pair</td><td>400 - 1,200</td><td>800</td><td><button class="btn-add-item" onclick="addToCollection('Jeans', 'pair', '400 - 1,200', '800')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Dress (Casual)" data-unit="piece" data-price="650"><td>Dress (Casual)</td><td>piece</td><td>300 - 1,000</td><td>650</td><td><button class="btn-add-item" onclick="addToCollection('Dress (Casual)', 'piece', '300 - 1,000', '650')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Shorts" data-unit="pair" data-price="400"><td>Shorts</td><td>pair</td><td>200 - 600</td><td>400</td><td><button class="btn-add-item" onclick="addToCollection('Shorts', 'pair', '200 - 600', '400')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Sneakers" data-unit="pair" data-price="1,500"><td>Sneakers</td><td>pair</td><td>500 - 2,500</td><td>1,500</td><td><button class="btn-add-item" onclick="addToCollection('Sneakers', 'pair', '500 - 2,500', '1,500')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Slippers" data-unit="pair" data-price="225"><td>Slippers</td><td>pair</td><td>100 - 350</td><td>225</td><td><button class="btn-add-item" onclick="addToCollection('Slippers', 'pair', '100 - 350', '225')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
+                                <tr data-item="Formal Shoes" data-unit="pair" data-price="1,900"><td>Formal Shoes</td><td>pair</td><td>800 - 3,000</td><td>1,900</td><td><button class="btn-add-item" onclick="addToCollection('Formal Shoes', 'pair', '800 - 3,000', '1,900')" title="Add to collection"><i class="fas fa-plus"></i></button></td></tr>
                             </tbody>
                         </table>
                     </div>
