@@ -1687,11 +1687,14 @@ function renderAllRequests() {
                 <p>Submitted by: ${req.name}</p>
                 <div class="request-item-meta">
                     <span><i class="fas fa-phone"></i> ${req.phone}</span>
-                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</span>
+                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</span>
                 </div>
             </div>
             <div class="request-item-id">${req.id}</div>
-            <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+            <div class="request-item-actions">
+                <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+                ${req.status === 'completed' ? `<button onclick="downloadCompletedRequest('${req.id}')" class="btn-download-completed" title="Download Completed Document"><i class="fas fa-download"></i></button>` : ''}
+            </div>
         </div>
     `).join('');
 }
@@ -1753,13 +1756,86 @@ function filterAllRequests() {
                 <p>Submitted by: ${req.name}</p>
                 <div class="request-item-meta">
                     <span><i class="fas fa-phone"></i> ${req.phone}</span>
-                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</span>
+                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</span>
                 </div>
             </div>
             <div class="request-item-id">${req.id}</div>
-            <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+            <div class="request-item-actions">
+                <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+                ${req.status === 'completed' ? `<button onclick="downloadCompletedRequest('${req.id}')" class="btn-download-completed" title="Download Completed Document"><i class="fas fa-download"></i></button>` : ''}
+            </div>
         </div>
     `).join('');
+}
+
+function downloadCompletedRequest(requestId) {
+    const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    const request = requests.find(r => r.id === requestId);
+    
+    if (!request) {
+        showNotification('Request not found', 'error');
+        return;
+    }
+    
+    const requestTypeNames = {
+        'governor-esig': "Governor's E-Signature",
+        'financial-assistance': 'Financial Assistance',
+        'obr-signature': 'OBR Signature',
+        'pr-signature': 'PR Signature',
+        'dtr': 'Daily Time Record (DTR)',
+        'leave': 'Leave Application',
+        'certificate': 'Certificate Request',
+        'travel': 'Travel Order'
+    };
+    
+    const completedContent = `
+========================================
+   OFFICE OF THE PROVINCIAL GOVERNOR
+         BATAAN PROVINCE
+========================================
+
+      COMPLETED REQUEST DOCUMENT
+----------------------------------------
+
+Request ID: ${request.id}
+Request Type: ${requestTypeNames[request.type] || request.type}
+
+Submitted By:
+  Name: ${request.name}
+  Phone: ${request.phone}
+  Office/Department: ${request.office || 'N/A'}
+
+Details:
+${request.purpose}
+
+----------------------------------------
+Submitted: ${new Date(request.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)
+Status: COMPLETED
+Completed Date: ${new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)
+----------------------------------------
+
+This document certifies that the request has been
+processed and completed by the Office of the 
+Provincial Governor.
+
+For verification, contact opg@bataan.gov.ph
+View all requests at: employee-dashboard.html
+
+========================================
+    `;
+    
+    // Create and download file
+    const blob = new Blob([completedContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Completed_Request_${request.id}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Completed document downloaded!', 'success');
 }
 
 function showTrackRequestInterface() {

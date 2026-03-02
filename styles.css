@@ -3568,6 +3568,32 @@ html {
     border-radius: 6px;
 }
 
+.request-item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.btn-download-completed {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-download-completed:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
 .empty-requests {
     text-align: center;
     padding: 60px 20px;
@@ -3578,6 +3604,48 @@ html {
     font-size: 4rem;
     margin-bottom: 20px;
     color: #cbd5e1;
+}
+
+/* Admin Links Bar */
+.admin-links-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.admin-link i {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .admin-links-bar {
+        flex-direction: column;
+    }
+    
+    .admin-link {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 768px) {
