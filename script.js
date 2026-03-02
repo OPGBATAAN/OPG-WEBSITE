@@ -350,8 +350,10 @@ window.addEventListener('load', () => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         // Close mobile menu if open
-        if (navMenu.classList.contains('active')) {
-            hamburger.classList.remove('active');
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (navMenu && navMenu.classList.contains('active')) {
+            if (hamburger) hamburger.classList.remove('active');
             navMenu.classList.remove('active');
         }
         
@@ -629,11 +631,11 @@ function updatePHTime() {
     }
 }
 
-// Initialize clock after DOM loads
-document.addEventListener('DOMContentLoaded', () => {
-    updatePHTime();
-    setInterval(updatePHTime, 1000);
-});
+// Initialize clock after DOM loads - REMOVED: Now handled in main DOMContentLoaded
+// document.addEventListener('DOMContentLoaded', () => {
+//     updatePHTime();
+//     setInterval(updatePHTime, 1000);
+// });
 
 // ==================== DASHBOARD FUNCTIONS ====================
 // Simple XLSX parser for Excel/CSV files (lightweight implementation)
