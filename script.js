@@ -1468,43 +1468,6 @@ function openRequestForm(requestType) {
     }
 }
 
-function submitRequest(event) {
-    event.preventDefault();
-    
-    const formData = {
-        type: currentRequestType,
-        name: document.getElementById('reqName').value,
-        phone: document.getElementById('reqPhone').value,
-        office: document.getElementById('reqOffice').value,
-        purpose: document.getElementById('reqPurpose').value,
-        submittedAt: new Date().toISOString(),
-        id: 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
-    };
-    
-    // Handle file uploads if any
-    const fileInput = document.getElementById('reqDocuments');
-    if (fileInput.files.length > 0 && typeof handleFileUploadForEmail === 'function') {
-        handleFileUploadForEmail(fileInput.files, formData);
-    }
-    
-    // Store in localStorage (simulate submission)
-    let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
-    requests.push(formData);
-    localStorage.setItem('submittedRequests', JSON.stringify(requests));
-    
-    // Store current request for receipt download
-    localStorage.setItem('currentRequestReceipt', JSON.stringify(formData));
-    
-    // Send email notifications if email service is available
-    if (typeof sendEmail === 'function' && typeof EMAIL_TEMPLATES !== 'undefined') {
-        // Send to admin
-        sendEmail('opg@bataan.gov.ph', EMAIL_TEMPLATES.newRequest, formData);
-    }
-    
-    // Show success screen
-    showRequestSuccessScreen(formData);
-}
-
 function showRequestSuccessScreen(formData) {
     // Hide form
     document.getElementById('requestFormContainer').style.display = 'none';
@@ -2430,7 +2393,7 @@ function submitRequest(event) {
         type: currentRequestType,
         status: 'pending',
         timestamp: new Date().toISOString(),
-        files: uploadedFiles.map(f => f.name),
+        files: uploadedFiles.map(f => ({ name: f.name, size: f.size })),
         hasSignature: !!signatureData
     };
     
@@ -2445,7 +2408,7 @@ function submitRequest(event) {
     }
     
     // Show success screen
-    showRequestSuccess(requestData);
+    showRequestSuccessScreen(requestData);
     
     // Reset form
     document.getElementById('requestForm').reset();
