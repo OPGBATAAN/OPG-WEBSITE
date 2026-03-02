@@ -39,7 +39,7 @@
                         <a href="employee-dashboard.html" class="nav-link nav-link-budget" onclick="window.open('employee-dashboard.html', 'AIPDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes'); return false;">Sign In</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link nav-link-signup">Sign Up</a>
+                        <a href="#" class="nav-link nav-link-signup" onclick="openSignupModal(); return false;">Sign Up</a>
                     </li>
                 </ul>
                 <div class="hamburger">
@@ -629,6 +629,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Sign Up</h3>
+                <button class="modal-close" onclick="closeSignupModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" name="password" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPhone">Phone Number</label>
+                        <input type="tel" id="signupPhone" name="phone" placeholder="Enter your phone number">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+                <p class="form-footer">Already have an account? <a href="#" onclick="closeSignupModal(); return false;">Sign In</a></p>
             </div>
         </div>
     </div>

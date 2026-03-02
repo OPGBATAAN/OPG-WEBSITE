@@ -611,6 +611,69 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// ==================== SIGN UP MODAL FUNCTIONS ====================
+function openSignupModal() {
+    const modal = document.getElementById('signupModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeSignupModal() {
+    const modal = document.getElementById('signupModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function handleSignup(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    const phone = document.getElementById('signupPhone').value;
+    
+    // Basic validation
+    if (password !== confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return;
+    }
+    
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+    
+    // Store user data (in a real app, this would be sent to a server)
+    const userData = {
+        name: name,
+        email: email,
+        phone: phone,
+        createdAt: new Date().toISOString()
+    };
+    
+    // Save to localStorage (for demo purposes)
+    localStorage.setItem('userData', JSON.stringify(userData));
+    
+    alert('Account created successfully! Welcome to the Office of the Provincial Governor website.');
+    
+    // Close modal and reset form
+    closeSignupModal();
+    document.getElementById('signupForm').reset();
+}
+
+// Close signup modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('signupModal');
+    if (event.target === modal) {
+        closeSignupModal();
+    }
+});
+
 // Console welcome message
 console.log('%cOffice of the Provincial Governor Website', 'color: #1e3a8a; font-size: 20px; font-weight: bold;');
 console.log('%cBuilt with dedication for public service', 'color: #3730a3; font-size: 14px;');
