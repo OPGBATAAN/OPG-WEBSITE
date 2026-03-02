@@ -596,3 +596,23 @@ document.addEventListener('click', function(event) {
 // Console welcome message
 console.log('%cOffice of the Provincial Governor Website', 'color: #1e3a8a; font-size: 20px; font-weight: bold;');
 console.log('%cBuilt with dedication for public service', 'color: #3730a3; font-size: 14px;');
+
+// Philippines Time Clock
+function updatePHTime() {
+    const timeElement = document.getElementById('ph-time');
+    if (timeElement) {
+        const now = new Date();
+        const options = {
+            timeZone: 'Asia/Manila',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
+        timeElement.textContent = now.toLocaleTimeString('en-US', options) + ' PH Time';
+    }
+}
+
+// Update clock immediately and every second
+updatePHTime();
+setInterval(updatePHTime, 1000);
