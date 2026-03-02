@@ -1615,6 +1615,7 @@ function showRequestsGrid() {
     const successScreen = document.getElementById('requestSuccessScreen');
     const trackInterface = document.getElementById('trackRequestInterface');
     const trackResult = document.getElementById('trackResult');
+    const allRequestsInterface = document.getElementById('allRequestsInterface');
     
     if (grid && form) {
         grid.style.display = 'grid';
@@ -1629,6 +1630,136 @@ function showRequestsGrid() {
     if (trackResult) {
         trackResult.style.display = 'none';
     }
+    if (allRequestsInterface) {
+        allRequestsInterface.style.display = 'none';
+    }
+}
+
+function showAllRequestsInterface() {
+    const grid = document.querySelector('.requests-grid');
+    const allRequestsInterface = document.getElementById('allRequestsInterface');
+    
+    if (grid && allRequestsInterface) {
+        grid.style.display = 'none';
+        allRequestsInterface.style.display = 'block';
+        renderAllRequests();
+    }
+}
+
+function renderAllRequests() {
+    const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    const container = document.getElementById('allRequestsList');
+    const countElement = document.getElementById('totalRequestsCount');
+    
+    if (countElement) {
+        countElement.textContent = `${requests.length} total request${requests.length !== 1 ? 's' : ''}`;
+    }
+    
+    if (requests.length === 0) {
+        container.innerHTML = `
+            <div class="empty-requests">
+                <i class="fas fa-inbox"></i>
+                <h3>No Requests Found</h3>
+                <p>No requests have been submitted yet.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const requestTypeNames = {
+        'governor-esig': "Governor's E-Signature",
+        'financial-assistance': 'Financial Assistance',
+        'obr-signature': 'OBR Signature',
+        'pr-signature': 'PR Signature',
+        'dtr': 'Daily Time Record (DTR)',
+        'leave': 'Leave Application',
+        'certificate': 'Certificate Request',
+        'travel': 'Travel Order'
+    };
+    
+    // Sort by newest first
+    const sortedRequests = [...requests].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    
+    container.innerHTML = sortedRequests.map(req => `
+        <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
+            <div class="request-item-info">
+                <h4>${requestTypeNames[req.type] || req.type}</h4>
+                <p>Submitted by: ${req.name}</p>
+                <div class="request-item-meta">
+                    <span><i class="fas fa-phone"></i> ${req.phone}</span>
+                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</span>
+                </div>
+            </div>
+            <div class="request-item-id">${req.id}</div>
+            <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+        </div>
+    `).join('');
+}
+
+function filterAllRequests() {
+    const searchTerm = document.getElementById('allRequestsSearch').value.toLowerCase();
+    const typeFilter = document.getElementById('allRequestsFilter').value;
+    const statusFilter = document.getElementById('allRequestsStatusFilter').value;
+    
+    const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    const container = document.getElementById('allRequestsList');
+    const countElement = document.getElementById('totalRequestsCount');
+    
+    const requestTypeNames = {
+        'governor-esig': "Governor's E-Signature",
+        'financial-assistance': 'Financial Assistance',
+        'obr-signature': 'OBR Signature',
+        'pr-signature': 'PR Signature',
+        'dtr': 'Daily Time Record (DTR)',
+        'leave': 'Leave Application',
+        'certificate': 'Certificate Request',
+        'travel': 'Travel Order'
+    };
+    
+    let filtered = requests.filter(req => {
+        const matchesSearch = !searchTerm || 
+            req.name.toLowerCase().includes(searchTerm) || 
+            req.id.toLowerCase().includes(searchTerm) || 
+            (requestTypeNames[req.type] || req.type).toLowerCase().includes(searchTerm);
+        
+        const matchesType = !typeFilter || req.type === typeFilter;
+        const matchesStatus = !statusFilter || (req.status || 'pending') === statusFilter;
+        
+        return matchesSearch && matchesType && matchesStatus;
+    });
+    
+    // Sort by newest first
+    filtered.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    
+    if (countElement) {
+        countElement.textContent = `${filtered.length} request${filtered.length !== 1 ? 's' : ''} found`;
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-requests">
+                <i class="fas fa-search"></i>
+                <h3>No Matching Requests</h3>
+                <p>No requests match your search criteria.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = filtered.map(req => `
+        <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
+            <div class="request-item-info">
+                <h4>${requestTypeNames[req.type] || req.type}</h4>
+                <p>Submitted by: ${req.name}</p>
+                <div class="request-item-meta">
+                    <span><i class="fas fa-phone"></i> ${req.phone}</span>
+                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</span>
+                </div>
+            </div>
+            <div class="request-item-id">${req.id}</div>
+            <div class="request-item-status ${req.status || 'pending'}">${(req.status || 'pending').replace('-', ' ').toUpperCase()}</div>
+        </div>
+    `).join('');
 }
 
 function showTrackRequestInterface() {

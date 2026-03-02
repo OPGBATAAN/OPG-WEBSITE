@@ -642,6 +642,23 @@
             </div>
             <div class="requests-body">
                 <div class="requests-grid">
+                    <!-- View All Requests Button -->
+                    <div class="request-card view-all" onclick="showAllRequestsInterface()">
+                        <div class="request-icon view-all-icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>View All Requests</h3>
+                            <p>View status of all submitted requests with search and filter</p>
+                            <div class="request-badge">
+                                <span class="badge-standard"><i class="fas fa-eye"></i> View All</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
                     <!-- Track Request Button -->
                     <div class="request-card track-request" onclick="showTrackRequestInterface()">
                         <div class="request-icon track">
@@ -825,6 +842,48 @@
                     </div>
                     <div id="trackResult" class="track-result" style="display: none;">
                         <!-- Results will be populated here -->
+                    </div>
+                </div>
+
+                <!-- View All Requests Status Interface -->
+                <div id="allRequestsInterface" class="all-requests-interface" style="display: none;">
+                    <div class="form-header">
+                        <button class="back-btn" onclick="showRequestsGrid()">
+                            <i class="fas fa-arrow-left"></i> Back to Requests
+                        </button>
+                        <h3><i class="fas fa-list-alt"></i> All Requests Status</h3>
+                    </div>
+                    <div class="all-requests-controls">
+                        <div class="search-filter-row">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="allRequestsSearch" placeholder="Search by name, ID, or type..." onkeyup="filterAllRequests()">
+                            </div>
+                            <select id="allRequestsFilter" onchange="filterAllRequests()">
+                                <option value="">All Types</option>
+                                <option value="governor-esig">Governor's E-Signature</option>
+                                <option value="financial-assistance">Financial Assistance</option>
+                                <option value="obr-signature">OBR Signature</option>
+                                <option value="pr-signature">PR Signature</option>
+                                <option value="dtr">Daily Time Record</option>
+                                <option value="leave">Leave Application</option>
+                                <option value="certificate">Certificate Request</option>
+                                <option value="travel">Travel Order</option>
+                            </select>
+                            <select id="allRequestsStatusFilter" onchange="filterAllRequests()">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending Review</option>
+                                <option value="processing">Processing</option>
+                                <option value="completed">Completed</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="requests-stats">
+                            <span id="totalRequestsCount">0 total requests</span>
+                        </div>
+                    </div>
+                    <div id="allRequestsList" class="all-requests-list">
+                        <!-- All requests will be populated here -->
                     </div>
                 </div>
 
