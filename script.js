@@ -947,7 +947,7 @@ function exportBudget() {
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, '2026 AIP Budget');
-    XLSX.writeFile(wb, '2026_AIP_Budget_Export.xlsx');
+    XLSX.writeFile(wb, 'AIP_Budget_Export.xlsx');
 }
 
 // Clear Budget Data
@@ -1097,4 +1097,7 @@ function filterAIPSection() {
 document.getElementById('aipViewModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeAIPView();
 });
+
+// Update current year in footer
+document.getElementById('currentYear')?.textContent = new Date().getFullYear();
 

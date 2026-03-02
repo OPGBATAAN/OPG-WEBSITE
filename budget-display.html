@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 AIP Budget - Office of the Provincial Governor</title>
+    <title>AIP Budget - Office of the Provincial Governor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -363,7 +363,7 @@
     
     <div class="budget-container">
         <div class="budget-header">
-            <div class="budget-title">2026 AIP Budget</div>
+            <div class="budget-title">AIP Budget</div>
             <div class="budget-subtitle">Annual Investment Plan - Upload and View Budget Data</div>
         </div>
         
@@ -428,7 +428,7 @@
         <div class="no-data" id="noData">
             <i class="fas fa-file-upload"></i>
             <h3>No Data Loaded</h3>
-            <p>Upload an Excel or CSV file to view the 2026 AIP Budget</p>
+            <p>Upload an Excel or CSV file to view the AIP Budget</p>
         </div>
     </div>
     
@@ -640,8 +640,8 @@
             
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, '2026 AIP Budget');
-            XLSX.writeFile(wb, '2026_AIP_Budget_Export.xlsx');
+            XLSX.utils.book_append_sheet(wb, ws, 'AIP Budget');
+            XLSX.writeFile(wb, 'AIP_Budget_Export.xlsx');
         }
         
         function clearData() {
