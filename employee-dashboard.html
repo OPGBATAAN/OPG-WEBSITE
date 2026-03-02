@@ -697,6 +697,9 @@
                 <div class="sidebar-item active" onclick="navigate('overview', this)">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </div>
+                <div class="sidebar-item" onclick="navigate('requests', this)">
+                    <i class="fas fa-file-signature"></i><span>Requests</span>
+                </div>
                 <div class="sidebar-item" onclick="navigate('upload', this)">
                     <i class="fas fa-cloud-upload-alt"></i><span>Upload PPA</span>
                 </div>
@@ -831,6 +834,50 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- REQUESTS SECTION -->
+            <div class="content-section" id="requests">
+                <div class="section-header">
+                    <h2><i class="fas fa-file-signature"></i> E-Requests Management</h2>
+                    <p>View and manage all submitted requests with file attachments</p>
+                </div>
+
+                <div class="requests-controls">
+                    <div class="search-filter-row">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="adminRequestsSearch" placeholder="Search by name, ID, or type..." onkeyup="filterAdminRequests()">
+                        </div>
+                        <select id="adminRequestsFilter" onchange="filterAdminRequests()">
+                            <option value="">All Types</option>
+                            <option value="governor-esig">Governor's E-Signature</option>
+                            <option value="financial-assistance">Financial Assistance</option>
+                            <option value="obr-signature">OBR Signature</option>
+                            <option value="pr-signature">PR Signature</option>
+                            <option value="dtr">Daily Time Record</option>
+                            <option value="leave">Leave Application</option>
+                            <option value="certificate">Certificate Request</option>
+                            <option value="travel">Travel Order</option>
+                        </select>
+                        <select id="adminRequestsStatusFilter" onchange="filterAdminRequests()">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="requests-stats-bar">
+                        <span id="adminTotalRequests">0 total requests</span>
+                        <span id="adminPendingRequests" class="stat-pending">0 pending</span>
+                        <span id="adminCompletedRequests" class="stat-completed">0 completed</span>
+                    </div>
+                </div>
+
+                <div class="admin-requests-list" id="adminRequestsList">
+                    <!-- Requests will be populated here -->
                 </div>
             </div>
 
@@ -1359,6 +1406,278 @@
             document.getElementById('toastMsg').textContent = msg;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ==================== ADMIN REQUESTS MANAGEMENT ====================
+        function filterAdminRequests() {
+            const searchTerm = document.getElementById('adminRequestsSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('adminRequestsFilter').value;
+            const statusFilter = document.getElementById('adminRequestsStatusFilter').value;
+            
+            const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+            const container = document.getElementById('adminRequestsList');
+            
+            const requestTypeNames = {
+                'governor-esig': "Governor's E-Signature",
+                'financial-assistance': 'Financial Assistance',
+                'obr-signature': 'OBR Signature',
+                'pr-signature': 'PR Signature',
+                'dtr': 'Daily Time Record (DTR)',
+                'leave': 'Leave Application',
+                'certificate': 'Certificate Request',
+                'travel': 'Travel Order'
+            };
+            
+            let filtered = requests.filter(req => {
+                const matchesSearch = !searchTerm || 
+                    req.name.toLowerCase().includes(searchTerm) || 
+                    req.id.toLowerCase().includes(searchTerm) || 
+                    (requestTypeNames[req.type] || req.type).toLowerCase().includes(searchTerm);
+                
+                const matchesType = !typeFilter || req.type === typeFilter;
+                const matchesStatus = !statusFilter || (req.status || 'pending') === statusFilter;
+                
+                return matchesSearch && matchesType && matchesStatus;
+            });
+            
+            // Update stats
+            document.getElementById('adminTotalRequests').textContent = `${requests.length} total requests`;
+            document.getElementById('adminPendingRequests').textContent = `${requests.filter(r => !r.status || r.status === 'pending').length} pending`;
+            document.getElementById('adminCompletedRequests').textContent = `${requests.filter(r => r.status === 'completed').length} completed`;
+            
+            // Sort by newest first
+            filtered.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-requests">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No Requests Found</h3>
+                        <p>No requests match your search criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filtered.map(req => `
+                <div class="admin-request-item" data-id="${req.id}" data-type="${req.type}" data-status="${req.status || 'pending'}">
+                    <div class="admin-request-header">
+                        <div class="admin-request-type">
+                            <i class="fas fa-${getRequestIcon(req.type)}"></i>
+                            <span>${requestTypeNames[req.type] || req.type}</span>
+                        </div>
+                        <div class="admin-request-status ${req.status || 'pending'}">${(req.status || 'pending').toUpperCase()}</div>
+                    </div>
+                    <div class="admin-request-body">
+                        <div class="admin-request-info">
+                            <p><strong>Name:</strong> ${req.name}</p>
+                            <p><strong>Phone:</strong> ${req.phone}</p>
+                            <p><strong>Office:</strong> ${req.office || 'N/A'}</p>
+                            <p><strong>Submitted:</strong> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</p>
+                            <p class="request-id"><strong>ID:</strong> ${req.id}</p>
+                        </div>
+                        <div class="admin-request-details">
+                            <p><strong>Details:</strong></p>
+                            <p class="details-text">${req.purpose}</p>
+                        </div>
+                    </div>
+                    <div class="admin-request-actions">
+                        ${req.files && req.files.length > 0 ? `<button onclick="viewRequestFiles('${req.id}')" class="btn-view-files"><i class="fas fa-paperclip"></i> View Files (${req.files.length})</button>` : ''}
+                        <button onclick="updateRequestStatus('${req.id}', 'processing')" class="btn-status-processing" ${req.status === 'processing' || req.status === 'completed' || req.status === 'rejected' ? 'disabled' : ''}><i class="fas fa-spinner"></i> Mark Processing</button>
+                        <button onclick="updateRequestStatus('${req.id}', 'completed')" class="btn-status-complete" ${req.status === 'completed' || req.status === 'rejected' ? 'disabled' : ''}><i class="fas fa-check"></i> Complete</button>
+                        <button onclick="attachSignature('${req.id}')" class="btn-attach-sig"><i class="fas fa-signature"></i> Attach Signature</button>
+                        <button onclick="updateRequestStatus('${req.id}', 'rejected')" class="btn-status-reject" ${req.status === 'rejected' || req.status === 'completed' ? 'disabled' : ''}><i class="fas fa-times"></i> Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getRequestIcon(type) {
+            const icons = {
+                'governor-esig': 'signature',
+                'financial-assistance': 'hand-holding-usd',
+                'obr-signature': 'stamp',
+                'pr-signature': 'file-contract',
+                'dtr': 'clock',
+                'leave': 'umbrella-beach',
+                'certificate': 'certificate',
+                'travel': 'plane'
+            };
+            return icons[type] || 'file';
+        }
+        
+        function updateRequestStatus(requestId, newStatus) {
+            let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+            const requestIndex = requests.findIndex(r => r.id === requestId);
+            
+            if (requestIndex !== -1) {
+                const oldStatus = requests[requestIndex].status || 'pending';
+                requests[requestIndex].status = newStatus;
+                requests[requestIndex].statusUpdatedAt = new Date().toISOString();
+                
+                localStorage.setItem('submittedRequests', JSON.stringify(requests));
+                
+                // Send email notification
+                sendStatusUpdateEmail(requests[requestIndex], oldStatus, newStatus);
+                
+                addActivity(`Request ${requestId} marked as ${newStatus}`, 'info');
+                showToast(`Request marked as ${newStatus}`, 'success');
+                filterAdminRequests();
+            }
+        }
+        
+        function sendStatusUpdateEmail(request, oldStatus, newStatus) {
+            // Simulate sending email notification
+            const emailData = {
+                to: 'opg@bataan.gov.ph',
+                subject: `[OPG Request] Status Update - ${request.id}`,
+                body: `
+Request Status Updated
+======================
+
+Request ID: ${request.id}
+Type: ${request.type}
+Submitted by: ${request.name}
+
+Status Change: ${oldStatus} → ${newStatus}
+Updated at: ${new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)
+
+Details:
+${request.purpose}
+
+---
+This is an automated notification from the OPG Dashboard.
+                `
+            };
+            
+            // Store in admin email queue
+            let emailQueue = JSON.parse(localStorage.getItem('adminEmailQueue') || '[]');
+            emailQueue.unshift({
+                ...emailData,
+                timestamp: new Date().toISOString(),
+                status: 'sent'
+            });
+            localStorage.setItem('adminEmailQueue', JSON.stringify(emailQueue.slice(0, 100)));
+            
+            console.log('Email notification sent:', emailData);
+        }
+        
+        function viewRequestFiles(requestId) {
+            const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+            const request = requests.find(r => r.id === requestId);
+            
+            if (!request || !request.files || request.files.length === 0) {
+                showToast('No files attached to this request', 'error');
+                return;
+            }
+            
+            // Create modal to display files
+            const modal = document.createElement('div');
+            modal.className = 'file-viewer-modal';
+            modal.innerHTML = `
+                <div class="file-viewer-content">
+                    <div class="file-viewer-header">
+                        <h3><i class="fas fa-paperclip"></i> Attached Files - ${request.id}</h3>
+                        <button onclick="this.closest('.file-viewer-modal').remove()" class="close-btn">&times;</button>
+                    </div>
+                    <div class="file-list">
+                        ${request.files.map((file, index) => `
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <i class="fas fa-file"></i>
+                                    <span class="file-name">${file.name}</span>
+                                    <span class="file-size">(${(file.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                                <a href="${file.data}" download="${file.name}" class="btn-download-file">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function attachSignature(requestId) {
+            const requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+            const requestIndex = requests.findIndex(r => r.id === requestId);
+            
+            if (requestIndex === -1) return;
+            
+            // Create signature modal
+            const modal = document.createElement('div');
+            modal.className = 'signature-modal';
+            modal.innerHTML = `
+                <div class="signature-content">
+                    <div class="signature-header">
+                        <h3><i class="fas fa-signature"></i> Attach Signature - ${requestId}</h3>
+                        <button onclick="this.closest('.signature-modal').remove()" class="close-btn">&times;</button>
+                    </div>
+                    <div class="signature-body">
+                        <p>Upload signature image or draw signature:</p>
+                        <div class="signature-upload">
+                            <input type="file" id="signatureFile" accept="image/*" class="signature-input">
+                            <label for="signatureFile" class="signature-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click to upload signature image</span>
+                            </label>
+                        </div>
+                        <div class="signature-preview" id="signaturePreview"></div>
+                        <div class="signature-actions">
+                            <button onclick="saveSignature('${requestId}')" class="btn-save-sig"><i class="fas fa-save"></i> Save Signature</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Handle file preview
+            modal.querySelector('#signatureFile').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('signaturePreview').innerHTML = `
+                            <img src="${e.target.result}" alt="Signature Preview" style="max-width: 300px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        `;
+                        document.getElementById('signaturePreview').dataset.signatureData = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        function saveSignature(requestId) {
+            const preview = document.getElementById('signaturePreview');
+            const signatureData = preview.dataset.signatureData;
+            
+            if (!signatureData) {
+                showToast('Please upload a signature image first', 'error');
+                return;
+            }
+            
+            let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+            const requestIndex = requests.findIndex(r => r.id === requestId);
+            
+            if (requestIndex !== -1) {
+                requests[requestIndex].signature = signatureData;
+                requests[requestIndex].signatureAttachedAt = new Date().toISOString();
+                localStorage.setItem('submittedRequests', JSON.stringify(requests));
+                
+                document.querySelector('.signature-modal').remove();
+                showToast('Signature attached successfully!', 'success');
+                filterAdminRequests();
+            }
+        }
+        
+        // Load requests when navigating to requests section
+        const originalNavigate = navigate;
+        navigate = function(section, clickedElement) {
+            originalNavigate(section, clickedElement);
+            if (section === 'requests') {
+                filterAdminRequests();
+            }
+        };
     </script>
 </body>
 </html>
