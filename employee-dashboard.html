@@ -1011,6 +1011,81 @@
             margin-top: 8px;
         }
 
+        /* Request Files Preview */
+        .request-files-preview {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .request-files-preview p {
+            font-size: 0.85rem !important;
+            color: #475569 !important;
+            margin-bottom: 8px !important;
+        }
+
+        .files-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .file-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #bfdbfe;
+        }
+
+        .file-tag:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .file-tag i {
+            font-size: 0.75rem;
+        }
+
+        .no-files {
+            margin-top: 12px !important;
+            padding: 10px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            color: #94a3b8 !important;
+            font-size: 0.85rem !important;
+            font-style: italic;
+        }
+
+        .no-files i {
+            margin-right: 6px;
+            color: #cbd5e1;
+        }
+
+        /* Status Timestamp */
+        .status-timestamp {
+            margin-top: 12px !important;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.8rem !important;
+            color: #64748b !important;
+            font-style: italic;
+        }
+
+        .status-timestamp i {
+            margin-right: 6px;
+            color: #94a3b8;
+        }
+
         .admin-request-details {
             background: #f8fafc;
             border-radius: 10px;
@@ -2355,10 +2430,23 @@
                             <p><strong>Office:</strong> ${req.office || 'N/A'}</p>
                             <p><strong>Submitted:</strong> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</p>
                             <p class="request-id"><strong>ID:</strong> ${req.id}</p>
+                            ${req.files && req.files.length > 0 ? `
+                            <div class="request-files-preview">
+                                <p><strong>Attached Files:</strong></p>
+                                <div class="files-list">
+                                    ${req.files.map(file => `
+                                        <span class="file-tag" onclick="viewRequestFiles('${req.id}')">
+                                            <i class="fas fa-file"></i> ${file.name} (${(file.size / 1024).toFixed(1)} KB)
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : '<p class="no-files"><i class="fas fa-info-circle"></i> No files attached</p>'}
                         </div>
                         <div class="admin-request-details">
                             <p><strong>Details:</strong></p>
                             <p class="details-text">${req.purpose}</p>
+                            ${req.statusUpdatedAt ? `<p class="status-timestamp"><i class="fas fa-clock"></i> Status updated: ${new Date(req.statusUpdatedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</p>` : ''}
                         </div>
                     </div>
                     <div class="admin-request-actions">
