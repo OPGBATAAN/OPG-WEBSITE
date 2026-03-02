@@ -616,3 +616,370 @@ function updatePHTime() {
 // Update clock immediately and every second
 updatePHTime();
 setInterval(updatePHTime, 1000);
+
+// ==================== DASHBOARD FUNCTIONS ====================
+// Simple XLSX parser for Excel/CSV files (lightweight implementation)
+(function() {
+    // Minimal XLSX parser for CSV and basic Excel
+    window.XLSX = {
+        read: function(data, opts) {
+            // Try to detect if it's CSV or Excel
+            const text = new TextDecoder().decode(data.slice(0, 100));
+            if (text.includes('\n') && !text.includes('PK')) {
+                // It's likely CSV
+                return { SheetNames: ['Sheet1'], Sheets: { 'Sheet1': this.utils.csvToSheet(data) } };
+            }
+            // For simplicity, we'll assume CSV for now
+            const fullText = new TextDecoder().decode(data);
+            return { SheetNames: ['Sheet1'], Sheets: { 'Sheet1': this.utils.csvToSheet(data) } };
+        },
+        utils: {
+            csvToSheet: function(data) {
+                const text = new TextDecoder().decode(data);
+                const lines = text.split('\n');
+                const result = {};
+                let maxCol = 0;
+                lines.forEach((line, row) => {
+                    const cells = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                    cells.forEach((cell, col) => {
+                        if (cell) {
+                            const colLetter = String.fromCharCode(65 + col);
+                            result[colLetter + (row + 1)] = { v: cell };
+                            maxCol = Math.max(maxCol, col);
+                        }
+                    });
+                });
+                result['!ref'] = 'A1:' + String.fromCharCode(65 + maxCol) + lines.length;
+                return result;
+            },
+            sheet_to_json: function(sheet, opts) {
+                const range = sheet['!ref'] ? sheet['!ref'].split(':') : ['A1', 'A1'];
+                const start = this.decodeCell(range[0]);
+                const end = this.decodeCell(range[1]);
+                const result = [];
+                for (let row = start.row; row <= end.row; row++) {
+                    const rowData = [];
+                    for (let col = start.col; col <= end.col; col++) {
+                        const cell = sheet[this.encodeCell(col, row)];
+                        rowData.push(cell ? cell.v : '');
+                    }
+                    result.push(rowData);
+                }
+                return result;
+            },
+            json_to_sheet: function(data) {
+                const result = {};
+                if (!data.length) return result;
+                const headers = Object.keys(data[0]);
+                headers.forEach((h, i) => {
+                    result[String.fromCharCode(65 + i) + '1'] = { v: h };
+                });
+                data.forEach((row, i) => {
+                    headers.forEach((h, j) => {
+                        result[String.fromCharCode(65 + j) + (i + 2)] = { v: row[h] };
+                    });
+                });
+                result['!ref'] = 'A1:' + String.fromCharCode(65 + headers.length - 1) + (data.length + 1);
+                return result;
+            },
+            book_new: function() { return { SheetNames: [], Sheets: {} }; },
+            book_append_sheet: function(book, sheet, name) {
+                book.SheetNames.push(name);
+                book.Sheets[name] = sheet;
+            },
+            decodeCell: function(cell) {
+                const col = cell.charCodeAt(0) - 65;
+                const row = parseInt(cell.slice(1)) - 1;
+                return { col, row };
+            },
+            encodeCell: function(col, row) {
+                return String.fromCharCode(65 + col) + (row + 1);
+            }
+        },
+        writeFile: function(book, filename) {
+            const sheet = book.Sheets[book.SheetNames[0]];
+            const range = sheet['!ref'] ? sheet['!ref'].split(':') : ['A1', 'A1'];
+            const start = XLSX.utils.decodeCell(range[0]);
+            const end = XLSX.utils.decodeCell(range[1]);
+            let csv = '';
+            for (let row = start.row; row <= end.row; row++) {
+                const rowData = [];
+                for (let col = start.col; col <= end.col; col++) {
+                    const cell = sheet[XLSX.utils.encodeCell(col, row)];
+                    rowData.push(cell ? '"' + cell.v + '"' : '');
+                }
+                csv += rowData.join(',') + '\n';
+            }
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename.replace('.xlsx', '.csv');
+            a.click();
+        }
+    };
+})();
+
+// Dashboard Variables
+let budgetDataStore = [];
+let budgetSections = [];
+let currentBudgetData = [];
+const DASHBOARD_PASSWORD = 'opgbataan2026'; // Simple password protection
+
+// Open Dashboard Modal
+function openDashboard() {
+    document.getElementById('dashboardModal').classList.add('active');
+    document.getElementById('loginView').style.display = 'flex';
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('dashboardPassword').value = '';
+    document.getElementById('loginError').textContent = '';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Dashboard Modal
+function closeDashboard() {
+    document.getElementById('dashboardModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Login to Dashboard
+function loginDashboard() {
+    const password = document.getElementById('dashboardPassword').value;
+    if (password === DASHBOARD_PASSWORD) {
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'block';
+        document.getElementById('loginError').textContent = '';
+    } else {
+        document.getElementById('loginError').textContent = 'Incorrect password. Please try again.';
+    }
+}
+
+// Logout
+function logoutDashboard() {
+    document.getElementById('loginView').style.display = 'flex';
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('dashboardPassword').value = '';
+}
+
+// Open Budget Uploader
+function openBudgetUploader() {
+    const uploader = document.getElementById('budgetUploader');
+    uploader.style.display = uploader.style.display === 'none' ? 'block' : 'none';
+}
+
+// Open Budget Viewer
+function openBudgetViewer() {
+    document.getElementById('budgetUploader').style.display = 'block';
+    document.getElementById('budgetDataDisplay').style.display = 'block';
+}
+
+// Handle Budget File Upload
+function handleBudgetFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            
+            parseBudgetData(jsonData);
+            
+            document.getElementById('budgetDataDisplay').style.display = 'block';
+            updateBudgetStats();
+            updateBudgetTable();
+            populateBudgetSectionFilter();
+            
+            alert('Budget data loaded successfully! ' + budgetDataStore.length + ' records found.');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error processing file. Please ensure it is a valid Excel or CSV file.');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+// Parse Budget Data
+function parseBudgetData(rawData) {
+    budgetDataStore = [];
+    budgetSections = [];
+    let currentSection = '';
+    
+    const startRow = 5;
+    
+    for (let i = startRow; i < rawData.length; i++) {
+        const row = rawData[i];
+        if (!row || row.length === 0) continue;
+        
+        if (row[0] && !row[1] && !row[2]) {
+            currentSection = row[0].toString().trim();
+            if (currentSection && !budgetSections.find(s => s.name === currentSection)) {
+                budgetSections.push({ name: currentSection, items: 0, totalAmount: 0 });
+            }
+            continue;
+        }
+        
+        if (row[0] && row[1]) {
+            const item = {
+                section: currentSection,
+                program: row[0] ? row[0].toString().trim() : '',
+                code: row[1] ? row[1].toString().trim() : '',
+                unit: row[2] ? row[2].toString().trim() : '',
+                appropriation: parseBudgetAmount(row[4]),
+                ps: parseBudgetAmount(row[5]),
+                mooe: parseBudgetAmount(row[6]),
+                co: parseBudgetAmount(row[7]),
+                fe: parseBudgetAmount(row[8]),
+                total: parseBudgetAmount(row[9])
+            };
+            
+            budgetDataStore.push(item);
+            const section = budgetSections.find(s => s.name === currentSection);
+            if (section) { section.items++; section.totalAmount += item.total; }
+        }
+    }
+    currentBudgetData = [...budgetDataStore];
+}
+
+// Parse Amount
+function parseBudgetAmount(value) {
+    if (!value) return 0;
+    if (typeof value === 'number') return value;
+    const cleaned = value.toString().replace(/[^\d.-]/g, '');
+    return parseFloat(cleaned) || 0;
+}
+
+// Format Amount
+function formatBudgetAmount(amount) {
+    if (amount === 0) return '-';
+    return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Update Budget Stats
+function updateBudgetStats() {
+    const totalItems = budgetDataStore.length;
+    const totalAmount = budgetDataStore.reduce((sum, item) => sum + item.total, 0);
+    const totalSections = budgetSections.length;
+    
+    const statsGrid = document.getElementById('budgetStatsGrid');
+    statsGrid.innerHTML = `
+        <div class="budget-stat-card">
+            <div class="budget-stat-value">${totalItems}</div>
+            <div class="budget-stat-label">Total Programs</div>
+        </div>
+        <div class="budget-stat-card">
+            <div class="budget-stat-value">${totalSections}</div>
+            <div class="budget-stat-label">Sections</div>
+        </div>
+        <div class="budget-stat-card">
+            <div class="budget-stat-value">${formatBudgetAmount(totalAmount)}</div>
+            <div class="budget-stat-label">Total Budget</div>
+        </div>
+    `;
+}
+
+// Update Budget Table
+function updateBudgetTable() {
+    const tbody = document.getElementById('budgetTableBody');
+    tbody.innerHTML = currentBudgetData.map(item => `
+        <tr>
+            <td><span class="section-tag">${item.section || 'N/A'}</span></td>
+            <td>${item.program}</td>
+            <td>${item.code}</td>
+            <td>${item.unit}</td>
+            <td class="amount">${formatBudgetAmount(item.total)}</td>
+            <td class="amount">${formatBudgetAmount(item.ps)}</td>
+            <td class="amount">${formatBudgetAmount(item.mooe)}</td>
+            <td class="amount">${formatBudgetAmount(item.co)}</td>
+            <td class="amount">${formatBudgetAmount(item.fe)}</td>
+        </tr>
+    `).join('');
+    
+    document.getElementById('recordCount').textContent = `${currentBudgetData.length} records`;
+}
+
+// Populate Section Filter
+function populateBudgetSectionFilter() {
+    const filter = document.getElementById('budgetSectionFilter');
+    filter.innerHTML = '<option value="">All Sections</option>' +
+        budgetSections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+}
+
+// Search Budget Data
+function searchBudgetData() {
+    const searchTerm = document.getElementById('budgetSearch').value.toLowerCase();
+    currentBudgetData = budgetDataStore.filter(item =>
+        item.program.toLowerCase().includes(searchTerm) ||
+        item.code.toLowerCase().includes(searchTerm) ||
+        item.unit.toLowerCase().includes(searchTerm)
+    );
+    updateBudgetTable();
+}
+
+// Filter by Section
+function filterBudgetSection() {
+    const section = document.getElementById('budgetSectionFilter').value;
+    currentBudgetData = section ? budgetDataStore.filter(item => item.section === section) : [...budgetDataStore];
+    updateBudgetTable();
+}
+
+// Export Budget
+function exportBudget() {
+    if (currentBudgetData.length === 0) {
+        alert('No data to export. Please upload a file first.');
+        return;
+    }
+    
+    const exportData = currentBudgetData.map(item => ({
+        'Section': item.section,
+        'Program/PPA': item.program,
+        'FPP Code': item.code,
+        'Implementing Unit': item.unit,
+        'Total Appropriation': item.total,
+        'PS': item.ps,
+        'MOOE': item.mooe,
+        'CO': item.co,
+        'FE': item.fe
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '2026 AIP Budget');
+    XLSX.writeFile(wb, '2026_AIP_Budget_Export.xlsx');
+}
+
+// Clear Budget Data
+function clearBudgetData() {
+    if (confirm('Are you sure you want to clear all budget data?')) {
+        budgetDataStore = [];
+        budgetSections = [];
+        currentBudgetData = [];
+        document.getElementById('budgetDataDisplay').style.display = 'none';
+        document.getElementById('budgetFileInput').value = '';
+        alert('Budget data cleared.');
+    }
+}
+
+// Close modal when clicking outside
+document.getElementById('dashboardModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDashboard();
+});
+
+// Drag and drop for dashboard uploader
+const uploadAreaDashboard = document.getElementById('uploadAreaDashboard');
+if (uploadAreaDashboard) {
+    uploadAreaDashboard.addEventListener('dragover', (e) => { e.preventDefault(); uploadAreaDashboard.style.borderColor = '#1e3a8a'; });
+    uploadAreaDashboard.addEventListener('dragleave', () => { uploadAreaDashboard.style.borderColor = '#cbd5e1'; });
+    uploadAreaDashboard.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadAreaDashboard.style.borderColor = '#cbd5e1';
+        if (e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            document.getElementById('budgetFileInput').files = e.dataTransfer.files;
+            handleBudgetFile({ target: { files: e.dataTransfer.files } });
+        }
+    });
+    uploadAreaDashboard.addEventListener('click', () => document.getElementById('budgetFileInput').click());
+}

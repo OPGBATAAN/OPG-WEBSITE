@@ -33,7 +33,13 @@
                         <a href="#offices" class="nav-link">Divisions</a>
                     </li>
                     <li class="nav-item">
-                        <a href="budget-display.html" class="nav-link nav-link-budget">2026 AIP Budget</a>
+                        <a href="#services" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#dashboard" class="nav-link nav-link-budget" onclick="openDashboard(); return false;">Login Dashboard</a>
                     </li>
                 </ul>
                 <div class="hamburger">
@@ -519,6 +525,129 @@
             </div>
         </section>
     </main>
+
+    <!-- Dashboard Modal -->
+    <div class="dashboard-modal" id="dashboardModal">
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <i class="fas fa-lock"></i> Budget Dashboard
+                </div>
+                <button class="dashboard-close" onclick="closeDashboard()">&times;</button>
+            </div>
+            <div class="dashboard-body" id="dashboardBody">
+                <!-- Login View -->
+                <div class="login-view" id="loginView">
+                    <div class="login-box">
+                        <div class="login-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Authorized Access Only</h3>
+                        <p>Please enter the password to access the 2026 AIP Budget tools</p>
+                        <div class="login-form">
+                            <input type="password" id="dashboardPassword" placeholder="Enter password..." onkeypress="if(event.key==='Enter')loginDashboard()">
+                            <button onclick="loginDashboard()" class="login-btn">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </div>
+                        <div class="login-error" id="loginError"></div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard View -->
+                <div class="dashboard-view" id="dashboardView" style="display: none;">
+                    <div class="dashboard-welcome">
+                        <h3>Welcome to 2026 AIP Budget Dashboard</h3>
+                        <p>Manage and upload budget data securely</p>
+                    </div>
+                    
+                    <div class="dashboard-actions">
+                        <div class="action-card" onclick="openBudgetUploader()">
+                            <div class="action-icon upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h4>Upload Budget</h4>
+                            <p>Upload Excel or CSV files to update budget data</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="openBudgetViewer()">
+                            <div class="action-icon view">
+                                <i class="fas fa-table"></i>
+                            </div>
+                            <h4>View Budget</h4>
+                            <p>Browse and search current budget records</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="exportBudget()">
+                            <div class="action-icon export">
+                                <i class="fas fa-file-download"></i>
+                            </div>
+                            <h4>Export Data</h4>
+                            <p>Download budget data as Excel file</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="clearBudgetData()">
+                            <div class="action-icon clear">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <h4>Clear Data</h4>
+                            <p>Remove all loaded budget data</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Budget Uploader Section -->
+                    <div class="budget-uploader" id="budgetUploader" style="display: none;">
+                        <div class="upload-section-dashboard">
+                            <h4><i class="fas fa-file-excel"></i> Upload Budget File</h4>
+                            <div class="upload-area-dashboard" id="uploadAreaDashboard">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag and drop Excel or CSV file here</p>
+                                <small>Supports .xlsx, .xls, .csv</small>
+                                <input type="file" id="budgetFileInput" accept=".xlsx,.xls,.csv" onchange="handleBudgetFile(event)">
+                                <button class="browse-btn" onclick="document.getElementById('budgetFileInput').click()">Browse File</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Budget Data Display -->
+                        <div class="budget-data-display" id="budgetDataDisplay" style="display: none;">
+                            <div class="budget-controls">
+                                <input type="text" id="budgetSearch" placeholder="Search programs..." onkeyup="searchBudgetData()">
+                                <select id="budgetSectionFilter" onchange="filterBudgetSection()">
+                                    <option value="">All Sections</option>
+                                </select>
+                                <span class="record-count" id="recordCount">0 records</span>
+                            </div>
+                            
+                            <div class="budget-stats-grid" id="budgetStatsGrid"></div>
+                            
+                            <div class="budget-table-container">
+                                <table class="budget-table" id="budgetTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Section</th>
+                                            <th>Program/PPA</th>
+                                            <th>FPP Code</th>
+                                            <th>Unit</th>
+                                            <th>Total</th>
+                                            <th>PS</th>
+                                            <th>MOOE</th>
+                                            <th>CO</th>
+                                            <th>FE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="budgetTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="logout-btn" onclick="logoutDashboard()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer" id="main-footer">
