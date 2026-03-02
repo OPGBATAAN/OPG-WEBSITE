@@ -25,12 +25,13 @@ function showSection(sectionId) {
         
         // Show/hide footer based on section
         const footer = document.getElementById('main-footer');
-        // Footer is now visible on all pages including home
-        footer.style.display = 'block';
+        if (footer) footer.style.display = 'block';
         
         // Close mobile menu if open
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (hamburger) hamburger.classList.remove('active');
+        if (navMenu) navMenu.classList.remove('active');
         
         // Scroll to top smoothly
         window.scrollTo({
@@ -40,46 +41,20 @@ function showSection(sectionId) {
     }
 }
 
-// Navigation click handlers
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        
-        // Allow external links (starting with http or containing .html)
-        if (href.startsWith('http') || href.includes('.html')) {
-            return; // Let the link work normally
-        }
-        
-        // Handle internal section navigation
-        e.preventDefault();
-        const targetId = href.substring(1);
-        showSection(targetId);
-    });
-});
-
-// Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
-
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
-
-// Initialize page - restore section from localStorage or show home by default
+// Initialize page after DOM loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize clock
+    updatePHTime();
+    setInterval(updatePHTime, 1000);
+    
+    // Initialize navigation handlers
+    initializeNavigation();
+    
     // Check for saved section in localStorage
     const savedSection = localStorage.getItem('currentSection');
     if (savedSection && document.getElementById(savedSection)) {
         showSection(savedSection);
     } else {
-        // Show home section by default
         showSection('home');
     }
     
@@ -87,7 +62,48 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAnimations();
     initializeForms();
     initializeCounters();
+    initializeDashboard();
+    initializeAIPModal();
 });
+
+// Navigation setup - called after DOM loads
+function initializeNavigation() {
+    // Navigation click handlers
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Allow external links (starting with http or containing .html)
+            if (href.startsWith('http') || href.includes('.html')) {
+                return; // Let the link work normally
+            }
+            
+            // Handle internal section navigation
+            e.preventDefault();
+            const targetId = href.substring(1);
+            showSection(targetId);
+        });
+    });
+
+    // Mobile Navigation Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => {
+            n.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+}
 
 function initializeAnimations() {
     // Scroll animations
@@ -964,26 +980,31 @@ function clearBudgetData() {
     }
 }
 
-// Close modal when clicking outside
-document.getElementById('dashboardModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeDashboard();
-});
-
-// Drag and drop for dashboard uploader
-const uploadAreaDashboard = document.getElementById('uploadAreaDashboard');
-if (uploadAreaDashboard) {
-    uploadAreaDashboard.addEventListener('dragover', (e) => { e.preventDefault(); uploadAreaDashboard.style.borderColor = '#1e3a8a'; });
-    uploadAreaDashboard.addEventListener('dragleave', () => { uploadAreaDashboard.style.borderColor = '#cbd5e1'; });
-    uploadAreaDashboard.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadAreaDashboard.style.borderColor = '#cbd5e1';
-        if (e.dataTransfer.files.length > 0) {
-            const file = e.dataTransfer.files[0];
-            document.getElementById('budgetFileInput').files = e.dataTransfer.files;
-            handleBudgetFile({ target: { files: e.dataTransfer.files } });
-        }
-    });
-    uploadAreaDashboard.addEventListener('click', () => document.getElementById('budgetFileInput').click());
+// Dashboard initialization - called after DOM loads
+function initializeDashboard() {
+    // Close modal when clicking outside
+    const dashboardModal = document.getElementById('dashboardModal');
+    if (dashboardModal) {
+        dashboardModal.addEventListener('click', function(e) {
+            if (e.target === this) closeDashboard();
+        });
+    }
+    
+    // Drag and drop for dashboard uploader
+    const uploadAreaDashboard = document.getElementById('uploadAreaDashboard');
+    if (uploadAreaDashboard) {
+        uploadAreaDashboard.addEventListener('dragover', (e) => { e.preventDefault(); uploadAreaDashboard.style.borderColor = '#1e3a8a'; });
+        uploadAreaDashboard.addEventListener('dragleave', () => { uploadAreaDashboard.style.borderColor = '#cbd5e1'; });
+        uploadAreaDashboard.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadAreaDashboard.style.borderColor = '#cbd5e1';
+            if (e.dataTransfer.files.length > 0) {
+                document.getElementById('budgetFileInput').files = e.dataTransfer.files;
+                handleBudgetFile({ target: { files: e.dataTransfer.files } });
+            }
+        });
+        uploadAreaDashboard.addEventListener('click', () => document.getElementById('budgetFileInput').click());
+    }
 }
 
 // ==================== AIP VIEW MODAL FUNCTIONS ====================
@@ -991,6 +1012,23 @@ let aipAllData = [];
 let aipSections = [];
 let aipFilteredData = [];
 let aipCurrentView = 'category';
+
+// AIP Modal initialization - called after DOM loads
+function initializeAIPModal() {
+    // Close modal when clicking outside
+    const aipViewModal = document.getElementById('aipViewModal');
+    if (aipViewModal) {
+        aipViewModal.addEventListener('click', function(e) {
+            if (e.target === this) closeAIPView();
+        });
+    }
+    
+    // Update current year in footer
+    const currentYearEl = document.getElementById('currentYear');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
+    }
+}
 
 function openAIPView() {
     // Try to preload data if available
@@ -1273,12 +1311,4 @@ function filterAIPSection() {
     aipFilteredData = section ? aipAllData.filter(item => item.section === section) : [...aipAllData];
     updateAIPTable();
 }
-
-// Close modal when clicking outside
-document.getElementById('aipViewModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeAIPView();
-});
-
-// Update current year in footer
-document.getElementById('currentYear')?.textContent = new Date().getFullYear();
 
