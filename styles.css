@@ -2320,6 +2320,140 @@ html {
     font-weight: 600;
 }
 
+/* AIP Summary Section */
+.aip-summary-section {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.aip-summary-section h3 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.aip-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.aip-summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.aip-summary-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.aip-summary-card.blue::before { background: #3b82f6; }
+.aip-summary-card.green::before { background: #10b981; }
+.aip-summary-card.orange::before { background: #f59e0b; }
+.aip-summary-card.purple::before { background: #8b5cf6; }
+
+.aip-summary-card .icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin: 0 auto 12px;
+}
+
+.aip-summary-card.blue .icon { background: #dbeafe; color: #3b82f6; }
+.aip-summary-card.green .icon { background: #d1fae5; color: #10b981; }
+.aip-summary-card.orange .icon { background: #fef3c7; color: #f59e0b; }
+.aip-summary-card.purple .icon { background: #ede9fe; color: #8b5cf6; }
+
+.aip-summary-card .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.aip-summary-card .label {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* AIP Chart Container */
+.aip-chart-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.aip-chart-container h4 {
+    color: #1e3a8a;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+}
+
+.aip-bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.aip-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.aip-bar-label {
+    min-width: 140px;
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.aip-bar-track {
+    flex: 1;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.aip-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.aip-bar-value {
+    min-width: 90px;
+    text-align: right;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
     .aip-view-content {
         width: 95%;
@@ -2332,5 +2466,19 @@ html {
     
     .aip-controls input {
         min-width: 100%;
+    }
+    
+    .aip-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .aip-bar-label {
+        min-width: 100px;
+        font-size: 0.75rem;
+    }
+    
+    .aip-bar-value {
+        min-width: 70px;
+        font-size: 0.8rem;
     }
 }

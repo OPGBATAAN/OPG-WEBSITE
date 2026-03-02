@@ -545,14 +545,46 @@
                     </button>
                 </div>
                 <div class="aip-data-display" id="aipDataDisplay" style="display: none;">
-                    <div class="aip-stats-grid" id="aipStatsGrid"></div>
+                    <!-- Interactive Summary Stats -->
+                    <div class="aip-summary-section">
+                        <h3><i class="fas fa-chart-pie"></i> Budget Summary</h3>
+                        <div class="aip-summary-grid" id="aipSummaryGrid">
+                            <div class="aip-summary-card blue">
+                                <div class="icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="value" id="aipTotalPrograms">0</div>
+                                <div class="label">Total Programs</div>
+                            </div>
+                            <div class="aip-summary-card green">
+                                <div class="icon"><i class="fas fa-folder"></i></div>
+                                <div class="value" id="aipTotalSections">0</div>
+                                <div class="label">Sections</div>
+                            </div>
+                            <div class="aip-summary-card orange">
+                                <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                                <div class="value" id="aipTotalBudget">₱0</div>
+                                <div class="label">Total Budget</div>
+                            </div>
+                            <div class="aip-summary-card purple">
+                                <div class="icon"><i class="fas fa-calculator"></i></div>
+                                <div class="value" id="aipAvgBudget">₱0</div>
+                                <div class="label">Average per Program</div>
+                            </div>
+                        </div>
+                        <!-- Budget Distribution Chart -->
+                        <div class="aip-chart-container" id="aipChartContainer">
+                            <h4><i class="fas fa-chart-bar"></i> Budget by Section</h4>
+                            <div class="aip-bar-chart" id="aipBarChart"></div>
+                        </div>
+                    </div>
+                    <!-- Table Controls -->
                     <div class="aip-controls">
-                        <input type="text" id="aipSearchInput" placeholder="Search programs, codes..." onkeyup="searchAIPData()">
+                        <input type="text" id="aipSearchInput" placeholder="Search programs, codes, units..." onkeyup="searchAIPData()">
                         <select id="aipSectionFilter" onchange="filterAIPSection()">
                             <option value="">All Sections</option>
                         </select>
                         <span class="aip-record-count" id="aipRecordCount">0 records</span>
                     </div>
+                    <!-- Data Table -->
                     <div class="aip-table-container">
                         <table class="aip-data-table" id="aipDataTable">
                             <thead>

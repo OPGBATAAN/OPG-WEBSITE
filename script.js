@@ -1001,7 +1001,7 @@ function closeAIPView() {
 }
 
 function loadAIPData() {
-    // Load data from localStorage
+    // Load data from localStorage (synced from dashboard)
     const storedData = localStorage.getItem('aipBudgetData');
     const storedSections = localStorage.getItem('aipBudgetSections');
     
@@ -1013,7 +1013,8 @@ function loadAIPData() {
         document.getElementById('aipNoData').style.display = 'none';
         document.getElementById('aipDataDisplay').style.display = 'block';
         
-        updateAIPStats();
+        updateAIPSummary();
+        updateAIPChart();
         updateAIPTable();
         populateAIPSectionFilter();
     } else {
@@ -1023,33 +1024,44 @@ function loadAIPData() {
 }
 
 function formatAIPAmount(amount) {
-    if (amount === 0) return '-';
+    if (!amount || amount === 0) return '₱0.00';
     return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function updateAIPStats() {
+function updateAIPSummary() {
     const totalItems = aipAllData.length;
     const totalAmount = aipAllData.reduce((sum, item) => sum + item.total, 0);
     const totalSections = aipSections.length;
+    const avgAmount = totalItems > 0 ? totalAmount / totalItems : 0;
     
-    document.getElementById('aipStatsGrid').innerHTML = `
-        <div class="aip-stat-card">
-            <div class="aip-stat-value">${totalItems}</div>
-            <div class="aip-stat-label">Total Programs</div>
-        </div>
-        <div class="aip-stat-card">
-            <div class="aip-stat-value">${totalSections}</div>
-            <div class="aip-stat-label">Sections</div>
-        </div>
-        <div class="aip-stat-card">
-            <div class="aip-stat-value">${formatAIPAmount(totalAmount)}</div>
-            <div class="aip-stat-label">Total Budget</div>
-        </div>
-        <div class="aip-stat-card">
-            <div class="aip-stat-value">${formatAIPAmount(totalItems > 0 ? totalAmount / totalItems : 0)}</div>
-            <div class="aip-stat-label">Average per Program</div>
-        </div>
-    `;
+    document.getElementById('aipTotalPrograms').textContent = totalItems.toLocaleString();
+    document.getElementById('aipTotalSections').textContent = totalSections;
+    document.getElementById('aipTotalBudget').textContent = formatAIPAmount(totalAmount);
+    document.getElementById('aipAvgBudget').textContent = formatAIPAmount(avgAmount);
+}
+
+function updateAIPChart() {
+    const container = document.getElementById('aipBarChart');
+    
+    if (aipSections.length === 0) {
+        container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No section data available</p>';
+        return;
+    }
+    
+    const maxAmount = Math.max(...aipSections.map(s => s.totalAmount));
+    
+    container.innerHTML = aipSections.map(sec => {
+        const percent = maxAmount ? (sec.totalAmount / maxAmount * 100).toFixed(1) : 0;
+        return `
+            <div class="aip-bar-item">
+                <div class="aip-bar-label">${sec.name}</div>
+                <div class="aip-bar-track">
+                    <div class="aip-bar-fill" style="width: ${percent}%"></div>
+                </div>
+                <div class="aip-bar-value">${formatAIPAmount(sec.totalAmount)}</div>
+            </div>
+        `;
+    }).join('');
 }
 
 function updateAIPTable() {
