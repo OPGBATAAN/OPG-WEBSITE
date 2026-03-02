@@ -24,13 +24,10 @@
                 </div>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="#offices" class="nav-link">Divisions</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="#" class="nav-link">Price List</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Requests</a>
+                        <a href="#" class="nav-link" onclick="openRequestsModal(); return false;">Requests</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="openAIPView(); return false;">View</a>
@@ -630,6 +627,219 @@
         </div>
     </div>
 
+    <!-- Requests Modal -->
+    <div id="requestsModal" class="requests-modal">
+        <div class="requests-modal-content">
+            <div class="requests-header">
+                <div class="requests-title">
+                    <i class="fas fa-file-signature"></i>
+                    <div>
+                        <h2>E-Request Services</h2>
+                        <p>Submit your documents and requests online</p>
+                    </div>
+                </div>
+                <button class="requests-close" onclick="closeRequestsModal()">&times;</button>
+            </div>
+            <div class="requests-body">
+                <div class="requests-grid">
+                    <!-- Governor's E-signature -->
+                    <div class="request-card" onclick="openRequestForm('governor-esig')">
+                        <div class="request-icon governor">
+                            <i class="fas fa-signature"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Governor's E-Signature</h3>
+                            <p>Request digital signature from the Governor for official documents</p>
+                            <div class="request-badge">
+                                <span class="badge-high">High Priority</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 1-2 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Financial Assistance -->
+                    <div class="request-card" onclick="openRequestForm('financial-assistance')">
+                        <div class="request-icon financial">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Financial Assistance</h3>
+                            <p>Apply for provincial financial aid and support programs</p>
+                            <div class="request-badge">
+                                <span class="badge-medium">Medium Priority</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 3-5 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Signature of OBR -->
+                    <div class="request-card" onclick="openRequestForm('obr-signature')">
+                        <div class="request-icon obr">
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Signature of OBR</h3>
+                            <p>Official Budget Review signature for financial documents</p>
+                            <div class="request-badge">
+                                <span class="badge-high">High Priority</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 1-2 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Signature of PR -->
+                    <div class="request-card" onclick="openRequestForm('pr-signature')">
+                        <div class="request-icon pr">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Signature of PR</h3>
+                            <p>Purchase Request approval signature for procurement</p>
+                            <div class="request-badge">
+                                <span class="badge-medium">Medium Priority</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 2-3 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- DTR -->
+                    <div class="request-card" onclick="openRequestForm('dtr')">
+                        <div class="request-icon dtr">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Daily Time Record (DTR)</h3>
+                            <p>Submit and process employee time records</p>
+                            <div class="request-badge">
+                                <span class="badge-standard">Standard</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> Same day</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Leave Application -->
+                    <div class="request-card" onclick="openRequestForm('leave')">
+                        <div class="request-icon leave">
+                            <i class="fas fa-umbrella-beach"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Leave Application</h3>
+                            <p>Apply for vacation, sick, or emergency leave</p>
+                            <div class="request-badge">
+                                <span class="badge-standard">Standard</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 1-2 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Request -->
+                    <div class="request-card" onclick="openRequestForm('certificate')">
+                        <div class="request-icon cert">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Certificate Request</h3>
+                            <p>Request clearance, employment, or service certificates</p>
+                            <div class="request-badge">
+                                <span class="badge-standard">Standard</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 2-3 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Travel Order -->
+                    <div class="request-card" onclick="openRequestForm('travel')">
+                        <div class="request-icon travel">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="request-info">
+                            <h3>Travel Order</h3>
+                            <p>Request official travel authorization</p>
+                            <div class="request-badge">
+                                <span class="badge-medium">Medium Priority</span>
+                                <span class="processing-time"><i class="fas fa-clock"></i> 2-3 days</span>
+                            </div>
+                        </div>
+                        <div class="request-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Form Container -->
+                <div id="requestFormContainer" class="request-form-container" style="display: none;">
+                    <div class="form-header">
+                        <button class="back-btn" onclick="showRequestsGrid()">
+                            <i class="fas fa-arrow-left"></i> Back to Requests
+                        </button>
+                        <h3 id="requestFormTitle">Submit Request</h3>
+                    </div>
+                    <form id="requestForm" onsubmit="submitRequest(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reqName">Full Name *</label>
+                                <input type="text" id="reqName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="reqEmail">Email Address *</label>
+                                <input type="email" id="reqEmail" required placeholder="Enter your email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reqPhone">Phone Number *</label>
+                                <input type="tel" id="reqPhone" required placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="reqOffice">Office/Department</label>
+                                <input type="text" id="reqOffice" placeholder="Enter office or department">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reqPurpose">Purpose/Details *</label>
+                            <textarea id="reqPurpose" rows="4" required placeholder="Describe the purpose and details of your request"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="reqDocuments">Supporting Documents</label>
+                            <div class="file-upload-area">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop files here or click to browse</p>
+                                <input type="file" id="reqDocuments" multiple accept=".pdf,.doc,.docx,.jpg,.png">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="showRequestsGrid()">Cancel</button>
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-paper-plane"></i> Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Sign Up Modal -->
     <div id="signupModal" class="modal">
         <div class="modal-content">
@@ -675,10 +885,6 @@
                 <div class="footer-section">
                     <h4>Office of the Provincial Governor</h4>
                     <p>Serving with dedication and commitment to public service.</p>
-                    <div class="login-options">
-                <a href="user-dashboard.html" class="login-link"><i class="fas fa-users"></i> User View (Read-Only)</a>
-            </div>
-            <p class="signup-text">No Account yet? <a href="#" class="signup-link" onclick="showSignupBox(); return false;">Click Sign Up</a></p>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>

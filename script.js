@@ -1377,3 +1377,129 @@ function filterAIPSection() {
     updateAIPTable();
 }
 
+// ==================== STUNNING REQUESTS MODAL FUNCTIONS ====================
+const requestTypes = {
+    'governor-esig': {
+        title: "Governor's E-Signature Request",
+        icon: "fa-signature",
+        description: "Request digital signature from the Governor for official documents"
+    },
+    'financial-assistance': {
+        title: "Financial Assistance Application",
+        icon: "fa-hand-holding-usd",
+        description: "Apply for provincial financial aid and support programs"
+    },
+    'obr-signature': {
+        title: "OBR Signature Request",
+        icon: "fa-stamp",
+        description: "Official Budget Review signature for financial documents"
+    },
+    'pr-signature': {
+        title: "PR Signature Request",
+        icon: "fa-file-contract",
+        description: "Purchase Request approval signature for procurement"
+    },
+    'dtr': {
+        title: "Daily Time Record (DTR)",
+        icon: "fa-clock",
+        description: "Submit and process employee time records"
+    },
+    'leave': {
+        title: "Leave Application",
+        icon: "fa-umbrella-beach",
+        description: "Apply for vacation, sick, or emergency leave"
+    },
+    'certificate': {
+        title: "Certificate Request",
+        icon: "fa-certificate",
+        description: "Request clearance, employment, or service certificates"
+    },
+    'travel': {
+        title: "Travel Order Request",
+        icon: "fa-plane",
+        description: "Request official travel authorization"
+    }
+};
+
+let currentRequestType = '';
+
+function openRequestsModal() {
+    const modal = document.getElementById('requestsModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // Show the grid, hide the form
+        showRequestsGrid();
+    }
+}
+
+function closeRequestsModal() {
+    const modal = document.getElementById('requestsModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function showRequestsGrid() {
+    const grid = document.querySelector('.requests-grid');
+    const form = document.getElementById('requestFormContainer');
+    if (grid && form) {
+        grid.style.display = 'grid';
+        form.style.display = 'none';
+    }
+}
+
+function openRequestForm(requestType) {
+    currentRequestType = requestType;
+    const grid = document.querySelector('.requests-grid');
+    const form = document.getElementById('requestFormContainer');
+    const formTitle = document.getElementById('requestFormTitle');
+    
+    if (grid && form && formTitle) {
+        const requestInfo = requestTypes[requestType];
+        formTitle.innerHTML = `<i class="fas ${requestInfo.icon}"></i> ${requestInfo.title}`;
+        
+        grid.style.display = 'none';
+        form.style.display = 'block';
+        
+        // Reset form
+        document.getElementById('requestForm').reset();
+    }
+}
+
+function submitRequest(event) {
+    event.preventDefault();
+    
+    const formData = {
+        type: currentRequestType,
+        name: document.getElementById('reqName').value,
+        email: document.getElementById('reqEmail').value,
+        phone: document.getElementById('reqPhone').value,
+        office: document.getElementById('reqOffice').value,
+        purpose: document.getElementById('reqPurpose').value,
+        submittedAt: new Date().toISOString()
+    };
+    
+    // Store in localStorage (simulate submission)
+    let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    requests.push(formData);
+    localStorage.setItem('submittedRequests', JSON.stringify(requests));
+    
+    // Show success message
+    showNotification('Request submitted successfully! You will receive a confirmation email shortly.', 'success');
+    
+    // Close modal and reset
+    closeRequestsModal();
+    document.getElementById('requestForm').reset();
+}
+
+// Close requests modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('requestsModal');
+    if (event.target === modal) {
+        closeRequestsModal();
+    }
+});
+
+
