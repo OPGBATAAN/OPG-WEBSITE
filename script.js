@@ -2052,3 +2052,462 @@ document.addEventListener('keydown', function(event) {
 });
 
 
+
+// ==================== FILE PREVIEW AND SIGNATURE FUNCTIONS ====================
+
+// Store uploaded files
+let uploadedFiles = [];
+let signatureData = null;
+
+// Handle file selection
+function handleFileSelect(event) {
+    const files = Array.from(event.target.files);
+    const container = document.getElementById('filePreviewContainer');
+    const list = document.getElementById('filePreviewList');
+    const uploadArea = document.getElementById('fileUploadArea');
+    
+    files.forEach(file => {
+        // Check if file already exists
+        if (!uploadedFiles.find(f => f.name === file.name && f.size === file.size)) {
+            uploadedFiles.push(file);
+        }
+    });
+    
+    // Show container
+    container.style.display = 'block';
+    uploadArea.classList.add('has-files');
+    
+    // Render previews
+    renderFilePreviews();
+}
+
+// Render file previews
+function renderFilePreviews() {
+    const list = document.getElementById('filePreviewList');
+    list.innerHTML = '';
+    
+    uploadedFiles.forEach((file, index) => {
+        const previewItem = document.createElement('div');
+        previewItem.className = 'file-preview-item';
+        
+        // Check if image
+        const isImage = file.type.startsWith('image/');
+        
+        let iconHtml = '';
+        if (isImage) {
+            const imageUrl = URL.createObjectURL(file);
+            iconHtml = `<img src="${imageUrl}" class="file-preview-thumbnail" alt="${file.name}" onclick="viewFile(${index})">`;
+        } else {
+            let icon = 'fa-file';
+            if (file.name.endsWith('.pdf')) icon = 'fa-file-pdf';
+            else if (file.name.endsWith('.doc') || file.name.endsWith('.docx')) icon = 'fa-file-word';
+            iconHtml = `<div class="file-preview-icon" onclick="viewFile(${index})"><i class="fas ${icon}"></i></div>`;
+        }
+        
+        const size = formatFileSize(file.size);
+        
+        previewItem.innerHTML = `
+            ${iconHtml}
+            <div class="file-preview-info">
+                <div class="file-preview-name" title="${file.name}">${file.name}</div>
+                <div class="file-preview-size">${size}</div>
+            </div>
+            <div class="file-preview-actions">
+                <button type="button" class="file-preview-btn" onclick="viewFile(${index})" title="View">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="file-preview-btn remove" onclick="removeFile(${index})" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        list.appendChild(previewItem);
+    });
+}
+
+// Format file size
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// View file
+function viewFile(index) {
+    const file = uploadedFiles[index];
+    const isImage = file.type.startsWith('image/');
+    
+    if (isImage) {
+        // Show image in modal
+        const imageUrl = URL.createObjectURL(file);
+        showImageModal(imageUrl, file.name);
+    } else {
+        // For PDFs and docs, create a download/view link
+        const url = URL.createObjectURL(file);
+        window.open(url, '_blank');
+    }
+}
+
+// Show image modal
+function showImageModal(imageUrl, title) {
+    // Create modal if doesn't exist
+    let modal = document.getElementById('imageViewModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'imageViewModal';
+        modal.className = 'image-view-modal';
+        modal.innerHTML = `
+            <div class="image-view-content">
+                <div class="image-view-header">
+                    <h3 id="imageViewTitle"></h3>
+                    <button onclick="closeImageModal()" class="image-view-close">&times;</button>
+                </div>
+                <div class="image-view-body">
+                    <img id="imageViewImg" src="" alt="">
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .image-view-modal {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 5000;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .image-view-content {
+                background: white;
+                border-radius: 12px;
+                max-width: 90%;
+                max-height: 90%;
+                overflow: hidden;
+            }
+            .image-view-header {
+                background: #1e3a8a;
+                color: white;
+                padding: 1rem 1.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .image-view-header h3 {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+            .image-view-close {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+            .image-view-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            .image-view-body {
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                max-height: 70vh;
+                overflow: auto;
+            }
+            .image-view-body img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+                border-radius: 4px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    modal.style.display = 'flex';
+    document.getElementById('imageViewTitle').textContent = title;
+    document.getElementById('imageViewImg').src = imageUrl;
+}
+
+// Close image modal
+function closeImageModal() {
+    const modal = document.getElementById('imageViewModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Remove file
+function removeFile(index) {
+    uploadedFiles.splice(index, 1);
+    renderFilePreviews();
+    
+    // Hide container if no files
+    if (uploadedFiles.length === 0) {
+        document.getElementById('filePreviewContainer').style.display = 'none';
+        document.getElementById('fileUploadArea').classList.remove('has-files');
+    }
+}
+
+// ==================== SIGNATURE FUNCTIONS ====================
+
+// Open signature pad
+function openSignaturePad() {
+    const modal = document.getElementById('signaturePadModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Initialize canvas
+    initSignatureCanvas();
+}
+
+// Close signature pad
+function closeSignaturePad() {
+    const modal = document.getElementById('signaturePadModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Signature canvas variables
+let signatureCanvas = null;
+let signatureCtx = null;
+let isDrawing = false;
+
+// Initialize signature canvas
+function initSignatureCanvas() {
+    signatureCanvas = document.getElementById('signatureCanvas');
+    signatureCtx = signatureCanvas.getContext('2d');
+    
+    // Set canvas size
+    const rect = signatureCanvas.getBoundingClientRect();
+    signatureCanvas.width = rect.width;
+    signatureCanvas.height = rect.height;
+    
+    // Set drawing style
+    signatureCtx.strokeStyle = '#1e3a8a';
+    signatureCtx.lineWidth = 2;
+    signatureCtx.lineCap = 'round';
+    
+    // Add event listeners
+    signatureCanvas.addEventListener('mousedown', startDrawing);
+    signatureCanvas.addEventListener('mousemove', draw);
+    signatureCanvas.addEventListener('mouseup', stopDrawing);
+    signatureCanvas.addEventListener('mouseout', stopDrawing);
+    
+    // Touch events
+    signatureCanvas.addEventListener('touchstart', handleTouch);
+    signatureCanvas.addEventListener('touchmove', handleTouch);
+    signatureCanvas.addEventListener('touchend', stopDrawing);
+}
+
+function startDrawing(e) {
+    isDrawing = true;
+    const rect = signatureCanvas.getBoundingClientRect();
+    signatureCtx.beginPath();
+    signatureCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    const rect = signatureCanvas.getBoundingClientRect();
+    signatureCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    signatureCtx.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+function handleTouch(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+    });
+    signatureCanvas.dispatchEvent(mouseEvent);
+}
+
+// Clear signature pad
+function clearSignaturePad() {
+    if (signatureCtx && signatureCanvas) {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+    }
+}
+
+// Save signature from pad
+function saveSignatureFromPad() {
+    if (!signatureCanvas) return;
+    
+    // Check if canvas is empty
+    const pixelData = signatureCtx.getImageData(0, 0, signatureCanvas.width, signatureCanvas.height).data;
+    const isEmpty = pixelData.every(pixel => pixel === 0);
+    
+    if (isEmpty) {
+        alert('Please draw your signature first.');
+        return;
+    }
+    
+    // Convert to image
+    signatureData = signatureCanvas.toDataURL('image/png');
+    
+    // Show preview
+    showSignaturePreview(signatureData);
+    
+    // Close modal
+    closeSignaturePad();
+}
+
+// Handle signature upload
+function handleSignatureUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file (PNG, JPG, JPEG).');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        signatureData = e.target.result;
+        showSignaturePreview(signatureData);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Show signature preview
+function showSignaturePreview(dataUrl) {
+    const preview = document.getElementById('signaturePreview');
+    const image = document.getElementById('signatureImage');
+    
+    image.src = dataUrl;
+    preview.style.display = 'block';
+}
+
+// Remove signature
+function removeSignature() {
+    signatureData = null;
+    document.getElementById('signaturePreview').style.display = 'none';
+    document.getElementById('signatureImage').src = '';
+    document.getElementById('signatureUpload').value = '';
+}
+
+// Update submitRequest to include files and signature
+function submitRequest(event) {
+    event.preventDefault();
+    
+    // Get form data
+    const name = document.getElementById('reqName').value;
+    const phone = document.getElementById('reqPhone').value;
+    const office = document.getElementById('reqOffice').value;
+    const purpose = document.getElementById('reqPurpose').value;
+    
+    // Create request object
+    const requestData = {
+        id: 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name: name,
+        phone: phone,
+        office: office,
+        purpose: purpose,
+        type: currentRequestType,
+        status: 'pending',
+        timestamp: new Date().toISOString(),
+        files: uploadedFiles.map(f => f.name),
+        hasSignature: !!signatureData
+    };
+    
+    // Save to localStorage
+    let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    requests.push(requestData);
+    localStorage.setItem('submittedRequests', JSON.stringify(requests));
+    
+    // Store signature separately if exists
+    if (signatureData) {
+        localStorage.setItem('signature_' + requestData.id, signatureData);
+    }
+    
+    // Show success screen
+    showRequestSuccess(requestData);
+    
+    // Reset form
+    document.getElementById('requestForm').reset();
+    uploadedFiles = [];
+    removeSignature();
+    document.getElementById('filePreviewContainer').style.display = 'none';
+    document.getElementById('fileUploadArea').classList.remove('has-files');
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(event) {
+    const imageModal = document.getElementById('imageViewModal');
+    if (event.target === imageModal) {
+        closeImageModal();
+    }
+    
+    const sigModal = document.getElementById('signaturePadModal');
+    if (event.target === sigModal) {
+        closeSignaturePad();
+    }
+});
+
+// Escape key to close modals
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeImageModal();
+        closeSignaturePad();
+    }
+});
+
+// Drag and drop support
+const fileUploadArea = document.getElementById('fileUploadArea');
+if (fileUploadArea) {
+    fileUploadArea.addEventListener('click', () => {
+        document.getElementById('reqDocuments').click();
+    });
+    
+    fileUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadArea.style.borderColor = '#3b82f6';
+        fileUploadArea.style.background = '#f0f9ff';
+    });
+    
+    fileUploadArea.addEventListener('dragleave', () => {
+        fileUploadArea.style.borderColor = '';
+        fileUploadArea.style.background = '';
+    });
+    
+    fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadArea.style.borderColor = '';
+        fileUploadArea.style.background = '';
+        
+        const files = Array.from(e.dataTransfer.files);
+        files.forEach(file => {
+            if (!uploadedFiles.find(f => f.name === file.name && f.size === file.size)) {
+                uploadedFiles.push(file);
+            }
+        });
+        
+        document.getElementById('filePreviewContainer').style.display = 'block';
+        fileUploadArea.classList.add('has-files');
+        renderFilePreviews();
+    });
+}

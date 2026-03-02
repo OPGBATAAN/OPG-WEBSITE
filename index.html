@@ -924,10 +924,65 @@
                         </div>
                         <div class="form-group">
                             <label for="reqDocuments">Supporting Documents</label>
-                            <div class="file-upload-area">
+                            <div class="file-upload-area" id="fileUploadArea">
                                 <i class="fas fa-cloud-upload-alt"></i>
                                 <p>Drag & drop files here or click to browse</p>
-                                <input type="file" id="reqDocuments" multiple accept=".pdf,.doc,.docx,.jpg,.png">
+                                <input type="file" id="reqDocuments" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
+                            </div>
+                            <!-- File Preview Container -->
+                            <div id="filePreviewContainer" class="file-preview-container" style="display: none;">
+                                <h4><i class="fas fa-paperclip"></i> Attached Files</h4>
+                                <div id="filePreviewList" class="file-preview-list"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Signature Attachment Section -->
+                        <div class="form-group">
+                            <label for="signatureUpload">E-Signature <span class="optional-label">(Optional)</span></label>
+                            <div class="signature-section">
+                                <div class="signature-options">
+                                    <button type="button" class="signature-btn" onclick="openSignaturePad()">
+                                        <i class="fas fa-signature"></i> Draw Signature
+                                    </button>
+                                    <button type="button" class="signature-btn upload-sig" onclick="document.getElementById('signatureUpload').click()">
+                                        <i class="fas fa-upload"></i> Upload Signature
+                                    </button>
+                                    <input type="file" id="signatureUpload" accept=".png,.jpg,.jpeg" style="display: none;" onchange="handleSignatureUpload(event)">
+                                </div>
+                                
+                                <!-- Signature Preview -->
+                                <div id="signaturePreview" class="signature-preview" style="display: none;">
+                                    <h4><i class="fas fa-check-circle"></i> Signature Attached</h4>
+                                    <div class="signature-image-container">
+                                        <img id="signatureImage" src="" alt="Signature" />
+                                    </div>
+                                    <button type="button" class="btn-remove-sig" onclick="removeSignature()">
+                                        <i class="fas fa-trash"></i> Remove Signature
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Signature Pad Modal -->
+                        <div id="signaturePadModal" class="signature-pad-modal" style="display: none;">
+                            <div class="signature-pad-content">
+                                <div class="signature-pad-header">
+                                    <h3><i class="fas fa-signature"></i> Draw Your Signature</h3>
+                                    <button type="button" class="btn-close-pad" onclick="closeSignaturePad()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="signature-pad-body">
+                                    <canvas id="signatureCanvas" width="600" height="200"></canvas>
+                                    <div class="signature-controls">
+                                        <button type="button" class="btn-clear-sig" onclick="clearSignaturePad()">
+                                            <i class="fas fa-eraser"></i> Clear
+                                        </button>
+                                        <button type="button" class="btn-save-sig" onclick="saveSignatureFromPad()">
+                                            <i class="fas fa-check"></i> Save Signature
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions">

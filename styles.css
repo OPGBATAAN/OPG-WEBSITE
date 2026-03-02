@@ -3961,3 +3961,389 @@ html {
         display: none;
     }
 }
+
+/* File Preview and Signature Styles */
+.file-preview-container {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+.file-preview-container h4 {
+    font-size: 1rem;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-preview-container h4 i {
+    color: #3b82f6;
+}
+
+.file-preview-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.file-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    max-width: 300px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.file-preview-item:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.file-preview-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+.file-preview-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.file-preview-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-preview-name {
+    font-weight: 600;
+    color: #1e3a8a;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.file-preview-size {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.file-preview-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.file-preview-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.file-preview-btn:hover {
+    background: #1e3a8a;
+    color: white;
+}
+
+.file-preview-btn.remove:hover {
+    background: #ef4444;
+}
+
+/* Signature Section Styles */
+.optional-label {
+    font-weight: 400;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.signature-section {
+    margin-top: 0.5rem;
+}
+
+.signature-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.signature-btn {
+    padding: 12px 24px;
+    border: 2px dashed #3b82f6;
+    background: #f0f9ff;
+    color: #1e3a8a;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.signature-btn:hover {
+    background: #1e3a8a;
+    color: white;
+    border-style: solid;
+}
+
+.signature-btn.upload-sig {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+.signature-btn.upload-sig:hover {
+    background: #10b981;
+}
+
+.signature-preview {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #f0fdf4;
+    border-radius: 12px;
+    border: 2px solid #10b981;
+    text-align: center;
+}
+
+.signature-preview h4 {
+    font-size: 1rem;
+    color: #059669;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.signature-image-container {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.signature-image-container img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 4px;
+}
+
+.btn-remove-sig {
+    padding: 8px 16px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-remove-sig:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* Signature Pad Modal */
+.signature-pad-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.signature-pad-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
+}
+
+.signature-pad-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.signature-pad-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-close-pad {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.btn-close-pad:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.signature-pad-body {
+    padding: 2rem;
+}
+
+#signatureCanvas {
+    width: 100%;
+    height: 200px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    cursor: crosshair;
+    display: block;
+}
+
+.signature-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 1.5rem;
+}
+
+.btn-clear-sig {
+    padding: 12px 24px;
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-clear-sig:hover {
+    background: #e2e8f0;
+}
+
+.btn-save-sig {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-save-sig:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* File Upload Area Improvements */
+.file-upload-area {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+.file-upload-area:hover {
+    border-color: #3b82f6;
+    background: #f0f9ff;
+}
+
+.file-upload-area.has-files {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .file-preview-item {
+        max-width: 100%;
+    }
+    
+    .signature-options {
+        flex-direction: column;
+    }
+    
+    .signature-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .signature-pad-content {
+        max-width: 100%;
+    }
+    
+    #signatureCanvas {
+        height: 150px;
+    }
+    
+    .signature-controls {
+        flex-direction: column;
+    }
+    
+    .btn-clear-sig,
+    .btn-save-sig {
+        width: 100%;
+        justify-content: center;
+    }
+}
