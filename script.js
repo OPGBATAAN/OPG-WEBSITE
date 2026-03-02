@@ -690,7 +690,7 @@ function updatePHTime() {
             second: '2-digit',
             hour12: true
         };
-        timeElement.textContent = now.toLocaleTimeString('en-US', options) + ' PH Time';
+        timeElement.textContent = now.toLocaleTimeString('en-US', options) + ' (GMT+8)';
     }
 }
 
@@ -1478,13 +1478,29 @@ function submitRequest(event) {
         phone: document.getElementById('reqPhone').value,
         office: document.getElementById('reqOffice').value,
         purpose: document.getElementById('reqPurpose').value,
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
+        id: 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
     };
+    
+    // Handle file uploads if any
+    const fileInput = document.getElementById('reqDocuments');
+    if (fileInput.files.length > 0 && typeof handleFileUploadForEmail === 'function') {
+        handleFileUploadForEmail(fileInput.files, formData);
+    }
     
     // Store in localStorage (simulate submission)
     let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
     requests.push(formData);
     localStorage.setItem('submittedRequests', JSON.stringify(requests));
+    
+    // Send email notifications if email service is available
+    if (typeof sendEmail === 'function' && typeof EMAIL_TEMPLATES !== 'undefined') {
+        // Send to admin
+        sendEmail('opg@bataan.gov.ph', EMAIL_TEMPLATES.newRequest, formData);
+        
+        // Send confirmation to user
+        sendEmail(formData.email, EMAIL_TEMPLATES.confirmationToUser, formData);
+    }
     
     // Show success message
     showNotification('Request submitted successfully! You will receive a confirmation email shortly.', 'success');

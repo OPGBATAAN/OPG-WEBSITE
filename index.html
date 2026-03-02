@@ -24,13 +24,13 @@
                 </div>
                 <ul class="nav-menu">
                     <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="openAIPView(); return false;">Budget</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#" class="nav-link">Price List</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="openRequestsModal(); return false;">Requests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="openAIPView(); return false;">View</a>
                     </li>
                     <li class="nav-item">
                         <a href="employee-dashboard.html" class="nav-link nav-link-budget" onclick="window.open('employee-dashboard.html', 'AIPDashboard', 'width=1400,height=900,scrollbars=yes,resizable=yes'); return false;">Sign In</a>
@@ -930,6 +930,7 @@
     </footer>
 
     <script src="aip-data-preload.js"></script>
+    <script src="email-service.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
