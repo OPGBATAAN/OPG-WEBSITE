@@ -1640,17 +1640,74 @@ function renderAllRequests() {
         'travel': 'Travel Order'
     };
     
+    // Helper function to calculate running time
+    function getRunningTime(submittedAt, status, completedAt) {
+        const submitted = new Date(submittedAt);
+        const now = new Date();
+        
+        if (status === 'completed' && completedAt) {
+            const completed = new Date(completedAt);
+            const diffMs = completed - submitted;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffHrs / 24);
+            const remainingHrs = diffHrs % 24;
+            
+            if (diffDays > 0) {
+                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
+            } else if (diffHrs > 0) {
+                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
+            } else {
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+            }
+        } else {
+            // For pending/processing - show time elapsed
+            const diffMs = now - submitted;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffHrs / 24);
+            const remainingHrs = diffHrs % 24;
+            
+            if (diffDays > 0) {
+                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
+            } else if (diffHrs > 0) {
+                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
+            } else {
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+            }
+        }
+    }
+    
+    // Helper function to format time
+    function formatTime(dateString) {
+        if (!dateString) return 'N/A';
+        try {
+            return new Date(dateString).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+        } catch (e) {
+            return 'Invalid Date';
+        }
+    }
+    
     // Sort by newest first
     const sortedRequests = [...requests].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
     
-    container.innerHTML = sortedRequests.map(req => `
+    container.innerHTML = sortedRequests.map(req => {
+        const submittedTime = formatTime(req.submittedAt);
+        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt);
+        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt) : null;
+        
+        return `
         <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
             <div class="request-item-info">
                 <h4>${requestTypeNames[req.type] || req.type}</h4>
                 <p>Submitted by: ${req.name}</p>
                 <div class="request-item-meta">
                     <span><i class="fas fa-phone"></i> ${req.phone}</span>
-                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</span>
+                    <span><i class="fas fa-clock"></i> <strong>Time Submitted:</strong> ${submittedTime} (GMT+8)</span>
+                    ${req.status === 'completed' 
+                        ? `<span><i class="fas fa-check-circle"></i> <strong>Time Completed:</strong> ${completedTime} (GMT+8)</span>`
+                        : `<span><i class="fas fa-hourglass-half"></i> <strong>Running Time:</strong> ${runningTime}</span>`
+                    }
                 </div>
             </div>
             <div class="request-item-id">${req.id}</div>
@@ -1659,7 +1716,7 @@ function renderAllRequests() {
                 ${req.status === 'completed' ? `<button onclick="downloadCompletedRequest('${req.id}')" class="btn-download-completed" title="Download Completed Document"><i class="fas fa-download"></i></button>` : ''}
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function filterAllRequests() {
@@ -1694,6 +1751,54 @@ function filterAllRequests() {
         return matchesSearch && matchesType && matchesStatus;
     });
     
+    // Helper function to calculate running time
+    function getRunningTime(submittedAt, status, completedAt) {
+        const submitted = new Date(submittedAt);
+        const now = new Date();
+        
+        if (status === 'completed' && completedAt) {
+            const completed = new Date(completedAt);
+            const diffMs = completed - submitted;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffHrs / 24);
+            const remainingHrs = diffHrs % 24;
+            
+            if (diffDays > 0) {
+                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
+            } else if (diffHrs > 0) {
+                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
+            } else {
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+            }
+        } else {
+            // For pending/processing - show time elapsed
+            const diffMs = now - submitted;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffHrs / 24);
+            const remainingHrs = diffHrs % 24;
+            
+            if (diffDays > 0) {
+                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
+            } else if (diffHrs > 0) {
+                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
+            } else {
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+            }
+        }
+    }
+    
+    // Helper function to format time
+    function formatTime(dateString) {
+        if (!dateString) return 'N/A';
+        try {
+            return new Date(dateString).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+        } catch (e) {
+            return 'Invalid Date';
+        }
+    }
+    
     // Sort by newest first
     filtered.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
     
@@ -1712,14 +1817,23 @@ function filterAllRequests() {
         return;
     }
     
-    container.innerHTML = filtered.map(req => `
+    container.innerHTML = filtered.map(req => {
+        const submittedTime = formatTime(req.submittedAt);
+        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt);
+        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt) : null;
+        
+        return `
         <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
             <div class="request-item-info">
                 <h4>${requestTypeNames[req.type] || req.type}</h4>
                 <p>Submitted by: ${req.name}</p>
                 <div class="request-item-meta">
                     <span><i class="fas fa-phone"></i> ${req.phone}</span>
-                    <span><i class="fas fa-clock"></i> ${new Date(req.submittedAt).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })} (GMT+8)</span>
+                    <span><i class="fas fa-clock"></i> <strong>Time Submitted:</strong> ${submittedTime} (GMT+8)</span>
+                    ${req.status === 'completed' 
+                        ? `<span><i class="fas fa-check-circle"></i> <strong>Time Completed:</strong> ${completedTime} (GMT+8)</span>`
+                        : `<span><i class="fas fa-hourglass-half"></i> <strong>Running Time:</strong> ${runningTime}</span>`
+                    }
                 </div>
             </div>
             <div class="request-item-id">${req.id}</div>
@@ -1728,7 +1842,7 @@ function filterAllRequests() {
                 ${req.status === 'completed' ? `<button onclick="downloadCompletedRequest('${req.id}')" class="btn-download-completed" title="Download Completed Document"><i class="fas fa-download"></i></button>` : ''}
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function downloadCompletedRequest(requestId) {
@@ -2393,6 +2507,7 @@ function submitRequest(event) {
         type: currentRequestType,
         status: 'pending',
         timestamp: new Date().toISOString(),
+        submittedAt: new Date().toISOString(),
         files: uploadedFiles.map(f => ({ name: f.name, size: f.size })),
         hasSignature: !!signatureData
     };
@@ -2409,6 +2524,9 @@ function submitRequest(event) {
     
     // Show success screen
     showRequestSuccessScreen(requestData);
+    
+    // Close the requests modal
+    closeRequestsModal();
     
     // Reset form
     document.getElementById('requestForm').reset();
