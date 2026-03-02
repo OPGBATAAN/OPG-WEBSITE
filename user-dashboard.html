@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIP Budget Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="aip-data-preload.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #065f46 0%, #047857 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h3 { font-size: 1.1rem; font-weight: 600; }
+        .sidebar-header p { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+        
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #d1fae5;
+            color: #065f46;
+            margin-left: 8px;
+        }
+        
+        .sidebar-nav { flex: 1; padding: 20px 0; overflow-y: auto; }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #34d399;
+        }
+        
+        .sidebar-item i { font-size: 1.1rem; width: 24px; }
+        
+        .sidebar-footer {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .admin-link:hover { background: rgba(255, 255, 255, 0.2); }
+        
+        .datetime-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .datetime-box .date {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .datetime-box .time {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #34d399;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+            flex: 1;
+        }
+        
+        .section-header {
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            color: #065f46;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-header p { color: #64748b; margin-top: 5px; }
+        
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #065f46;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+        
+        .stat-card.blue::before { background: #3b82f6; }
+        .stat-card.green::before { background: #10b981; }
+        .stat-card.orange::before { background: #f59e0b; }
+        .stat-card.purple::before { background: #8b5cf6; }
+        
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card.blue .icon { background: #dbeafe; color: #3b82f6; }
+        .stat-card.green .icon { background: #d1fae5; color: #10b981; }
+        .stat-card.orange .icon { background: #fef3c7; color: #f59e0b; }
+        .stat-card.purple .icon { background: #ede9fe; color: #8b5cf6; }
+        
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .label { color: #64748b; font-size: 0.9rem; }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+        
+        /* Chart Bar */
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .bar-label {
+            min-width: 150px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        
+        .bar-track {
+            flex: 1;
+            height: 28px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .bar-value {
+            min-width: 100px;
+            text-align: right;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        /* Table */
+        .table-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .table-controls input, .table-controls select {
+            padding: 12px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .table-controls input { flex: 1; }
+        .table-controls input:focus, .table-controls select:focus { outline: none; border-color: #10b981; }
+        
+        .record-count { color: #64748b; font-weight: 600; padding: 12px; }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background: #065f46;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; }
+        .data-table tr:hover { background: #f8fafc; }
+        
+        .tag {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: #059669;
+            font-weight: 600;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .info-box i {
+            font-size: 2rem;
+            color: #059669;
+        }
+        
+        .info-box h4 {
+            color: #065f46;
+            margin-bottom: 5px;
+        }
+        
+        .info-box p {
+            color: #047857;
+            font-size: 0.9rem;
+        }
+        
+        /* Read-only indicator */
+        .readonly-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state h3 { color: #1e293b; margin-bottom: 8px; font-size: 1.1rem; }
+        .empty-state p { color: #64748b; font-size: 0.9rem; }
+        
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard" id="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="images/bataan_logo.png" alt="Logo">
+                <h3>AIP Dashboard <span class="role-badge"><i class="fas fa-eye"></i> VIEWER</span></h3>
+                <p>Budget Data Viewer - Read Only</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-item active" onclick="navigate('overview', this)">
+                    <i class="fas fa-home"></i><span>Overview</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('view', this)">
+                    <i class="fas fa-table"></i><span>View Budget</span>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="employee-dashboard.html" class="admin-link">
+                    <i class="fas fa-user-shield"></i> Admin Access
+                </a>
+                <div class="datetime-box">
+                    <div class="date" id="currentDate">Loading...</div>
+                    <div class="time" id="currentTime">--:--:--</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Info Banner -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h4>Read-Only Access</h4>
+                    <p>You can view all budget data but cannot modify it. Contact admin for changes.</p>
+                </div>
+            </div>
+
+            <!-- OVERVIEW SECTION -->
+            <div class="content-section active" id="overview">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Budget Overview</h2>
+                    <p>View-only summary of AIP budget data</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="value" id="totalPrograms">0</div>
+                        <div class="label">Total Programs</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="icon"><i class="fas fa-folder"></i></div>
+                        <div class="value" id="totalSections">0</div>
+                        <div class="label">Sections</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="value" id="totalBudget">₱0</div>
+                        <div class="label">Total Budget</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="icon"><i class="fas fa-calculator"></i></div>
+                        <div class="value" id="avgBudget">₱0</div>
+                        <div class="label">Average per Program</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Budget Distribution -->
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-chart-bar"></i> Budget by Section</div>
+                            <div class="bar-chart" id="sectionChart">
+                                <div class="empty-state">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <h3>No Data Available</h3>
+                                    <p>No budget data has been loaded</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Data Status -->
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-info-circle"></i> Data Status</div>
+                            <div id="dataStatus">
+                                <div class="empty-state" style="padding: 30px;">
+                                    <i class="fas fa-database"></i>
+                                    <h3>Loading Data...</h3>
+                                    <p>Please wait while data loads</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW SECTION -->
+            <div class="content-section" id="view">
+                <div class="section-header">
+                    <h2><i class="fas fa-table"></i> View Budget <span class="readonly-indicator"><i class="fas fa-lock"></i> READ-ONLY</span></h2>
+                    <p>Search and view budget records (view only)</p>
+                </div>
+
+                <div class="table-controls">
+                    <input type="text" id="searchInput" placeholder="Search programs, codes, units..." onkeyup="searchData()">
+                    <select id="sectionFilter" onchange="filterData()">
+                        <option value="">All Sections</option>
+                    </select>
+                    <span class="record-count" id="recordCount">0 records</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Section</th>
+                                <th>Program/PPA</th>
+                                <th>FPP Code</th>
+                                <th>Unit</th>
+                                <th>Total</th>
+                                <th>PS</th>
+                                <th>MOOE</th>
+                                <th>CO</th>
+                                <th>FE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==================== CONFIG ====================
+        let allData = [];
+        let sections = [];
+        let filteredData = [];
+
+        // ==================== NAVIGATION ====================
+        function navigate(section, clickedElement) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            }
+            
+            if (section === 'view') renderTable();
+            if (section === 'overview') updateDashboard();
+        }
+
+        // ==================== CLOCK ====================
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { timeZone: 'Asia/Manila', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            const timeOptions = { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-PH', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-PH', timeOptions);
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // ==================== STORAGE ====================
+        function loadData() {
+            // Try to preload data if available
+            if (typeof preloadAIPData === 'function') {
+                preloadAIPData();
+            }
+            
+            const savedData = localStorage.getItem('aipBudgetData');
+            const savedSections = localStorage.getItem('aipBudgetSections');
+            
+            if (savedData) allData = JSON.parse(savedData);
+            if (savedSections) sections = JSON.parse(savedSections);
+            
+            filteredData = [...allData];
+            updateDashboard();
+        }
+
+        // ==================== DASHBOARD ====================
+        function updateDashboard() {
+            updateStats();
+            renderChart();
+            updateDataStatus();
+        }
+
+        function updateStats() {
+            const total = allData.reduce((sum, i) => sum + i.total, 0);
+            const avg = allData.length ? total / allData.length : 0;
+            
+            document.getElementById('totalPrograms').textContent = allData.length.toLocaleString();
+            document.getElementById('totalSections').textContent = sections.length;
+            document.getElementById('totalBudget').textContent = formatMoney(total);
+            document.getElementById('avgBudget').textContent = formatMoney(avg);
+        }
+
+        function renderChart() {
+            const container = document.getElementById('sectionChart');
+            
+            if (sections.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>No Data Available</h3>
+                        <p>No budget data has been loaded</p>
+                    </div>`;
+                return;
+            }
+            
+            const maxAmount = Math.max(...sections.map(s => s.totalAmount));
+            
+            container.innerHTML = sections.map(sec => {
+                const percent = maxAmount ? (sec.totalAmount / maxAmount * 100).toFixed(1) : 0;
+                return `
+                    <div class="bar-item">
+                        <div class="bar-label">${sec.name}</div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="bar-value">${formatMoney(sec.totalAmount)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateDataStatus() {
+            const container = document.getElementById('dataStatus');
+            
+            if (allData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 30px;">
+                        <i class="fas fa-database"></i>
+                        <h3>No Data Available</h3>
+                        <p>Admin has not uploaded any budget data yet</p>
+                    </div>`;
+                return;
+            }
+            
+            const total = allData.reduce((sum, i) => sum + i.total, 0);
+            
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.5rem;"></i>
+                        <div>
+                            <div style="font-weight: 600; color: #1e293b;">Data Available</div>
+                            <div style="font-size: 0.85rem; color: #64748b;">${allData.length} programs loaded</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Total Budget</div>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: #065f46;">${formatMoney(total)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== TABLE ====================
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const filter = document.getElementById('sectionFilter');
+            
+            filter.innerHTML = '<option value="">All Sections</option>' +
+                sections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            
+            tbody.innerHTML = filteredData.map(item => `
+                <tr>
+                    <td><span class="tag">${item.section || 'N/A'}</span></td>
+                    <td>${item.program}</td>
+                    <td>${item.code}</td>
+                    <td>${item.unit}</td>
+                    <td class="amount">${formatMoney(item.total)}</td>
+                    <td class="amount">${formatMoney(item.ps)}</td>
+                    <td class="amount">${formatMoney(item.mooe)}</td>
+                    <td class="amount">${formatMoney(item.co)}</td>
+                    <td class="amount">${formatMoney(item.fe)}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('recordCount').textContent = filteredData.length + ' records';
+        }
+
+        function searchData() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            filteredData = allData.filter(i => 
+                i.program.toLowerCase().includes(term) ||
+                i.code.toLowerCase().includes(term) ||
+                i.unit.toLowerCase().includes(term)
+            );
+            renderTable();
+        }
+
+        function filterData() {
+            const section = document.getElementById('sectionFilter').value;
+            filteredData = section ? allData.filter(i => i.section === section) : [...allData];
+            renderTable();
+        }
+
+        // ==================== UTILS ====================
+        function formatMoney(amount) {
+            if (!amount || amount === 0) return '₱0.00';
+            return '₱' + amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>

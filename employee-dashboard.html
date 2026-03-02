@@ -81,7 +81,71 @@
         
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3); }
         
-        .login-error { color: #ef4444; margin-top: 15px; min-height: 20px; }
+        .login-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .login-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link:hover {
+            background: #eff6ff;
+            text-decoration: underline;
+        }
+        
+        .signup-box {
+            display: none;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .signup-box.active { display: block; }
+        .login-box.hidden { display: none; }
+        
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        
+        .role-badge.admin {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+        
+        .role-badge.user {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .admin-only {
+            display: none;
+        }
+        
+        .admin-only.visible {
+            display: block;
+        }
         
         /* Dashboard */
         .dashboard { display: none; min-height: 100vh; }
@@ -603,15 +667,18 @@
 <body>
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
-        <div class="login-box">
+        <div class="login-box" id="loginBox">
             <div class="login-icon"><i class="fas fa-user-shield"></i></div>
             <h2>AIP Dashboard</h2>
-            <p>Authorized Personnel Only</p>
+            <p>Admin Access - Full Control</p>
             <div class="login-form">
-                <input type="password" id="passwordInput" placeholder="Enter password..." onkeypress="if(event.key==='Enter')doLogin()">
+                <input type="password" id="passwordInput" placeholder="Enter admin password..." onkeypress="if(event.key==='Enter')doLogin()">
                 <button onclick="doLogin()" class="login-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
             </div>
             <div class="login-error" id="loginError"></div>
+            <div class="login-options">
+                <a href="user-dashboard.html" class="login-link"><i class="fas fa-users"></i> User View (Read-Only)</a>
+            </div>
         </div>
     </div>
 
@@ -621,21 +688,21 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="images/bataan_logo.png" alt="Logo">
-                <h3>AIP Dashboard</h3>
-                <p>Budget Management</p>
+                <h3>AIP Dashboard <span class="role-badge admin"><i class="fas fa-crown"></i> ADMIN</span></h3>
+                <p>Budget Management - Full Access</p>
             </div>
             
             <nav class="sidebar-nav">
-                <div class="sidebar-item active" onclick="navigate('overview')">
+                <div class="sidebar-item active" onclick="navigate('overview', this)">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </div>
-                <div class="sidebar-item" onclick="navigate('upload')">
+                <div class="sidebar-item" onclick="navigate('upload', this)">
                     <i class="fas fa-cloud-upload-alt"></i><span>Upload PPA</span>
                 </div>
-                <div class="sidebar-item" onclick="navigate('view')">
+                <div class="sidebar-item" onclick="navigate('view', this)">
                     <i class="fas fa-table"></i><span>View Budget</span>
                 </div>
-                <div class="sidebar-item" onclick="navigate('export')">
+                <div class="sidebar-item" onclick="navigate('export', this)">
                     <i class="fas fa-download"></i><span>Download</span>
                 </div>
             </nav>
@@ -720,21 +787,21 @@
                         <div class="card">
                             <div class="card-header"><i class="fas fa-bolt"></i> Quick Actions</div>
                             <div class="quick-actions">
-                                <button class="action-btn upload" onclick="navigate('upload')">
+                                <button class="action-btn upload" onclick="navigate('upload'); event.stopPropagation();">
                                     <i class="fas fa-upload"></i>
                                     <div>
                                         <div class="text">Upload Data</div>
                                         <div class="subtext">Excel or CSV</div>
                                     </div>
                                 </button>
-                                <button class="action-btn view" onclick="navigate('view')">
+                                <button class="action-btn view" onclick="navigate('view'); event.stopPropagation();">
                                     <i class="fas fa-eye"></i>
                                     <div>
                                         <div class="text">View Data</div>
                                         <div class="subtext">Browse records</div>
                                     </div>
                                 </button>
-                                <button class="action-btn export" onclick="navigate('export')">
+                                <button class="action-btn export" onclick="navigate('export'); event.stopPropagation();">
                                     <i class="fas fa-file-export"></i>
                                     <div>
                                         <div class="text">Export</div>
@@ -882,12 +949,24 @@
         }
 
         // ==================== NAVIGATION ====================
-        function navigate(section) {
+        function navigate(section, clickedElement) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(section).classList.add('active');
             
             document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-            event.target.closest('.sidebar-item')?.classList.add('active');
+            
+            // Handle both onclick from sidebar and quick action buttons
+            if (clickedElement) {
+                clickedElement.closest('.sidebar-item')?.classList.add('active');
+            } else {
+                // Find sidebar item by onclick attribute
+                const items = document.querySelectorAll('.sidebar-item');
+                items.forEach(item => {
+                    if (item.getAttribute('onclick')?.includes(`navigate('${section}')`)) {
+                        item.classList.add('active');
+                    }
+                });
+            }
             
             if (section === 'view') renderTable();
             if (section === 'overview') updateDashboard();
