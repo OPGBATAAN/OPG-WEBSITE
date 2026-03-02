@@ -81,6 +81,23 @@
         
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3); }
         
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #475569;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1e3a8a;
+            cursor: pointer;
+        }
+        
         .login-options {
             display: flex;
             gap: 10px;
@@ -673,6 +690,10 @@
             <p>Admin Access - Full Control</p>
             <div class="login-form">
                 <input type="password" id="passwordInput" placeholder="Enter admin password..." onkeypress="if(event.key==='Enter')doLogin()">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMeCheckbox">
+                    <span>Remember Me</span>
+                </label>
                 <button onclick="doLogin()" class="login-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
             </div>
             <div class="login-error" id="loginError"></div>
@@ -972,7 +993,18 @@
         // ==================== AUTH ====================
         function doLogin() {
             const pwd = document.getElementById('passwordInput').value;
+            const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+            
             if (pwd === PASSWORD) {
+                // Save remember me preference
+                if (rememberMe) {
+                    localStorage.setItem('aipRememberMe', 'true');
+                    localStorage.setItem('aipSavedPassword', PASSWORD); // Store hash in production
+                } else {
+                    localStorage.removeItem('aipRememberMe');
+                    localStorage.removeItem('aipSavedPassword');
+                }
+                
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'flex';
                 document.getElementById('loginError').textContent = '';
@@ -994,7 +1026,36 @@
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('passwordInput').value = '';
+            // Clear remember me on logout
+            localStorage.removeItem('aipRememberMe');
+            localStorage.removeItem('aipSavedPassword');
+            showToast('Logged out successfully', 'success');
         }
+        
+        // ==================== AUTO LOGIN CHECK ====================
+        function checkAutoLogin() {
+            const rememberMe = localStorage.getItem('aipRememberMe');
+            const savedPassword = localStorage.getItem('aipSavedPassword');
+            
+            if (rememberMe === 'true' && savedPassword === PASSWORD) {
+                // Auto login
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'flex';
+                document.getElementById('rememberMeCheckbox').checked = true;
+                
+                // Pre-load data if available
+                if (typeof preloadAIPData === 'function' && preloadAIPData()) {
+                    showToast('Pre-loaded AIP Budget data available', 'success');
+                }
+                
+                loadData();
+                addActivity('Auto-login successful', 'info');
+                showToast('Welcome back to AIP Dashboard', 'success');
+            }
+        }
+        
+        // Check for auto login on page load
+        checkAutoLogin();
 
         // ==================== NAVIGATION ====================
         function navigate(section, clickedElement) {
