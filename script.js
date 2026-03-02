@@ -988,6 +988,7 @@ if (uploadAreaDashboard) {
 let aipAllData = [];
 let aipSections = [];
 let aipFilteredData = [];
+let aipCurrentView = 'category';
 
 function openAIPView() {
     // Try to preload data if available
@@ -1005,6 +1006,27 @@ function closeAIPView() {
     document.body.style.overflow = '';
 }
 
+function switchAIPView(view) {
+    aipCurrentView = view;
+    
+    // Update tabs
+    document.querySelectorAll('.aip-view-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Show/hide views
+    if (view === 'category') {
+        document.getElementById('aipCategoryView').classList.add('active');
+        document.getElementById('aipCategoryView').style.display = 'block';
+        document.getElementById('aipTableView').style.display = 'none';
+        renderAIPCategoryView();
+    } else {
+        document.getElementById('aipCategoryView').classList.remove('active');
+        document.getElementById('aipCategoryView').style.display = 'none';
+        document.getElementById('aipTableView').style.display = 'block';
+        updateAIPTable();
+    }
+}
+
 function loadAIPData() {
     // Load data from localStorage (synced from dashboard)
     const storedData = localStorage.getItem('aipBudgetData');
@@ -1020,7 +1042,13 @@ function loadAIPData() {
         
         updateAIPSummary();
         updateAIPChart();
-        updateAIPTable();
+        
+        if (aipCurrentView === 'category') {
+            renderAIPCategoryView();
+        } else {
+            updateAIPTable();
+        }
+        
         populateAIPSectionFilter();
     } else {
         document.getElementById('aipNoData').style.display = 'block';
@@ -1049,7 +1077,7 @@ function updateAIPChart() {
     const container = document.getElementById('aipBarChart');
     
     if (aipSections.length === 0) {
-        container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No section data available</p>';
+        container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No budget data available</p>';
         return;
     }
     
@@ -1069,6 +1097,140 @@ function updateAIPChart() {
     }).join('');
 }
 
+// ==================== CATEGORY VIEW ====================
+function renderAIPCategoryView() {
+    const container = document.getElementById('aipBudgetTypes');
+    
+    if (aipSections.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>No Budget Data</h3></div>';
+        document.getElementById('aipCategoryCount').textContent = '0 budget types';
+        return;
+    }
+    
+    // Group data by section (budget type)
+    const sectionData = {};
+    aipSections.forEach(sec => {
+        sectionData[sec.name] = {
+            ...sec,
+            programs: aipAllData.filter(item => item.section === sec.name)
+        };
+    });
+    
+    // Generate HTML for each budget type
+    container.innerHTML = aipSections.map((sec, index) => {
+        const data = sectionData[sec.name];
+        return `
+            <div class="aip-budget-type">
+                <div class="aip-type-header" onclick="toggleBudgetType(${index})">
+                    <div class="aip-type-title">
+                        <i class="fas fa-folder"></i>
+                        ${sec.name}
+                    </div>
+                    <div class="aip-type-stats">
+                        <span class="aip-type-stat">
+                            <i class="fas fa-file-alt"></i> ${sec.items} programs
+                        </span>
+                        <span class="aip-type-stat">
+                            <i class="fas fa-money-bill-wave"></i> ${formatAIPAmount(sec.totalAmount)}
+                        </span>
+                    </div>
+                    <i class="fas fa-chevron-down aip-type-toggle" id="toggle-${index}"></i>
+                </div>
+                <div class="aip-nature-list" id="nature-list-${index}">
+                    ${renderProgramsByNature(data.programs)}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('aipCategoryCount').textContent = `${aipSections.length} budget types`;
+}
+
+function renderProgramsByNature(programs) {
+    // Group programs by their nature (simplified - using first word of program name as nature)
+    const natureGroups = {};
+    
+    programs.forEach(prog => {
+        // Determine nature based on program keywords
+        let nature = 'General';
+        const progLower = prog.program.toLowerCase();
+        
+        if (progLower.includes('construction') || progLower.includes('building')) nature = 'Construction';
+        else if (progLower.includes('procurement') || progLower.includes('purchase')) nature = 'Procurement';
+        else if (progLower.includes('scholarship') || progLower.includes('education')) nature = 'Education';
+        else if (progLower.includes('health') || progLower.includes('medical')) nature = 'Health';
+        else if (progLower.includes('assistance') || progLower.includes('aid')) nature = 'Assistance';
+        else if (progLower.includes('maintenance') || progLower.includes('operation')) nature = 'Operations';
+        else if (progLower.includes('program') || progLower.includes('project')) nature = 'Programs';
+        
+        if (!natureGroups[nature]) natureGroups[nature] = [];
+        natureGroups[nature].push(prog);
+    });
+    
+    // Generate HTML for each nature group
+    return Object.entries(natureGroups).map(([nature, items]) => `
+        <div class="aip-nature-item">
+            <div class="aip-nature-header">
+                <span class="aip-nature-title"><i class="fas fa-tag"></i> ${nature}</span>
+                <span class="aip-nature-count">${items.length} items</span>
+            </div>
+            <div class="aip-programs-list">
+                ${items.map(item => `
+                    <div class="aip-program-item">
+                        <div class="aip-program-name">${item.program}</div>
+                        <div class="aip-program-code">${item.code}</div>
+                        <div class="aip-program-unit">${item.unit}</div>
+                        <div class="aip-amount">${formatAIPAmount(item.total)}</div>
+                        <div class="aip-amount">${formatAIPAmount(item.ps)}</div>
+                        <div class="aip-amount">${formatAIPAmount(item.mooe)}</div>
+                        <div class="aip-amount">${formatAIPAmount(item.co)}</div>
+                        <div class="aip-amount">${formatAIPAmount(item.fe)}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleBudgetType(index) {
+    const header = document.querySelector(`#nature-list-${index}`).previousElementSibling;
+    const list = document.getElementById(`nature-list-${index}`);
+    const toggle = document.getElementById(`toggle-${index}`);
+    
+    header.classList.toggle('collapsed');
+    list.classList.toggle('collapsed');
+    toggle.classList.toggle('collapsed');
+}
+
+function searchAIPCategory() {
+    const searchTerm = document.getElementById('aipCategorySearch').value.toLowerCase();
+    
+    if (!searchTerm) {
+        renderAIPCategoryView();
+        return;
+    }
+    
+    // Filter sections based on search
+    const filteredSections = aipSections.filter(sec => 
+        sec.name.toLowerCase().includes(searchTerm) ||
+        aipAllData.some(item => 
+            item.section === sec.name && (
+                item.program.toLowerCase().includes(searchTerm) ||
+                item.code.toLowerCase().includes(searchTerm)
+            )
+        )
+    );
+    
+    // Temporarily update sections for rendering
+    const originalSections = [...aipSections];
+    aipSections = filteredSections;
+    renderAIPCategoryView();
+    aipSections = originalSections;
+    
+    document.getElementById('aipCategoryCount').textContent = `${filteredSections.length} of ${aipSections.length} budget types`;
+}
+
+// ==================== TABLE VIEW ====================
 function updateAIPTable() {
     const tbody = document.getElementById('aipTableBody');
     tbody.innerHTML = aipFilteredData.map(item => `
@@ -1090,7 +1252,7 @@ function updateAIPTable() {
 
 function populateAIPSectionFilter() {
     const filter = document.getElementById('aipSectionFilter');
-    filter.innerHTML = '<option value="">All Sections</option>' +
+    filter.innerHTML = '<option value="">All Budget Types</option>' +
         aipSections.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
 }
 

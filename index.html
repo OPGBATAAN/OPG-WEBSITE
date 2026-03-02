@@ -557,7 +557,7 @@
                             <div class="aip-summary-card green">
                                 <div class="icon"><i class="fas fa-folder"></i></div>
                                 <div class="value" id="aipTotalSections">0</div>
-                                <div class="label">Sections</div>
+                                <div class="label">Budget Types</div>
                             </div>
                             <div class="aip-summary-card orange">
                                 <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
@@ -572,36 +572,61 @@
                         </div>
                         <!-- Budget Distribution Chart -->
                         <div class="aip-chart-container" id="aipChartContainer">
-                            <h4><i class="fas fa-chart-bar"></i> Budget by Section</h4>
+                            <h4><i class="fas fa-chart-bar"></i> Budget by Type</h4>
                             <div class="aip-bar-chart" id="aipBarChart"></div>
                         </div>
                     </div>
-                    <!-- Table Controls -->
-                    <div class="aip-controls">
-                        <input type="text" id="aipSearchInput" placeholder="Search programs, codes, units..." onkeyup="searchAIPData()">
-                        <select id="aipSectionFilter" onchange="filterAIPSection()">
-                            <option value="">All Sections</option>
-                        </select>
-                        <span class="aip-record-count" id="aipRecordCount">0 records</span>
+                    
+                    <!-- View Tabs -->
+                    <div class="aip-view-tabs">
+                        <button class="aip-view-tab active" onclick="switchAIPView('category')">
+                            <i class="fas fa-sitemap"></i> By Budget Type
+                        </button>
+                        <button class="aip-view-tab" onclick="switchAIPView('table')">
+                            <i class="fas fa-table"></i> Table View
+                        </button>
                     </div>
-                    <!-- Data Table -->
-                    <div class="aip-table-container">
-                        <table class="aip-data-table" id="aipDataTable">
-                            <thead>
-                                <tr>
-                                    <th>Section</th>
-                                    <th>Program/PPA</th>
-                                    <th>FPP Code</th>
-                                    <th>Unit</th>
-                                    <th>Total</th>
-                                    <th>PS</th>
-                                    <th>MOOE</th>
-                                    <th>CO</th>
-                                    <th>FE</th>
-                                </tr>
-                            </thead>
-                            <tbody id="aipTableBody"></tbody>
-                        </table>
+                    
+                    <!-- Category View (Hierarchical) -->
+                    <div class="aip-category-view active" id="aipCategoryView">
+                        <div class="aip-controls">
+                            <input type="text" id="aipCategorySearch" placeholder="Search budget types or programs..." onkeyup="searchAIPCategory()">
+                            <span class="aip-record-count" id="aipCategoryCount">0 budget types</span>
+                        </div>
+                        <div id="aipBudgetTypes">
+                            <!-- Budget types will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Table View -->
+                    <div class="aip-table-view" id="aipTableView" style="display: none;">
+                        <!-- Table Controls -->
+                        <div class="aip-controls">
+                            <input type="text" id="aipSearchInput" placeholder="Search programs, codes, units..." onkeyup="searchAIPData()">
+                            <select id="aipSectionFilter" onchange="filterAIPSection()">
+                                <option value="">All Budget Types</option>
+                            </select>
+                            <span class="aip-record-count" id="aipRecordCount">0 records</span>
+                        </div>
+                        <!-- Data Table -->
+                        <div class="aip-table-container">
+                            <table class="aip-data-table" id="aipDataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Budget Type</th>
+                                        <th>Program/PPA</th>
+                                        <th>FPP Code</th>
+                                        <th>Unit</th>
+                                        <th>Total</th>
+                                        <th>PS</th>
+                                        <th>MOOE</th>
+                                        <th>CO</th>
+                                        <th>FE</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aipTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
