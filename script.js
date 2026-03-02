@@ -1640,13 +1640,34 @@ function renderAllRequests() {
         'travel': 'Travel Order'
     };
     
-    // Helper function to calculate running time
-    function getRunningTime(submittedAt, status, completedAt) {
-        const submitted = new Date(submittedAt);
+    // Helper function to format time (for renderAllRequests)
+    function formatTime(dateString, req) {
+        // Use timestamp as fallback if submittedAt is missing
+        const effectiveDate = dateString || (req ? req.timestamp : null);
+        if (!effectiveDate) return 'N/A';
+        try {
+            const date = new Date(effectiveDate);
+            if (isNaN(date.getTime())) return 'N/A';
+            return date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+        } catch (e) {
+            return 'N/A';
+        }
+    }
+    
+    // Helper function to calculate running time (for renderAllRequests)
+    function getRunningTime(submittedAt, status, completedAt, req) {
+        // Use timestamp as fallback if submittedAt is missing
+        const effectiveSubmittedAt = submittedAt || (req ? req.timestamp : null);
+        if (!effectiveSubmittedAt) return 'N/A';
+        
+        const submitted = new Date(effectiveSubmittedAt);
+        if (isNaN(submitted.getTime())) return 'N/A';
+        
         const now = new Date();
         
         if (status === 'completed' && completedAt) {
             const completed = new Date(completedAt);
+            if (isNaN(completed.getTime())) return 'N/A';
             const diffMs = completed - submitted;
             const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
             const diffDays = Math.floor(diffHrs / 24);
@@ -1678,23 +1699,13 @@ function renderAllRequests() {
         }
     }
     
-    // Helper function to format time
-    function formatTime(dateString) {
-        if (!dateString) return 'N/A';
-        try {
-            return new Date(dateString).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
-        } catch (e) {
-            return 'Invalid Date';
-        }
-    }
-    
     // Sort by newest first
-    const sortedRequests = [...requests].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    const sortedRequests = [...requests].sort((a, b) => new Date(b.submittedAt || b.timestamp) - new Date(a.submittedAt || a.timestamp));
     
     container.innerHTML = sortedRequests.map(req => {
-        const submittedTime = formatTime(req.submittedAt);
-        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt);
-        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt) : null;
+        const submittedTime = formatTime(req.submittedAt, req);
+        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt, req);
+        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt, req) : null;
         
         return `
         <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
@@ -1751,13 +1762,34 @@ function filterAllRequests() {
         return matchesSearch && matchesType && matchesStatus;
     });
     
-    // Helper function to calculate running time
-    function getRunningTime(submittedAt, status, completedAt) {
-        const submitted = new Date(submittedAt);
+    // Helper function to format time (for filterAllRequests)
+    function formatTime(dateString, req) {
+        // Use timestamp as fallback if submittedAt is missing
+        const effectiveDate = dateString || (req ? req.timestamp : null);
+        if (!effectiveDate) return 'N/A';
+        try {
+            const date = new Date(effectiveDate);
+            if (isNaN(date.getTime())) return 'N/A';
+            return date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+        } catch (e) {
+            return 'N/A';
+        }
+    }
+    
+    // Helper function to calculate running time (for filterAllRequests)
+    function getRunningTime(submittedAt, status, completedAt, req) {
+        // Use timestamp as fallback if submittedAt is missing
+        const effectiveSubmittedAt = submittedAt || (req ? req.timestamp : null);
+        if (!effectiveSubmittedAt) return 'N/A';
+        
+        const submitted = new Date(effectiveSubmittedAt);
+        if (isNaN(submitted.getTime())) return 'N/A';
+        
         const now = new Date();
         
         if (status === 'completed' && completedAt) {
             const completed = new Date(completedAt);
+            if (isNaN(completed.getTime())) return 'N/A';
             const diffMs = completed - submitted;
             const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
             const diffDays = Math.floor(diffHrs / 24);
@@ -1789,18 +1821,8 @@ function filterAllRequests() {
         }
     }
     
-    // Helper function to format time
-    function formatTime(dateString) {
-        if (!dateString) return 'N/A';
-        try {
-            return new Date(dateString).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
-        } catch (e) {
-            return 'Invalid Date';
-        }
-    }
-    
     // Sort by newest first
-    filtered.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    filtered.sort((a, b) => new Date(b.submittedAt || b.timestamp) - new Date(a.submittedAt || a.timestamp));
     
     if (countElement) {
         countElement.textContent = `${filtered.length} request${filtered.length !== 1 ? 's' : ''} found`;
@@ -1818,9 +1840,9 @@ function filterAllRequests() {
     }
     
     container.innerHTML = filtered.map(req => {
-        const submittedTime = formatTime(req.submittedAt);
-        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt);
-        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt) : null;
+        const submittedTime = formatTime(req.submittedAt, req);
+        const runningTime = getRunningTime(req.submittedAt, req.status, req.statusUpdatedAt, req);
+        const completedTime = req.status === 'completed' ? formatTime(req.statusUpdatedAt, req) : null;
         
         return `
         <div class="request-item" data-type="${req.type}" data-status="${req.status || 'pending'}">
