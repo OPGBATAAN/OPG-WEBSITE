@@ -1665,38 +1665,30 @@ function renderAllRequests() {
         
         const now = new Date();
         
+        let diffMs;
         if (status === 'completed' && completedAt) {
             const completed = new Date(completedAt);
             if (isNaN(completed.getTime())) return 'N/A';
-            const diffMs = completed - submitted;
-            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffHrs / 24);
-            const remainingHrs = diffHrs % 24;
-            
-            if (diffDays > 0) {
-                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
-            } else if (diffHrs > 0) {
-                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
-            } else {
-                const diffMins = Math.floor(diffMs / (1000 * 60));
-                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
-            }
+            diffMs = completed - submitted;
         } else {
             // For pending/processing - show time elapsed
-            const diffMs = now - submitted;
-            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffHrs / 24);
-            const remainingHrs = diffHrs % 24;
-            
-            if (diffDays > 0) {
-                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
-            } else if (diffHrs > 0) {
-                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
-            } else {
-                const diffMins = Math.floor(diffMs / (1000 * 60));
-                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
-            }
+            diffMs = now - submitted;
         }
+        
+        // Calculate all time units
+        const diffSecs = Math.floor((diffMs / 1000) % 60);
+        const diffMins = Math.floor((diffMs / (1000 * 60)) % 60);
+        const diffHrs = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        // Build formatted string
+        const parts = [];
+        if (diffDays > 0) parts.push(`${diffDays}d`);
+        if (diffHrs > 0) parts.push(`${diffHrs}h`);
+        if (diffMins > 0) parts.push(`${diffMins}m`);
+        parts.push(`${diffSecs}s`);
+        
+        return parts.join(' ');
     }
     
     // Sort by newest first
@@ -1787,38 +1779,30 @@ function filterAllRequests() {
         
         const now = new Date();
         
+        let diffMs;
         if (status === 'completed' && completedAt) {
             const completed = new Date(completedAt);
             if (isNaN(completed.getTime())) return 'N/A';
-            const diffMs = completed - submitted;
-            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffHrs / 24);
-            const remainingHrs = diffHrs % 24;
-            
-            if (diffDays > 0) {
-                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
-            } else if (diffHrs > 0) {
-                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
-            } else {
-                const diffMins = Math.floor(diffMs / (1000 * 60));
-                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
-            }
+            diffMs = completed - submitted;
         } else {
             // For pending/processing - show time elapsed
-            const diffMs = now - submitted;
-            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffHrs / 24);
-            const remainingHrs = diffHrs % 24;
-            
-            if (diffDays > 0) {
-                return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${remainingHrs} hr${remainingHrs !== 1 ? 's' : ''}`;
-            } else if (diffHrs > 0) {
-                return `${diffHrs} hr${diffHrs !== 1 ? 's' : ''}`;
-            } else {
-                const diffMins = Math.floor(diffMs / (1000 * 60));
-                return `${diffMins} min${diffMins !== 1 ? 's' : ''}`;
-            }
+            diffMs = now - submitted;
         }
+        
+        // Calculate all time units
+        const diffSecs = Math.floor((diffMs / 1000) % 60);
+        const diffMins = Math.floor((diffMs / (1000 * 60)) % 60);
+        const diffHrs = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        // Build formatted string
+        const parts = [];
+        if (diffDays > 0) parts.push(`${diffDays}d`);
+        if (diffHrs > 0) parts.push(`${diffHrs}h`);
+        if (diffMins > 0) parts.push(`${diffMins}m`);
+        parts.push(`${diffSecs}s`);
+        
+        return parts.join(' ');
     }
     
     // Sort by newest first
@@ -2525,23 +2509,38 @@ function submitRequest(event) {
     const office = document.getElementById('reqOffice').value;
     const purpose = document.getElementById('reqPurpose').value;
     
+    // Get existing requests to calculate upload number for today
+    let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
+    const now = new Date();
+    const todayStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+    
+    // Count requests from today
+    const todayRequests = requests.filter(req => {
+        const reqDate = new Date(req.submittedAt || req.timestamp);
+        const reqDateStr = reqDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+        return reqDateStr === todayStr;
+    });
+    const uploadNumber = todayRequests.length + 1;
+    
+    // Create request ID in format MM/DD/YYYY-No. of Uploads
+    const requestId = `${todayStr}-${uploadNumber}`;
+    
     // Create request object
     const requestData = {
-        id: 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        id: requestId,
         name: name,
         phone: phone,
         office: office,
         purpose: purpose,
         type: currentRequestType,
         status: 'pending',
-        timestamp: new Date().toISOString(),
-        submittedAt: new Date().toISOString(),
+        timestamp: now.toISOString(),
+        submittedAt: now.toISOString(),
         files: uploadedFiles.map(f => ({ name: f.name, size: f.size })),
         hasSignature: !!signatureData
     };
     
     // Save to localStorage
-    let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
     requests.push(requestData);
     localStorage.setItem('submittedRequests', JSON.stringify(requests));
     
