@@ -2582,7 +2582,9 @@ document.addEventListener('keydown', function(event) {
 // Drag and drop support
 const fileUploadArea = document.getElementById('fileUploadArea');
 if (fileUploadArea) {
-    fileUploadArea.addEventListener('click', () => {
+    fileUploadArea.addEventListener('click', (e) => {
+        // Don't trigger if clicking the file input directly (let the input handle it)
+        if (e.target.id === 'reqDocuments') return;
         document.getElementById('reqDocuments').click();
     });
     
