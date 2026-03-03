@@ -2509,20 +2509,20 @@ function submitRequest(event) {
     const office = document.getElementById('reqOffice').value;
     const purpose = document.getElementById('reqPurpose').value;
     
-    // Get existing requests to calculate upload number for today
+    // Get existing requests to calculate upload number for today (per request type)
     let requests = JSON.parse(localStorage.getItem('submittedRequests') || '[]');
     const now = new Date();
     const todayStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
     
-    // Count requests from today
-    const todayRequests = requests.filter(req => {
+    // Count requests from today for the SAME request type
+    const todayTypeRequests = requests.filter(req => {
         const reqDate = new Date(req.submittedAt || req.timestamp);
         const reqDateStr = reqDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-        return reqDateStr === todayStr;
+        return reqDateStr === todayStr && req.type === currentRequestType;
     });
-    const uploadNumber = todayRequests.length + 1;
+    const uploadNumber = todayTypeRequests.length + 1;
     
-    // Create request ID in format MM/DD/YYYY-No. of Uploads
+    // Create request ID in format MM/DD/YYYY-No. (per request type)
     const requestId = `${todayStr}-${uploadNumber}`;
     
     // Create request object
