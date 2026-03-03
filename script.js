@@ -2138,12 +2138,22 @@ document.addEventListener('keydown', function(event) {
 
 // ==================== FILE PREVIEW AND SIGNATURE FUNCTIONS ====================
 
-// Store uploaded files
+// Store uploaded files with data
 let uploadedFiles = [];
 let signatureData = null;
 
+// Convert File to base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 // Handle file selection
-function handleFileSelect(event) {
+async function handleFileSelect(event) {
     event.preventDefault();
     event.stopPropagation();
     
@@ -2152,12 +2162,23 @@ function handleFileSelect(event) {
     const list = document.getElementById('filePreviewList');
     const uploadArea = document.getElementById('fileUploadArea');
     
-    files.forEach(file => {
+    for (const file of files) {
         // Check if file already exists
         if (!uploadedFiles.find(f => f.name === file.name && f.size === file.size)) {
-            uploadedFiles.push(file);
+            // Convert to base64 and store
+            try {
+                const data = await fileToBase64(file);
+                uploadedFiles.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    data: data
+                });
+            } catch (err) {
+                console.error('Error reading file:', err);
+            }
         }
-    });
+    }
     
     // Show container
     container.style.display = 'block';
@@ -2180,12 +2201,11 @@ function renderFilePreviews() {
         previewItem.className = 'file-preview-item';
         
         // Check if image
-        const isImage = file.type.startsWith('image/');
+        const isImage = file.type && file.type.startsWith('image/');
         
         let iconHtml = '';
         if (isImage) {
-            const imageUrl = URL.createObjectURL(file);
-            iconHtml = `<img src="${imageUrl}" class="file-preview-thumbnail" alt="${file.name}" onclick="viewFile(${index})">`;
+            iconHtml = `<img src="${file.data}" class="file-preview-thumbnail" alt="${file.name}" onclick="viewFile(${index})">`;
         } else {
             let icon = 'fa-file';
             if (file.name.endsWith('.pdf')) icon = 'fa-file-pdf';
@@ -2227,16 +2247,14 @@ function formatFileSize(bytes) {
 // View file
 function viewFile(index) {
     const file = uploadedFiles[index];
-    const isImage = file.type.startsWith('image/');
+    const isImage = file.type && file.type.startsWith('image/');
     
     if (isImage) {
         // Show image in modal
-        const imageUrl = URL.createObjectURL(file);
-        showImageModal(imageUrl, file.name);
+        showImageModal(file.data, file.name);
     } else {
         // For PDFs and docs, create a download/view link
-        const url = URL.createObjectURL(file);
-        window.open(url, '_blank');
+        window.open(file.data, '_blank');
     }
 }
 
@@ -2600,17 +2618,27 @@ if (fileUploadArea) {
         fileUploadArea.style.background = '';
     });
     
-    fileUploadArea.addEventListener('drop', (e) => {
+    fileUploadArea.addEventListener('drop', async (e) => {
         e.preventDefault();
         fileUploadArea.style.borderColor = '';
         fileUploadArea.style.background = '';
         
         const files = Array.from(e.dataTransfer.files);
-        files.forEach(file => {
+        for (const file of files) {
             if (!uploadedFiles.find(f => f.name === file.name && f.size === file.size)) {
-                uploadedFiles.push(file);
+                try {
+                    const data = await fileToBase64(file);
+                    uploadedFiles.push({
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        data: data
+                    });
+                } catch (err) {
+                    console.error('Error reading file:', err);
+                }
             }
-        });
+        }
         
         document.getElementById('filePreviewContainer').style.display = 'block';
         fileUploadArea.classList.add('has-files');

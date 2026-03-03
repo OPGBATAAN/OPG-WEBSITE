@@ -750,6 +750,37 @@
             border-color: #94a3b8;
         }
 
+        /* Refresh Button */
+        .btn-refresh {
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            min-width: 50px;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+
+        .btn-refresh.spinning i {
+            animation: spin 0.5s linear;
+        }
+
         .requests-stats-bar {
             display: flex;
             gap: 24px;
@@ -1355,11 +1386,39 @@
             align-items: center;
             gap: 6px;
             transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
         }
 
         .btn-download-file:hover {
             background: #2563eb;
             transform: scale(1.05);
+        }
+
+        .btn-view-file {
+            padding: 8px 16px;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-view-file:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
         }
 
         /* Signature Modal */
@@ -1761,6 +1820,9 @@
                             <option value="certificate">Certificate Request</option>
                             <option value="travel">Travel Order</option>
                         </select>
+                        <button type="button" class="btn-refresh" onclick="refreshRequests()" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 8px; padding: 12px 16px; font-weight: 600; cursor: pointer; display: inline-block; margin-left: 8px;">
+                            <i class="fas fa-sync-alt" style="margin-right: 6px;"></i> Refresh
+                        </button>
                         <select id="adminRequestsStatusFilter" onchange="filterAdminRequests()" style="display: none;">
                             <option value="">All Status</option>
                             <option value="pending">Pending Review</option>
@@ -2364,6 +2426,16 @@
             filterAdminRequests();
         }
         
+        function refreshRequests() {
+            const btn = document.querySelector('.btn-refresh');
+            if (btn) {
+                btn.classList.add('spinning');
+                setTimeout(() => btn.classList.remove('spinning'), 500);
+            }
+            filterAdminRequests();
+            showToast('Requests refreshed', 'success');
+        }
+        
         function filterAdminRequests() {
             const searchTerm = document.getElementById('adminRequestsSearch').value.toLowerCase();
             const typeFilter = document.getElementById('adminRequestsFilter').value;
@@ -2607,32 +2679,151 @@ This is an automated notification from the OPG Dashboard.
                 return;
             }
             
+            // Store current files globally for click handlers
+            window.currentRequestFiles = request.files;
+            
             // Create modal to display files
             const modal = document.createElement('div');
             modal.className = 'file-viewer-modal';
+            modal.id = 'fileViewerModal';
+            
+            let filesHtml = '';
+            request.files.forEach((file, index) => {
+                const fileName = file.name || 'Unknown File';
+                const fileSize = file.size ? (file.size / 1024).toFixed(1) + ' KB' : 'Unknown size';
+                const hasData = file.data && file.data.startsWith('data:');
+                const isImage = file.type && file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif)$/i);
+                
+                if (hasData) {
+                    filesHtml += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <i class="fas ${isImage ? 'fa-file-image' : 'fa-file'}"></i>
+                                <span class="file-name">${fileName}</span>
+                                <span class="file-size">(${fileSize})</span>
+                            </div>
+                            <div class="file-actions">
+                                <button onclick="viewFileByIndex(${index})" class="btn-view-file"><i class="fas fa-eye"></i> View</button>
+                                <button onclick="downloadFileByIndex(${index})" class="btn-download-file"><i class="fas fa-download"></i> Download</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    filesHtml += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <i class="fas fa-file"></i>
+                                <span class="file-name">${fileName}</span>
+                                <span class="file-size">(${fileSize})</span>
+                            </div>
+                            <span style="color: #94a3b8; font-size: 0.85rem;">No preview available</span>
+                        </div>
+                    `;
+                }
+            });
+            
             modal.innerHTML = `
                 <div class="file-viewer-content">
                     <div class="file-viewer-header">
                         <h3><i class="fas fa-paperclip"></i> Attached Files - ${request.id}</h3>
-                        <button onclick="this.closest('.file-viewer-modal').remove()" class="close-btn">&times;</button>
+                        <button onclick="document.getElementById('fileViewerModal').remove()" class="close-btn">&times;</button>
                     </div>
                     <div class="file-list">
-                        ${request.files.map((file, index) => `
-                            <div class="file-item">
-                                <div class="file-info">
-                                    <i class="fas fa-file"></i>
-                                    <span class="file-name">${file.name}</span>
-                                    <span class="file-size">(${(file.size / 1024).toFixed(1)} KB)</span>
-                                </div>
-                                <a href="${file.data}" download="${file.name}" class="btn-download-file">
-                                    <i class="fas fa-download"></i> Download
-                                </a>
-                            </div>
-                        `).join('')}
+                        ${filesHtml}
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
+        }
+        
+        // Helper functions for file actions
+        function previewFileByIndex(index) {
+            const file = window.currentRequestFiles[index];
+            if (!file || !file.data) return;
+            previewFile(file.data, file.name, 'image');
+        }
+        
+        function viewFileByIndex(index) {
+            const file = window.currentRequestFiles[index];
+            if (!file || !file.data) {
+                showToast('No file data available', 'error');
+                return;
+            }
+            // For images, use preview modal, otherwise open in new tab
+            const isImage = file.type && file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif)$/i);
+            if (isImage) {
+                previewFile(file.data, file.name, 'image');
+            } else {
+                window.open(file.data, '_blank');
+            }
+        }
+        
+        function downloadFileByIndex(index) {
+            const file = window.currentRequestFiles[index];
+            if (!file || !file.data) {
+                showToast('No file data available', 'error');
+                return;
+            }
+            downloadFile(file.data, file.name, file.type || 'application/octet-stream');
+        }
+        
+        // Preview file function
+        function previewFile(data, fileName, type) {
+            const modal = document.createElement('div');
+            modal.className = 'file-viewer-modal';
+            modal.style.zIndex = '1001';
+            
+            if (type === 'image') {
+                modal.innerHTML = `
+                    <div class="file-viewer-content" style="max-width: 90vw; max-height: 90vh;">
+                        <div class="file-viewer-header">
+                            <h3><i class="fas fa-image"></i> ${fileName}</h3>
+                            <button onclick="this.closest('.file-viewer-modal').remove()" class="close-btn">&times;</button>
+                        </div>
+                        <div style="padding: 20px; text-align: center;">
+                            <img src="${data}" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        </div>
+                    </div>
+                `;
+            }
+            document.body.appendChild(modal);
+        }
+        
+        // Download file function using blob
+        function downloadFile(data, fileName, mimeType) {
+            try {
+                // Check if data is a valid data URL
+                if (!data || !data.includes(',')) {
+                    showToast('Invalid file data format', 'error');
+                    return;
+                }
+                
+                const base64Data = data.split(',')[1];
+                if (!base64Data) {
+                    showToast('No file data found', 'error');
+                    return;
+                }
+                
+                const byteString = atob(base64Data);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([ab], { type: mimeType || 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('File downloaded successfully', 'success');
+            } catch (err) {
+                console.error('Download error:', err);
+                showToast('Error downloading file: ' + err.message, 'error');
+            }
         }
         
         function attachSignature(requestId) {
