@@ -2694,32 +2694,21 @@ This is an automated notification from the OPG Dashboard.
                 const hasData = file.data && file.data.startsWith('data:');
                 const isImage = file.type && file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif)$/i);
                 
-                if (hasData) {
-                    filesHtml += `
-                        <div class="file-item">
-                            <div class="file-info">
-                                <i class="fas ${isImage ? 'fa-file-image' : 'fa-file'}"></i>
-                                <span class="file-name">${fileName}</span>
-                                <span class="file-size">(${fileSize})</span>
-                            </div>
-                            <div class="file-actions">
-                                <button onclick="viewFileByIndex(${index})" class="btn-view-file"><i class="fas fa-eye"></i> View</button>
-                                <button onclick="downloadFileByIndex(${index})" class="btn-download-file"><i class="fas fa-download"></i> Download</button>
-                            </div>
+                // Show buttons for all files - handle missing data in the click handlers
+                filesHtml += `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <i class="fas ${isImage ? 'fa-file-image' : 'fa-file'}"></i>
+                            <span class="file-name">${fileName}</span>
+                            <span class="file-size">(${fileSize})</span>
                         </div>
-                    `;
-                } else {
-                    filesHtml += `
-                        <div class="file-item">
-                            <div class="file-info">
-                                <i class="fas fa-file"></i>
-                                <span class="file-name">${fileName}</span>
-                                <span class="file-size">(${fileSize})</span>
-                            </div>
-                            <span style="color: #94a3b8; font-size: 0.85rem;">No preview available</span>
+                        <div class="file-actions">
+                            <button onclick="viewFileByIndex(${index})" class="btn-view-file" ${!hasData ? 'style="opacity:0.6;cursor:not-allowed;"' : ''}><i class="fas fa-eye"></i> View</button>
+                            <button onclick="downloadFileByIndex(${index})" class="btn-download-file" ${!hasData ? 'style="opacity:0.6;cursor:not-allowed;"' : ''}><i class="fas fa-download"></i> Download</button>
                         </div>
-                    `;
-                }
+                        ${!hasData ? '<span style="color: #94a3b8; font-size: 0.75rem; margin-left: 8px;">(File uploaded before preview support)</span>' : ''}
+                    </div>
+                `;
             });
             
             modal.innerHTML = `
@@ -2745,8 +2734,12 @@ This is an automated notification from the OPG Dashboard.
         
         function viewFileByIndex(index) {
             const file = window.currentRequestFiles[index];
-            if (!file || !file.data) {
-                showToast('No file data available', 'error');
+            if (!file) {
+                showToast('File not found', 'error');
+                return;
+            }
+            if (!file.data) {
+                showToast('This file was uploaded before preview support was added. Please re-upload the file.', 'error');
                 return;
             }
             // For images, use preview modal, otherwise open in new tab
@@ -2760,8 +2753,12 @@ This is an automated notification from the OPG Dashboard.
         
         function downloadFileByIndex(index) {
             const file = window.currentRequestFiles[index];
-            if (!file || !file.data) {
-                showToast('No file data available', 'error');
+            if (!file) {
+                showToast('File not found', 'error');
+                return;
+            }
+            if (!file.data) {
+                showToast('This file was uploaded before download support was added. Please re-upload the file.', 'error');
                 return;
             }
             downloadFile(file.data, file.name, file.type || 'application/octet-stream');
