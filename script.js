@@ -2160,6 +2160,9 @@ let signatureData = null;
 
 // Handle file selection
 function handleFileSelect(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     const files = Array.from(event.target.files);
     const container = document.getElementById('filePreviewContainer');
     const list = document.getElementById('filePreviewList');
@@ -2178,6 +2181,9 @@ function handleFileSelect(event) {
     
     // Render previews
     renderFilePreviews();
+    
+    // Clear the file input value so the same file can be selected again if needed
+    event.target.value = '';
 }
 
 // Render file previews
