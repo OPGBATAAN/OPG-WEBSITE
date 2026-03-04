@@ -1,15 +1,21 @@
 // Single Page Application - Section Switching
 function showSection(sectionId) {
+    console.log('showSection called with:', sectionId);
+    
     // Hide all sections
     const sections = document.querySelectorAll('.content-section');
+    console.log('Found sections:', sections.length);
     sections.forEach(section => {
         section.classList.remove('active');
     });
     
     // Show the selected section
     const targetSection = document.getElementById(sectionId);
+    console.log('Target section found:', targetSection ? 'YES' : 'NO', 'ID:', sectionId);
+    
     if (targetSection) {
         targetSection.classList.add('active');
+        console.log('Added active class to section');
         
         // Save current section to localStorage for refresh persistence
         localStorage.setItem('currentSection', sectionId);
@@ -38,6 +44,8 @@ function showSection(sectionId) {
             top: 0,
             behavior: 'smooth'
         });
+    } else {
+        console.error('Section not found:', sectionId);
     }
 }
 
