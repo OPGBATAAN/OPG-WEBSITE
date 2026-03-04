@@ -640,6 +640,7 @@ function handleSignup(event) {
     event.preventDefault();
     
     const name = document.getElementById('signupName').value;
+    const username = document.getElementById('signupUsername').value;
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
     const confirmPassword = document.getElementById('signupConfirmPassword').value;
@@ -659,6 +660,7 @@ function handleSignup(event) {
     // Store user data (in a real app, this would be sent to a server)
     const userData = {
         name: name,
+        username: username,
         email: email,
         phone: phone,
         createdAt: new Date().toISOString()
