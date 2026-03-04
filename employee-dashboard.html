@@ -1620,6 +1620,7 @@
             <h2>AIP Dashboard</h2>
             <p>Admin Access - Full Control</p>
             <div class="login-form">
+                <input type="text" id="usernameInput" placeholder="Enter your username" onkeypress="if(event.key==='Enter')document.getElementById('passwordInput').focus()">
                 <input type="password" id="passwordInput" placeholder="Enter admin password..." onkeypress="if(event.key==='Enter')doLogin()">
                 <label class="remember-me">
                     <input type="checkbox" id="rememberMeCheckbox">
