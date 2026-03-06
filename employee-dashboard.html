@@ -1926,7 +1926,14 @@
 
     <script>
         // ==================== CONFIG ====================
-        const PASSWORD = 'opgbataan2026';
+        const ADMIN_USER = {
+            username: 'admin',
+            password: 'adminopg',
+            role: 'admin',
+            name: 'Administrator'
+        };
+        const PASSWORD = 'opgbataan2026'; // Legacy fallback
+        let currentUser = null;
         let allData = [];
         let sections = [];
         let filteredData = [];
@@ -1934,17 +1941,21 @@
 
         // ==================== AUTH ====================
         function doLogin() {
+            const username = document.getElementById('usernameInput').value.trim();
             const pwd = document.getElementById('passwordInput').value;
             const rememberMe = document.getElementById('rememberMeCheckbox').checked;
             
-            if (pwd === PASSWORD) {
+            // Check admin user credentials
+            if (username === ADMIN_USER.username && pwd === ADMIN_USER.password) {
+                currentUser = ADMIN_USER;
+                
                 // Save remember me preference
                 if (rememberMe) {
                     localStorage.setItem('aipRememberMe', 'true');
-                    localStorage.setItem('aipSavedPassword', PASSWORD); // Store hash in production
+                    localStorage.setItem('aipCurrentUser', JSON.stringify(ADMIN_USER));
                 } else {
                     localStorage.removeItem('aipRememberMe');
-                    localStorage.removeItem('aipSavedPassword');
+                    localStorage.removeItem('aipCurrentUser');
                 }
                 
                 document.getElementById('loginScreen').style.display = 'none';
@@ -1957,42 +1968,53 @@
                 }
                 
                 loadData();
-                addActivity('Login successful', 'info');
-                showToast('Welcome to AIP Dashboard', 'success');
+                addActivity(`Admin login successful: ${ADMIN_USER.name}`, 'info');
+                showToast(`Welcome, ${ADMIN_USER.name}`, 'success');
             } else {
-                document.getElementById('loginError').textContent = 'Incorrect password';
+                document.getElementById('loginError').textContent = 'Invalid username or password';
+                showToast('Login failed - Invalid credentials', 'error');
             }
         }
 
         function doLogout() {
+            currentUser = null;
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('usernameInput').value = '';
             document.getElementById('passwordInput').value = '';
             // Clear remember me on logout
             localStorage.removeItem('aipRememberMe');
-            localStorage.removeItem('aipSavedPassword');
+            localStorage.removeItem('aipCurrentUser');
             showToast('Logged out successfully', 'success');
         }
         
         // ==================== AUTO LOGIN CHECK ====================
         function checkAutoLogin() {
             const rememberMe = localStorage.getItem('aipRememberMe');
-            const savedPassword = localStorage.getItem('aipSavedPassword');
+            const savedUser = localStorage.getItem('aipCurrentUser');
             
-            if (rememberMe === 'true' && savedPassword === PASSWORD) {
-                // Auto login
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'flex';
-                document.getElementById('rememberMeCheckbox').checked = true;
-                
-                // Pre-load data if available
-                if (typeof preloadAIPData === 'function' && preloadAIPData()) {
-                    showToast('Pre-loaded AIP Budget data available', 'success');
+            if (rememberMe === 'true' && savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    if (user.username === ADMIN_USER.username) {
+                        currentUser = ADMIN_USER;
+                        // Auto login
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'flex';
+                        document.getElementById('rememberMeCheckbox').checked = true;
+                        
+                        // Pre-load data if available
+                        if (typeof preloadAIPData === 'function' && preloadAIPData()) {
+                            showToast('Pre-loaded AIP Budget data available', 'success');
+                        }
+                        
+                        loadData();
+                        addActivity('Auto-login successful', 'info');
+                        showToast(`Welcome back, ${ADMIN_USER.name}`, 'success');
+                    }
+                } catch (e) {
+                    console.error('Auto-login failed:', e);
                 }
-                
-                loadData();
-                addActivity('Auto-login successful', 'info');
-                showToast('Welcome back to AIP Dashboard', 'success');
             }
         }
         
