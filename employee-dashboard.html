@@ -2788,55 +2788,69 @@ This is an automated notification from the OPG Dashboard.
         
         // Preview file function
         function previewFile(data, fileName, type) {
-            const modal = document.createElement('div');
-            modal.className = 'preview-modal';
-            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;';
-            
-            if (type === 'image') {
-                modal.innerHTML = `
-                    <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);">
-                        <div class="file-viewer-header">
-                            <h3><i class="fas fa-image"></i> ${fileName}</h3>
-                            <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
+            try {
+                console.log('previewFile called:', fileName, type);
+                const modal = document.createElement('div');
+                modal.className = 'preview-modal';
+                modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;';
+                
+                if (type === 'image') {
+                    modal.innerHTML = `
+                        <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);">
+                            <div class="file-viewer-header">
+                                <h3><i class="fas fa-image"></i> ${fileName}</h3>
+                                <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
+                            </div>
+                            <div style="padding:20px;text-align:center;">
+                                <img src="${data}" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:block;">
+                            </div>
                         </div>
-                        <div style="padding:20px;text-align:center;">
-                            <img src="${data}" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:block;">
+                    `;
+                } else if (type === 'pdf') {
+                    modal.innerHTML = `
+                        <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;width:800px;height:90vh;">
+                            <div class="file-viewer-header">
+                                <h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
+                                <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
+                            </div>
+                            <div style="flex:1;padding:0;overflow:hidden;">
+                                <iframe src="${data}" type="application/pdf" width="100%" height="100%" style="border:none;"></iframe>
+                            </div>
                         </div>
-                    </div>
-                `;
-            } else if (type === 'pdf') {
-                modal.innerHTML = `
-                    <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);display:flex;flex-direction:column;width:800px;height:90vh;">
-                        <div class="file-viewer-header">
-                            <h3><i class="fas fa-file-pdf"></i> ${fileName}</h3>
-                            <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
+                    `;
+                } else {
+                    // Generic file viewer
+                    modal.innerHTML = `
+                        <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);width:800px;">
+                            <div class="file-viewer-header">
+                                <h3><i class="fas fa-file"></i> ${fileName}</h3>
+                                <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
+                            </div>
+                            <div style="padding:40px;text-align:center;">
+                                <i class="fas fa-file-alt" style="font-size:64px;color:#cbd5e1;margin-bottom:20px;"></i>
+                                <p style="color:#64748b;margin-bottom:10px;">Preview not available for this file type</p>
+                                <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:20px;">${fileName}</p>
+                                <button onclick="window.downloadAndClose('${data}', '${fileName}')" style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);color:white;text-decoration:none;border-radius:8px;font-weight:600;border:none;cursor:pointer;">
+                                    <i class="fas fa-download"></i> Download File
+                                </button>
+                            </div>
                         </div>
-                        <div style="flex:1;padding:0;overflow:hidden;">
-                            <embed src="${data}" type="application/pdf" width="100%" height="100%" style="border:none;">
-                        </div>
-                    </div>
-                `;
-            } else {
-                // Generic file viewer
-                modal.innerHTML = `
-                    <div style="background:white;border-radius:16px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);width:800px;">
-                        <div class="file-viewer-header">
-                            <h3><i class="fas fa-file"></i> ${fileName}</h3>
-                            <button onclick="this.closest('.preview-modal').remove()" class="close-btn">&times;</button>
-                        </div>
-                        <div style="padding:40px;text-align:center;">
-                            <i class="fas fa-file-alt" style="font-size:64px;color:#cbd5e1;margin-bottom:20px;"></i>
-                            <p style="color:#64748b;margin-bottom:10px;">Preview not available for this file type</p>
-                            <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:20px;">${fileName}</p>
-                            <a href="${data}" download="${fileName}" style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);color:white;text-decoration:none;border-radius:8px;font-weight:600;">
-                                <i class="fas fa-download"></i> Download File
-                            </a>
-                        </div>
-                    </div>
-                `;
+                    `;
+                }
+                document.body.appendChild(modal);
+                console.log('Modal appended to body');
+            } catch (err) {
+                console.error('previewFile error:', err);
+                showToast('Error opening preview: ' + err.message, 'error');
             }
-            document.body.appendChild(modal);
         }
+        window.previewFile = previewFile;
+        
+        window.downloadAndClose = function(data, fileName) {
+            downloadFile(data, fileName, 'application/octet-stream');
+            const modal = document.querySelector('.preview-modal');
+            if (modal) modal.remove();
+        };
         
         // Download file function using blob
         function downloadFile(data, fileName, mimeType) {
