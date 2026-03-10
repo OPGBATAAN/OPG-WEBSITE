@@ -2770,6 +2770,7 @@ This is an automated notification from the OPG Dashboard.
             const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
             previewFile(file.data, file.name, isImage ? 'image' : (isPDF ? 'pdf' : 'generic'));
         }
+        window.viewFileByIndex = viewFileByIndex;
         
         function downloadFileByIndex(index) {
             const file = window.currentRequestFiles[index];
@@ -2783,6 +2784,7 @@ This is an automated notification from the OPG Dashboard.
             }
             downloadFile(file.data, file.name, file.type || 'application/octet-stream');
         }
+        window.downloadFileByIndex = downloadFileByIndex;
         
         // Preview file function
         function previewFile(data, fileName, type) {
