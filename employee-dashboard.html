@@ -2717,7 +2717,7 @@ This is an automated notification from the OPG Dashboard.
                 const hasData = file.data && file.data.startsWith('data:');
                 const isImage = file.type && file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif)$/i);
                 
-                // Show buttons for all files - handle missing data in the click handlers
+                // Use data attributes for click handling instead of inline onclick
                 filesHtml += `
                     <div class="file-item">
                         <div class="file-info">
@@ -2726,8 +2726,8 @@ This is an automated notification from the OPG Dashboard.
                             <span class="file-size">(${fileSize})</span>
                         </div>
                         <div class="file-actions">
-                            <button onclick="viewFileByIndex(${index})" class="btn-view-file" ${!hasData ? 'style="opacity:0.6;cursor:not-allowed;"' : ''}><i class="fas fa-eye"></i> View</button>
-                            <button onclick="downloadFileByIndex(${index})" class="btn-download-file" ${!hasData ? 'style="opacity:0.6;cursor:not-allowed;"' : ''}><i class="fas fa-download"></i> Download</button>
+                            <button data-action="view" data-index="${index}" class="btn-view-file" ${!hasData ? 'disabled style="opacity:0.6;"' : ''}><i class="fas fa-eye"></i> View</button>
+                            <button data-action="download" data-index="${index}" class="btn-download-file" ${!hasData ? 'disabled style="opacity:0.6;"' : ''}><i class="fas fa-download"></i> Download</button>
                         </div>
                         ${!hasData ? '<span style="color: #94a3b8; font-size: 0.75rem; margin-left: 8px;">(File uploaded before preview support)</span>' : ''}
                     </div>
@@ -2738,7 +2738,7 @@ This is an automated notification from the OPG Dashboard.
                 <div class="file-viewer-content">
                     <div class="file-viewer-header">
                         <h3><i class="fas fa-paperclip"></i> Attached Files - ${request.id}</h3>
-                        <button onclick="document.getElementById('fileViewerModal').remove()" class="close-btn">&times;</button>
+                        <button class="close-btn" data-action="close">&times;</button>
                     </div>
                     <div class="file-list">
                         ${filesHtml}
@@ -2746,6 +2746,27 @@ This is an automated notification from the OPG Dashboard.
                 </div>
             `;
             document.body.appendChild(modal);
+            
+            // Attach event listeners using event delegation
+            modal.addEventListener('click', function(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                
+                const action = btn.dataset.action;
+                const index = parseInt(btn.dataset.index);
+                
+                if (action === 'view') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    viewFileByIndex(index);
+                } else if (action === 'download') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    downloadFileByIndex(index);
+                } else if (action === 'close') {
+                    modal.remove();
+                }
+            });
         }
         
         // Helper functions for file actions
